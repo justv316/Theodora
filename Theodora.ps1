@@ -213,21 +213,29 @@ function fnSetValidInput{
     $GenericInput = @("help")
 }
 function fnGameLoop{
-    while($State -ne "" -or $State -ne $null){
-        if($State -eq 0){
-            $InputLoop = {
+    while($State -ne "" -or $State -ne $null -or $State -ne -1){
+        $InputLoop = {
+            param(
+                [Parameter(Mandatory=$true,Position=0)]
+                [int]$InputIndex
+            )
+            if($InputIndex -eq 0){
                 fnDisplayGame 0
-                $Input = Read-Host ":3"
+                $In = Read-Host ""
             }
-            if($Input -eq ""){
+        }
+        if($State -eq 0){
+            &$InputLoop 0
+
+            if(!(Test-Path variable:in)){
                 $State = 1
             }
             else{
                 .$InputLoop
             }
         }
-        if($State -eq 1){
-            "State is 1 :)"
+        elseif($State -eq 1){
+            &$Inputloop 1
         }
     }
 }
