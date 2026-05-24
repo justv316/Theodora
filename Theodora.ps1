@@ -14,6 +14,7 @@ The game ends when the player reaches an ending, or perishes.
 # GLOBAL DEFINTIONS
 # CALLABLE FUNCTIONS : Save-Game
 
+
 function fnSetConsoleWinSize{
     Param(
         [Parameter(Mandatory=$False,Position=0)]
@@ -55,43 +56,75 @@ function fnSetConsoleWinColor{
     $host.UI.RawUI.BackgroundColor = $Background
     cls
 }
-
 function fnConsoleInit{
-    &fnSetConsoleWinSize -Width 80 -Height 24
+    &fnSetConsoleWinSize -Width 80 -Height 25
     &fnSetConsoleWinColor
 }
+function fnDisplayGame{
+    param(
+        [Parameter(Mandatory=$False,Position=0)]
+        [int]$DisplayResult = 0
+    )
+    $TopBorder = {Write-Host "╔~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╗";}
+    $BottomBorder = {Write-Host "╚~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╝";}
+    $BottomBorderContinuation = {Write-Host "╠~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╣";}
+    $EmptySpace = {Write-Host "║                                                                              ║";}
+    $InnerBorderTop = {Write-Host "║   )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )  ║";}
+    $InnerBorderBottom = {Write-Host "║  (  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(   ║";}
+    $InnerBorderTopEmpty = {Write-Host "║   )\  )                                                               )\  )  ║";}
+    $InnerBorderBottomEmpty = {Write-Host "║  (  \(                                                               (  \(   ║";}
+    $InnerBorderVersion = {Write-Host "║   )\  )              Ver: 0.0 PreRelease                              )\  )  ║";}
+    $TheodoraLineOne = {Write-Host "║  (  \(     * *  ┌───────────────────────────────────────────┐  * *   (  \(   ║";}
+    $TheodoraLineTwo = {Write-Host "║   )\  )   (•*•) | _____ _  _ ___ ___  ___   ___  ___    _   | (•*•)   )\  )  ║";}
+    $TheodoraLineThree = {Write-Host "║  (  \(     * *  ||_   _| || | __/ _ \|   \ / _ \| _ \  /_\  |  * *   (  \(   ║";}
+    $TheodoraLineFour = {Write-Host "║   )\  )    * *  |  | | | __ | _| (_) | |) | (_) |   / / _ \ |  * *    )\  )  ║";}
+    $TheodoraLineFive = {Write-Host "║  (  \(    (•*•) |  |_| |_||_|___\___/|___/ \___/|_|_\/_/ \_\| (•*•)  (  \(   ║";}
+    $TheodoraLineSix = {Write-Host "║   )\  )    * *  └───────────────────────────────────────────┘  * *    )\  )  ║";}
+    $TheodoraLineSeven = {Write-Host "║  (  \(               By: The Fox <~══════~> When: May 2026           (  \(   ║";}
+    $StartBoxOne = {Write-Host "║┌────────────────────────────────────────────────────────────────────────────┐║";}
+    $StartBoxTwo = {Write-Host "║│                         <Press Enter to Continue>                          │║";}
+    $StartBoxThree = {Write-Host "║└────────────────────────────────────────────────────────────────────────────┘║";}
 
-
-
-function New_Player{
-    cls
-    Read-Host 
-    
-    #Import Default Player Object
-    $PlayerImport = Import-Excel -Path .\dat\TheodoraDB.xlsx -WorksheetName 'Player'
-    $Player_Data = [PSCustomObject]@{
-        #Elements that impact the gameplay
-        Index = $PlayerImport.Index
-        CurLC = $PlayerImport.CurLC
-        CurLVL = $PlayerImport.CurLVL
-        CurEXP = $PlayerImport.CurEXP
-        CurHP = $PlayerImport.CurHP
+    $InnerBorder = {
+        &$InnerBorderTop
+        &$InnerBorderBottom
     }
-    $Player_Bio = [PSCustomObject]@{
-        #Elements that are biographical
-        FirstName = $PlayerImport.FirstName
-        LastName = $PlayerImport.LastName
-        FullName = $PlayerImport.FullName
-        Age = $PlayerImport.Age
-        Height = $PlayerImport.Height
-        Weight = $PlayerImport.Weight
+    $InnerBorderEmpty = {
+        &$InnerBorderTopEmpty
+        &$InnerBorderBottomEmpty
     }
-    $Player = [PSCustomObject]@{
-        Data = $Player_Data
-        Bio = $Player_Bio
+    $TheodoraDisplay = {
+     &$TheodoraLineOne
+     &$TheodoraLineTwo
+     &$TheodoraLineThree
+     &$TheodoraLineFour
+     &$TheodoraLineFive
+     &$TheodoraLineSix
+     &$TheodoraLineSeven
+    }
+
+    $StartBox = {
+       &$StartBoxOne
+       &$StartBoxTwo
+       &$StartBoxThree
+    }
+
+    if($DisplayResult -eq 0){
+        Clear-Host;
+        &$TopBorder
+        &$EmptySpace
+        &$InnerBorder
+        &$InnerBorderEmpty
+        &$InnerBorderVersion
+        &$TheodoraDisplay
+        &$InnerBorderEmpty
+        &$InnerBorder
+        &$EmptySpace
+        &$BottomBorderContinuation
+        &$StartBox
+        &$BottomBorder
     }
 }
-
 function Save-Game{
     $SavArr = @()
     $Slot = 0
@@ -176,11 +209,67 @@ function Save-Game{
     }
     &$fnBuildSavArr
 }
+function fnSetValidInput{
+    $GenericInput = @("help")
+}
+function fnGameLoop{
+    while($State -ne "" -or $State -ne $null){
+        if($State -eq 0){
+            $InputLoop = {
+                fnDisplayGame 0
+                $Input = Read-Host ":3"
+            }
+            if($Input -eq ""){
+                $State = 1
+            }
+            else{
+                .$InputLoop
+            }
+        }
+        if($State -eq 1){
+            "State is 1 :)"
+        }
+    }
+}
+function fnStartGame{
+    fnConsoleInit
+    $State = 0
+    fnGameLoop
+}
 
+fnStartGame
+
+<#function New_Player{
+    cls
+    Read-Host 
+    
+    #Import Default Player Object
+    $PlayerImport = Import-Excel -Path .\dat\TheodoraDB.xlsx -WorksheetName 'Player'
+    $Player_Data = [PSCustomObject]@{
+        #Elements that impact the gameplay
+        Index = $PlayerImport.Index
+        CurLC = $PlayerImport.CurLC
+        CurLVL = $PlayerImport.CurLVL
+        CurEXP = $PlayerImport.CurEXP
+        CurHP = $PlayerImport.CurHP
+    }
+    $Player_Bio = [PSCustomObject]@{
+        #Elements that are biographical
+        FirstName = $PlayerImport.FirstName
+        LastName = $PlayerImport.LastName
+        FullName = $PlayerImport.FullName
+        Age = $PlayerImport.Age
+        Height = $PlayerImport.Height
+        Weight = $PlayerImport.Weight
+    }
+    $Player = [PSCustomObject]@{
+        Data = $Player_Data
+        Bio = $Player_Bio
+    }
 function Load-Game{
     
 }
-    
+
 function Import_Locations{
     $LCs = @()
     $LCImport = Import-Excel .\dat\TheodoraDB.xlsx -WorksheetName 'Locations'
@@ -198,56 +287,4 @@ function Import_Locations{
         }
     }
 }
-
-function fnDisplayGame{
-    param(
-        [Parameter(Mandatory=$False,Position=0)]
-        [int]$DisplayResult = 0
-    )
-    $TopBorder = {Write-Host "╔~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╗";}
-    $BottomBorder = {Write-Host "╚~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╝";}
-    $EmptySpace = {Write-Host "║                                                                              ║";}
-    $InnerBorderTop = {Write-Host "║   )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )  ║";}
-    $InnerBorderBottom = {Write-Host "║  (  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(   ║";}
-    $InnerBorderTopEmpty = {Write-Host "║   )\  )                                                               )\  )  ║";}
-    $InnerBorderBottomEmpty = {Write-Host "║  (  \(                                                               (  \(   ║";}
-    $TheodoraLineOne = {Write-Host "║  (  \(     * *  ┌───────────────────────────────────────────┐  * *   (  \(   ║";}
-    $TheodoraLineTwo = {Write-Host "║   )\  )   (•*•) | _____ _  _ ___ ___  ___   ___  ___    _   | (•*•)   )\  )  ║";}
-    $TheodoraLineThree = {Write-Host "║  (  \(     * *  ||_   _| || | __/ _ \|   \ / _ \| _ \  /_\  |  * *   (  \(   ║";}
-    $TheodoraLineFour = {Write-Host "║   )\  )    * *  |  | | | __ | _| (_) | |) | (_) |   / / _ \ |  * *    )\  )  ║";}
-    $TheodoraLineFive = {Write-Host "║  (  \(    (•*•) |  |_| |_||_|___\___/|___/ \___/|_|_\/_/ \_\| (•*•)  (  \(   ║";}
-    $TheodoraLineSix = {Write-Host "║   )\  )    * *  └───────────────────────────────────────────┘  * *    )\  )  ║";}
-    $TheodoraLineSeven = {Write-Host "║  (  \(               By: The Fox <~══════~> When: May 2026           (  \(   ║";} 
-
-    $InnerBorder = {
-        &$InnerBorderTop
-        &$InnerBorderBottom
-    }
-    $InnerBorderEmpty = {
-        &$InnerBorderTopEmpty
-        &$InnerBorderBottomEmpty
-    }
-    $TheodoraDisplay = {
-     &$TheodoraLineOne
-     &$TheodoraLineTwo
-     &$TheodoraLineThree
-     &$TheodoraLineFour
-     &$TheodoraLineFive
-     &$TheodoraLineSix
-     &$TheodoraLineSeven
-    }
-
-    if($DisplayResult -eq 0){
-        Clear-Host;
-        &$TopBorder
-        &$EmptySpace
-        &$InnerBorder
-        &$InnerBorderEmpty
-        &$TheodoraDisplay
-        &$InnerBorderEmpty
-        &$InnerBorder
-        &$EmptySpace
-        &$BottomBorder
-    }
-}
-
+}#>
