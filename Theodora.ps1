@@ -16,6 +16,7 @@ The game ends when the player reaches an ending, or perishes.
 
 #Requires -PSEdition Desktop
 #Requires -Version 5.0
+#Requires -Module ImportExcel
 
 function fnSetConsoleWinSize{
     Param(
