@@ -57,73 +57,236 @@ function fnSetConsoleWinColor{
     cls
 }
 function fnConsoleInit{
-    &fnSetConsoleWinSize -Width 80 -Height 25
+    &fnSetConsoleWinSize -Width 80 -Height 24
     &fnSetConsoleWinColor
 }
 function fnDisplayGame{
     param(
         [Parameter(Mandatory=$False,Position=0)]
-        [int]$DisplayResult = 0
+        [String]$DisplayResult = 0
     )
-    $TopBorder = {Write-Host "╔~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╗";}
-    $BottomBorder = {Write-Host "╚~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╝";}
-    $BottomBorderContinuation = {Write-Host "╠~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╣";}
+    $BorderTop = {Write-Host "╔~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╗";}
+    $BorderBottom = {Write-Host "╚~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╝";}
+    $BorderContinuation = {Write-Host "╠~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~══════~╣";}
     $EmptySpace = {Write-Host "║                                                                              ║";}
-    $InnerBorderTop = {Write-Host "║   )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )  ║";}
-    $InnerBorderBottom = {Write-Host "║  (  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(   ║";}
-    $InnerBorderTopEmpty = {Write-Host "║   )\  )                                                               )\  )  ║";}
-    $InnerBorderBottomEmpty = {Write-Host "║  (  \(                                                               (  \(   ║";}
-    $InnerBorderVersion = {Write-Host "║   )\  )              Ver: 0.0 PreRelease                              )\  )  ║";}
-    $TheodoraLineOne = {Write-Host "║  (  \(     * *  ┌───────────────────────────────────────────┐  * *   (  \(   ║";}
-    $TheodoraLineTwo = {Write-Host "║   )\  )   (•*•) | _____ _  _ ___ ___  ___   ___  ___    _   | (•*•)   )\  )  ║";}
-    $TheodoraLineThree = {Write-Host "║  (  \(     * *  ||_   _| || | __/ _ \|   \ / _ \| _ \  /_\  |  * *   (  \(   ║";}
-    $TheodoraLineFour = {Write-Host "║   )\  )    * *  |  | | | __ | _| (_) | |) | (_) |   / / _ \ |  * *    )\  )  ║";}
-    $TheodoraLineFive = {Write-Host "║  (  \(    (•*•) |  |_| |_||_|___\___/|___/ \___/|_|_\/_/ \_\| (•*•)  (  \(   ║";}
-    $TheodoraLineSix = {Write-Host "║   )\  )    * *  └───────────────────────────────────────────┘  * *    )\  )  ║";}
-    $TheodoraLineSeven = {Write-Host "║  (  \(               By: The Fox <~══════~> When: May 2026           (  \(   ║";}
-    $StartBoxOne = {Write-Host "║┌────────────────────────────────────────────────────────────────────────────┐║";}
-    $StartBoxTwo = {Write-Host "║│                         <Press Enter to Continue>                          │║";}
-    $StartBoxThree = {Write-Host "║└────────────────────────────────────────────────────────────────────────────┘║";}
+    $InnerBoxTop = {Write-Host "║┌────────────────────────────────────────────────────────────────────────────┐║";}
+    $InnerBoxBottom = {Write-Host "║└────────────────────────────────────────────────────────────────────────────┘║";}
+    $InnerBoxMiddle = {Write-Host "║├────────────────────────────────────────────────────────────────────────────┤║";}
 
-    $InnerBorder = {
-        &$InnerBorderTop
-        &$InnerBorderBottom
-    }
-    $InnerBorderEmpty = {
-        &$InnerBorderTopEmpty
-        &$InnerBorderBottomEmpty
-    }
-    $TheodoraDisplay = {
-     &$TheodoraLineOne
-     &$TheodoraLineTwo
-     &$TheodoraLineThree
-     &$TheodoraLineFour
-     &$TheodoraLineFive
-     &$TheodoraLineSix
-     &$TheodoraLineSeven
+    $InvalidInput = {
+        $ErrorInput = {Write-Host "║     Error: Invalid Input! Type 'help' for valid commands at this field.      ║";}
+        &$BorderTop
+        &$ErrorInput
+        &$BorderBottom
     }
 
-    $StartBox = {
-       &$StartBoxOne
-       &$StartBoxTwo
-       &$StartBoxThree
+    $SplashScreen = {
+        $SplashBorder = {
+            $InnerBorderTop = {Write-Host "║   )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )  ║";}
+            $InnerBorderBottom = {Write-Host "║  (  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(  \(   ║";}
+            &$InnerBorderTop
+            &$InnerBorderBottom
+    }
+        $TheodoraSplash = {
+            $TheodoraLineOne = {Write-Host "║   )\  ) ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  )\  )  ║";}
+            $TheodoraLineTwo = {Write-Host "║  (  \(  ┃      _______ _                    _                      ┃ (  \(   ║";}
+            $TheodoraLineThree = {Write-Host "║   )\  ) ┃     |__   __| |                  | |                     ┃  )\  )  ║";}
+            $TheodoraLineFour = {Write-Host "║  (  \(  ┃        | |  | |__   ___  ___   __| | ___  _ __ __ _      ┃ (  \(   ║";}
+            $TheodoraLineFive = {Write-Host "║   )\  ) ┃        | |  | '_ \ / _ \/ _ \ / _' |/ _ \| '__/ _' |     ┃  )\  )  ║";}
+            $TheodoraLineSix = {Write-Host "║  (  \(  ┃        | |  | | | |  __/ (_) | (_| | (_) | | | (_| |     ┃ (  \(   ║";}
+            $TheodoraLineSeven = {Write-Host "║   )\  ) ┃        |_|  |_| |_|\___|\___/ \__,_|\___/|_|  \__,_|     ┃  )\  )  ║";}
+            $TheodoraLineEight = {Write-Host "║  (  \(  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ (  \(   ║";}
+            &$TheodoraLineOne
+            &$TheodoraLineTwo
+            &$TheodoraLineThree
+            &$TheodoraLineFour
+            &$TheodoraLineFive
+            &$TheodoraLineSix
+            &$TheodoraLineSeven
+            &$TheodoraLineEight
+    }
+        $SplashBox = {
+            $InnerBoxSegmentedTop = {Write-Host "║  ┌────────────┬──────────────┬──────────────────────┬─────────────────────┐  ║";}
+            $InnerBoxSegmentedBottom = {Write-Host "║  └────────────┴──────────────┴──────────────────────┴─────────────────────┘  ║";}
+            $InnerBoxSegmentedSplash = {Write-Host "║  │ By The Fox │ Version: 0.0 │ BuildDate: 5-24-2026 │ Pre-Release         │  ║";}
+            &$InnerBoxSegmentedTop
+            &$InnerBoxSegmentedSplash
+            &$InnerBoxSegmentedBottom
+    }
+        $StartBox = {
+            $InnerBoxMiddleStart = {Write-Host "║│                           <Enter Start to Begin>                           │║";}
+            &$InnerBoxTop
+            &$InnerBoxMiddleStart
+            &$InnerBoxBottom
+    }
+        Clear-Host;
+        &$BorderTop
+        &$EmptySpace
+        &$SplashBorder
+        &$TheodoraSplash
+        &$SplashBorder
+        &$SplashBox
+        &$EmptySpace
+        &$BorderContinuation
+        &$StartBox
+        &$BorderBottom
+    }
+    $Menu = {
+            $MenuOne = {Write-Host "║│ 1. New Game                                                                │║";}
+            $MenuTwo = {Write-Host "║│ 2. Load Game                                                               │║";}
+            $MenuThree = {Write-Host "║│ 3. Settings                                                                │║";}
+            $MenuFour = {Write-Host "║│ 4. Help                                                                    │║";}
+            &$BorderTop
+            &$InnerBoxTop
+            &$MenuOne
+            &$InnerBoxMiddle
+            &$MenuTwo
+            &$InnerBoxMiddle
+            &$MenuThree
+            &$InnerBoxMiddle
+            &$MenuFour
+            &$InnerBoxBottom
+            &$BorderContinuation
+        }
+    $Disclaimer = {
+            $DisclaimerOne = {Write-Host "║               IMPORTANT: DO NOT RESIZE THE GAME WINDOW AT ALL!               ║";}
+            $DisclaimerTwo = {Write-Host "║            THE GAME WILL RESIZE THE CONSOLE HOST WINDOW AS NEEDED            ║";}
+            $DisclaimerThree = {Write-Host "║    RESIZING THE WINDOW MANUALLY OR ATTEMPTING TO FULLSCREEN WILL BREAK IT    ║";}
+            &$DisclaimerOne
+            &$DisclaimerTwo
+            &$DisclaimerThree
+            &$BorderContinuation
+        }
+    $SmallTheodora = {
+            $SmallTheodoraOne = {Write-Host "║│                  _____ _  _ ___ ___  ___   ___  ___    _                   │║";}
+            $SmallTheodoraTwo = {Write-Host "║│                 |_   _| || | __/ _ \|   \ / _ \| _ \  /_\                  │║";}
+            $SmallTheodoraThree = {Write-Host "║│                   | | | __ | _| (_) | |) | (_) |   / / _ \                 │║";}
+            $SmallTheodoraFour = {Write-Host "║│                   |_| |_||_|___\___/|___/ \___/|_|_\/_/ \_\                │║";}
+            &$InnerBoxTop
+            &$SmallTheodoraOne
+            &$SmallTheodoraTwo
+            &$SmallTheodoraThree
+            &$SmallTheodoraFour
+            &$InnerBoxBottom
+            &$BorderBottom
+        }
+    $MainMenu = {
+        Clear-Host;
+        &$Menu
+        &$Disclaimer
+        &$SmallTheodora
     }
 
     if($DisplayResult -eq 0){
-        Clear-Host;
-        &$TopBorder
-        &$EmptySpace
-        &$InnerBorder
-        &$InnerBorderEmpty
-        &$InnerBorderVersion
-        &$TheodoraDisplay
-        &$InnerBorderEmpty
-        &$InnerBorder
-        &$EmptySpace
-        &$BottomBorderContinuation
-        &$StartBox
-        &$BottomBorder
+        &fnSetConsoleWinSize -Width 80 -Height 24
+        &$SplashScreen
     }
+    if($DisplayResult -eq 1){
+        &fnSetConsoleWinSize -Width 80 -Height 23
+        &$MainMenu
+    }
+    if($DisplayResult -eq "1_0"){
+        &fnSetConsoleWinSize -Width 80 -Height 26
+        &$MainMenu
+        &$InvalidInput
+    }
+}
+function fnDisplayIndex{
+    param(
+        [Parameter(Mandatory=$false,Position=0)]
+        [string]$Index = 0
+    )
+    if($Index -eq 0){
+        fnDisplayGame 0
+    }
+    elseif($Index -eq 1){
+        fnDisplayGame 1
+    }
+    elseif($Index -eq "1_0"){
+        fnDisplayGame 1_0
+    }
+}
+function fnGameLoop{
+    param(
+        [Parameter(Mandatory=$false,Position=0)]
+        [string]$State = 0
+    )
+        if($State -eq 0){
+            &fnDisplayIndex 0
+            
+            $ValidInput = @("start")
+            $In = Read-Host ":"
+
+            if($ValidInput -Contains $In){
+                if($In -eq "start"){
+                    &fnGameLoop 1
+                }
+                else{
+                    &fnDisplayIndex 0
+                }
+            }
+            else{
+                &fnGameLoop 0
+            }
+        }
+        elseif($State -eq 1){
+            &fnDisplayIndex 1
+            $In = Read-Host ":"
+            if($In -eq "1"){
+                &fnGameLoop 1_1
+            }
+            elseif($In -eq "2"){
+                &fnGameLoop 1_2
+            }
+            elseif($In -eq "3"){
+                &fnGameLoop 1_3
+            }
+            elseif($In -eq "4"){
+                &fnGameLoop 1_4
+            }
+            else{
+                &fnGameLoop 1_0
+            }
+        }
+        elseif($State -eq "1_0"){
+            &fnDisplayIndex 1_0
+            $In = Read-Host ":"
+            if($In -eq "1"){
+                &fnGameLoop 1_0
+            }
+            elseif($In -eq "2"){
+                &fnGameLoop 1_1
+            }
+            elseif($In -eq "3"){
+                &fnGameLoop 1_2
+            }
+            elseif($In -eq "4"){
+                &fnGameLoop 1_3
+            }
+            else{
+                &fnGameLoop 1_0
+            }
+        }
+        #NewGame
+        elseif($State -eq "1_1"){
+            Read-Host "State 1_1"
+        }
+        #LoadGame
+        elseif($State -eq "1_2"){
+            Read-Host "State 1_2"
+        }
+        #Settings
+        elseif($State -eq "1_3"){
+            Read-Host "State 1_3"
+        }
+        #Help
+        elseif($State -eq "1_4"){
+            Read-Host "State 1_4"
+        }
+}
+function fnStartGame{
+    fnConsoleInit
+    fnGameLoop 0
 }
 function Save-Game{
     $SavArr = @()
@@ -209,90 +372,5 @@ function Save-Game{
     }
     &$fnBuildSavArr
 }
-function fnSetValidInput{
-    $GenericInput = @("help")
-}
-function fnGameLoop{
-    while($State -ne "" -or $State -ne $null -or $State -ne -1){
-        $InputLoop = {
-            param(
-                [Parameter(Mandatory=$true,Position=0)]
-                [int]$InputIndex
-            )
-            if($InputIndex -eq 0){
-                fnDisplayGame 0
-                $In = Read-Host ""
-            }
-        }
-        if($State -eq 0){
-            &$InputLoop 0
-
-            if(!(Test-Path variable:in)){
-                $State = 1
-            }
-            else{
-                .$InputLoop
-            }
-        }
-        elseif($State -eq 1){
-            &$Inputloop 1
-        }
-    }
-}
-function fnStartGame{
-    fnConsoleInit
-    $State = 0
-    fnGameLoop
-}
 
 fnStartGame
-
-<#function New_Player{
-    cls
-    Read-Host 
-    
-    #Import Default Player Object
-    $PlayerImport = Import-Excel -Path .\dat\TheodoraDB.xlsx -WorksheetName 'Player'
-    $Player_Data = [PSCustomObject]@{
-        #Elements that impact the gameplay
-        Index = $PlayerImport.Index
-        CurLC = $PlayerImport.CurLC
-        CurLVL = $PlayerImport.CurLVL
-        CurEXP = $PlayerImport.CurEXP
-        CurHP = $PlayerImport.CurHP
-    }
-    $Player_Bio = [PSCustomObject]@{
-        #Elements that are biographical
-        FirstName = $PlayerImport.FirstName
-        LastName = $PlayerImport.LastName
-        FullName = $PlayerImport.FullName
-        Age = $PlayerImport.Age
-        Height = $PlayerImport.Height
-        Weight = $PlayerImport.Weight
-    }
-    $Player = [PSCustomObject]@{
-        Data = $Player_Data
-        Bio = $Player_Bio
-    }
-function Load-Game{
-    
-}
-
-function Import_Locations{
-    $LCs = @()
-    $LCImport = Import-Excel .\dat\TheodoraDB.xlsx -WorksheetName 'Locations'
-    $LCImport | Foreach {
-        $LC = [PSCustomObject]@{
-            Index = $_.Index
-            Name = $_.Name
-            Description = $_.Description
-            ValidDirections = $_.ValidDirections -Split(" ")
-            InvalidDirection = $_.InvalidDirection -Split(" ")
-            ValidActions = $_.ValidActions -Split(" ")
-        }
-        $LC | Foreach {
-            $LCs += $LC
-        }
-    }
-}
-}#>
