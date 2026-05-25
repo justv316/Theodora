@@ -1,2 +1,25 @@
 # Theodora
- A text based powershell game created by a Fox
+
+## Synopsis
+ An ASCII based powershell RPG created by The Fox. 
+ 
+# README
+
+## Getting Started
+### System Requirements
+1. Windows 11
+	b. For Linux users, spin up a Windows 11 VM to play this on. 
+
+2. PowerShell Version 5 or higher
+
+3. Windows 11 Terminal will not display the game correctly, so you will need to open the game in the old Windows Console Host. To do so:
+	a. Open a new Terminal window
+	b. Right click the empty space next to a tab and click Settings
+	c. Under Startup, for Default terminal application, change this to Windows Console Host, and ensure your Default profile is Windows PowerShell
+	
+Note: While this Game does utilize xlsx files to serve as databases, you do not need excel, or any spreadsheet software installed. 
+	
+### Starting the Game
+0. Download the latest zip file from releases and extract it somewhere
+1. Double-Click the script file 'Theodora.ps1'
+2. You can also launch the script by Opening a PowerShell window in the extracted directory, and running the script from there. 
