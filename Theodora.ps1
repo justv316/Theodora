@@ -16,8 +16,23 @@ The game ends when the player reaches an ending, or perishes.
 
 #Requires -PSEdition Desktop
 #Requires -Version 5.0
-#Requires -Module ImportExcel
 
+function fnInstallRequirements{
+    $ModulePaths = $env:PSModulePath -split ';'
+    $ModuleCheck = {
+            $ModuleVerification = @()
+            Foreach($Path in $ModulePaths){
+               $Result = Test-Path $path\ImportExcel
+               $ModuleVerification += $Result
+            }
+        if($ModuleVerification -contains "True"){
+        }
+        else{
+            Install-Module ImportExcel -Scope CurrentUser -Force
+        }
+    }
+    &$ModuleCheck
+}
 function fnSetConsoleWinSize{
     Param(
         [Parameter(Mandatory=$False,Position=0)]
@@ -199,15 +214,7 @@ function fnDisplayIndex{
         [Parameter(Mandatory=$false,Position=0)]
         [string]$Index = 0
     )
-    if($Index -eq 0){
-        fnDisplayGame 0
-    }
-    elseif($Index -eq 1){
-        fnDisplayGame 1
-    }
-    elseif($Index -eq "1_0"){
-        fnDisplayGame 1_0
-    }
+        fnDisplayGame $Index
 }
 function fnGameLoop{
     param(
@@ -289,6 +296,7 @@ function fnGameLoop{
 }
 function fnStartGame{
     fnConsoleInit
+    fnInstallRequirements
     fnGameLoop 0
 }
 function Save-Game{
