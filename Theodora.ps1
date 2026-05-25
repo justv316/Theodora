@@ -14,6 +14,8 @@ The game ends when the player reaches an ending, or perishes.
 # GLOBAL DEFINTIONS
 # CALLABLE FUNCTIONS : Save-Game
 
+#Requires -PSEdition Desktop
+#Requires -Version 5.0
 
 function fnSetConsoleWinSize{
     Param(
@@ -252,16 +254,16 @@ function fnGameLoop{
             &fnDisplayIndex 1_0
             $In = Read-Host ":"
             if($In -eq "1"){
-                &fnGameLoop 1_0
-            }
-            elseif($In -eq "2"){
                 &fnGameLoop 1_1
             }
-            elseif($In -eq "3"){
+            elseif($In -eq "2"){
                 &fnGameLoop 1_2
             }
-            elseif($In -eq "4"){
+            elseif($In -eq "3"){
                 &fnGameLoop 1_3
+            }
+            elseif($In -eq "4"){
+                &fnGameLoop 1_4
             }
             else{
                 &fnGameLoop 1_0
