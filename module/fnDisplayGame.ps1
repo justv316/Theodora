@@ -20,6 +20,7 @@ function fnDisplayGame{
         [Parameter(Mandatory=$False,Position=0)]
         [String]$DisplayResult = 0
     )
+
     $fnSimpleElement = {
         param(
             [Parameter(Mandatory=$True,Position=0)]
@@ -85,28 +86,15 @@ function fnDisplayGame{
             [Parameter(Mandatory=$True,Position=0)]
             [String]$Element
         )
-        $ComplexElements = @{
-            InvalidInput = @(BorderTop; ErrorInput; BorderBottom)
+        $InvalidInput = {
+            &$fnSimpleElement BorderTop DarkRed White
+            &$fnSimpleElement ErrorInput DarkRed White
+            &$fnSimpleElement BorderBottom DarkRed White
         }
-        $WriteComplexElement = {
-            $ComplexElements.$Element | Foreach {
-                &$WriteElement
-            } 
-        }
-
-    }
-
-    $InvalidInput = {
-        &$fnSimpleElement BorderTop
-        &$fnSimpleElement ErrorInput
-        &$fnSimpleElement BorderBottom
-    }
-
-    $SplashScreen = {
         $SplashBorder = {
             &$fnSimpleElement InnerBorderTop
             &$fnSimpleElement InnerBorderBottom
-    }
+        }
         $TheodoraSplash = {
             &$fnSimpleElement TheodoraLineOne
             &$fnSimpleElement TheodoraLineTwo
@@ -116,118 +104,149 @@ function fnDisplayGame{
             &$fnSimpleElement TheodoraLineSix
             &$fnSimpleElement TheodoraLineSeven
             &$fnSimpleElement TheodoraLineEight
-    }
+        }
         $SplashBox = {
             &$fnSimpleElement InnerBoxSegmentedTop
             &$fnSimpleElement InnerBoxSegmentedSplash
             &$fnSimpleElement InnerBoxSegmentedBottom
-    }
+        }
         $StartBox = {
             &$fnSimpleElement InnerBoxTop
             &$fnSimpleElement InnerBoxMiddleStart
             &$fnSimpleElement InnerBoxBottom
-    }
-        Clear-Host;
-        &$fnSimpleElement BorderTop
-        &$fnSimpleElement EmptySpace
-        &$SplashBorder
-        &$TheodoraSplash
-        &$SplashBorder
-        &$SplashBox
-        &$fnSimpleElement EmptySpace
-        &$fnSimpleElement BorderContinuation
-        &$StartBox
-        &$fnSimpleElement BorderBottom
-    }
-
-    $SplashScreenHelp = {
-        &$fnSimpleElement BorderTop
-        &$fnSimpleElement HelpBoxBannerTop
-        &$fnSimpleElement HelpBoxBannerSplash
-        &$fnSimpleElement HelpBoxBannerBottom
-        &$fnSimpleElement SplashScreenHelpOne
-        &$fnSimpleElement EmptyExitHelp
-        &$fnSimpleElement HelpBoxEmpty
-        &$fnSimpleElement InnerBoxBottom
-        &$fnSimpleElement BorderBottom
-    }
-
-    $MainMenu = {
+        }
+        $SplashScreenHelp = {
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement HelpBoxBannerTop
+            &$fnSimpleElement HelpBoxBannerSplash
+            &$fnSimpleElement HelpBoxBannerBottom
+            &$fnSimpleElement SplashScreenHelpOne
+            &$fnSimpleElement EmptyExitHelp
+            &$fnSimpleElement HelpBoxEmpty
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderBottom
+        }
         $Menu = {
-                &$fnSimpleElement BorderTop
-                &$fnSimpleElement InnerBoxTop
-                &$fnSimpleElement MenuOne
-                &$fnSimpleElement InnerBoxMiddle
-                &$fnSimpleElement MenuTwo
-                &$fnSimpleElement InnerBoxMiddle
-                &$fnSimpleElement MenuThree
-                &$fnSimpleElement InnerBoxMiddle
-                &$fnSimpleElement MenuFour
-                &$fnSimpleElement InnerBoxBottom
-                &$fnSimpleElement BorderContinuation
-            }
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement InnerBoxTop
+            &$fnSimpleElement MenuOne
+            &$fnSimpleElement InnerBoxMiddle
+            &$fnSimpleElement MenuTwo
+            &$fnSimpleElement InnerBoxMiddle
+            &$fnSimpleElement MenuThree
+            &$fnSimpleElement InnerBoxMiddle
+            &$fnSimpleElement MenuFour
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderContinuation
+        }
         $Disclaimer = {
-                &$fnSimpleElement DisclaimerOne
-                &$fnSimpleElement DisclaimerTwo
-                &$fnSimpleElement DisclaimerThree
-                &$fnSimpleElement BorderContinuation
-            }
+            &$fnSimpleElement DisclaimerOne
+            &$fnSimpleElement DisclaimerTwo
+            &$fnSimpleElement DisclaimerThree
+            &$fnSimpleElement BorderContinuation
+        }
         $SmallTheodora = {
-                &$fnSimpleElement InnerBoxTop
-                &$fnSimpleElement SmallTheodoraOne
-                &$fnSimpleElement SmallTheodoraTwo
-                &$fnSimpleElement SmallTheodoraThree
-                &$fnSimpleElement SmallTheodoraFour
-                &$fnSimpleElement InnerBoxBottom
-                &$fnSimpleElement BorderBottom
-            }
-        Clear-Host;
-        &$Menu
-        &$Disclaimer
-        &$SmallTheodora
+            &$fnSimpleElement InnerBoxTop
+            &$fnSimpleElement SmallTheodoraOne
+            &$fnSimpleElement SmallTheodoraTwo
+            &$fnSimpleElement SmallTheodoraThree
+            &$fnSimpleElement SmallTheodoraFour
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderBottom
+        }
+        $MainMenuHelp = {
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement HelpBoxBannerTop
+            &$fnSimpleElement HelpBoxBannerMain
+            &$fnSimpleElement HelpBoxBannerBottom
+            &$fnSimpleElement MainMenuHelpOne
+            &$fnSimpleElement MainMenuHelpTwo
+            &$fnSimpleElement MainMenuHelpThree
+            &$fnSimpleElement MainMenuHelpFour
+            &$fnSimpleElement HelpBoxEmpty
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderBottom
+        }
+        $ComplexElements = @{
+            InvalidInput = $InvalidInput
+            SplashBorder = $SplashBorder
+            TheodoraSplash = $TheodoraSplash
+            SplashBox = $SplashBox
+            StartBox = $StartBox
+            SplashScreenHelp = $SplashScreenHelp
+            Menu = $Menu
+            Disclaimer = $Disclaimer
+            SmallTheodora = $SmallTheodora
+            MainMenuHelp = $MainMenuHelp
+        }
+        $WriteComplexElement = {
+            &$ComplexElements.$Element
+        }
+        &$WriteComplexElement
     }
-    $MainMenuHelp = {
-        &$fnSimpleElement BorderTop
-        &$fnSimpleElement HelpBoxBannerTop
-        &$fnSimpleElement HelpBoxBannerMain
-        &$fnSimpleElement HelpBoxBannerBottom
-        &$fnSimpleElement MainMenuHelpOne
-        &$fnSimpleElement MainMenuHelpTwo
-        &$fnSimpleElement MainMenuHelpThree
-        &$fnSimpleElement MainMenuHelpFour
-        &$fnSimpleElement HelpBoxEmpty
-        &$fnSimpleElement InnerBoxBottom
-        &$fnSimpleElement BorderBottom
+    $fnAssembledElement = {
+        param(
+            [Parameter(Mandatory=$True,Position=0)]
+            [String]$Element
+        )
+        $SplashScreen = {
+            Clear-Host;
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement EmptySpace
+            &$fnComplexElement SplashBorder
+            &$fnComplexElement TheodoraSplash
+            &$fnComplexElement SplashBorder
+            &$fnComplexElement SplashBox
+            &$fnSimpleElement EmptySpace
+            &$fnSimpleElement BorderContinuation
+            &$fnComplexElement StartBox
+            &$fnSimpleElement BorderBottom
+        }
+        $MainMenu = {
+            Clear-Host;
+            &$fnComplexElement Menu
+            &$fnComplexElement Disclaimer
+            &$fnComplexElement SmallTheodora
+        }
+        $AssembledElements = @{
+            SplashScreen = $SplashScreen
+            MainMenu = $MainMenu
+        }
+        $WriteAssembledElement = {
+            &$AssembledElements.$Element
+        }
+        &$WriteAssembledElement
     }
+
 
     if($DisplayResult -eq 0){
         fnSetConsoleWinSize -Width 80 -Height 24
         fnSetConsoleWinColor -Background Black -Foreground White
-        &$SplashScreen
+        &$fnAssembledElement SplashScreen
     }
     if($DisplayResult -eq "0_0_0"){
         fnSetConsoleWinSize -Width 80 -Height 27
-        &$SplashScreen
-        &$InvalidInput
+        &$fnAssembledElement SplashScreen
+        &$fnComplexElement InvalidInput
     }
     if($DisplayResult -eq "0_0_1"){
         fnSetConsoleWinSize -Width 80 -Height 33
         fnSetConsoleWinColor -Background Black -Foreground White
-        &$SplashScreen
-        &$SplashScreenHelp
+        &$fnAssembledElement SplashScreen
+        &$fnComplexElement SplashScreenHelp
     }
     if($DisplayResult -eq 1){
         fnSetConsoleWinSize -Width 80 -Height 23
-        &$MainMenu
+        &$fnAssembledElement MainMenu
     }
     if($DisplayResult -eq "1_0_0"){
         fnSetConsoleWinSize -Width 80 -Height 26
-        &$MainMenu
-        &$InvalidInput
+        &$fnAssembledElement MainMenu
+        &$fnComplexElement InvalidInput
     }
     if($DisplayResult -eq "1_0_1"){
         fnSetConsoleWinSize -Width 80 -Height 34
-        &$MainMenu
-        &$MainMenuHelp
+        &$fnAssembledElement MainMenu
+        &$fnComplexElement MainMenuHelp
     }
 }
