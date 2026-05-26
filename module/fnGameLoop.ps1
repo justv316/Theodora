@@ -1,9 +1,13 @@
 <# This Script controls the Inputstate of the game and works in tandem with fnDisplayGame 
 to accurately project the game state
 
+    #_$_^
+    # = Main State Index (e.g Main Menu)
+    $ = Sub State Categorization (e.g Informational)
+    ^ = Sub State Index (e.g Error, Help)
 Common States: 
-    #_0 - Invalid Input Error
-    #_0_0 - Help Message
+    #_0_0 - Invalid Input Error
+    #_0_1 - Help Message
     #_-1 - Game Termination  
 #>
 
@@ -21,55 +25,50 @@ function fnGameLoop{
             if($In -eq "start"){
                 &fnGameLoop 1
             }
+            elseif($In -eq "help"){
+                &fnGameLoop 0_0_1
+            }
             else{
-                &fnGameLoop 0
+                &fnGameLoop 0_0_0
             }
         }
         else{
-            &fnGameLoop 0_0
+            &fnGameLoop 0_0_0
         }
+        
     }
+    $ValidState_0 = @("0","0_0_0", "0_0_1")
     $fnState_1 = {
         $ValidInput = @("1","2","3","4","help")
         $In = Read-Host ":"
-        if(1..4 -eq $In){
-            &fnGameLoop 1_$In
+        if($ValidInput -Contains $In){
+            if(1..4 -eq $In){
+                &fnGameLoop 1_$In
+            }
+            elseif($In -eq "help"){
+                &fnGameLoop 1_0_1
+            }
+            else{
+                &fnGameLoop 1_0_0
+            }
         }
         else{
-            &fnGameLoop 1_0
+            &fnGameLoop 1_0_0
         }
 
     }
-    if($State -eq 0){
+    $ValidState_1 = @("1","1_0_0", "1_0_1")
+    if($ValidState_0 -Contains $State){
         &fnDisplayGame $State
         &$fnState_0
     }
-    elseif($State -eq "0_0"){
-        &fnDisplayGame $State
-        &$fnState_0
-    }
-    elseif($State -eq 1){
+    elseif($ValidState_1 -Contains $State){
         &fnDisplayGame $State
         &$fnState_1
     }
-    elseif($State -eq "1_0"){
-        &fnDisplayGame $State
-        &$fnState_1
-    }
-    #NewGame
-    elseif($State -eq "1_1"){
-        Read-Host "State 1_1"
-    }
-    #LoadGame
-    elseif($State -eq "1_2"){
-        Read-Host "State 1_2"
-    }
-    #Settings
-    elseif($State -eq "1_3"){
-        Read-Host "State 1_3"
-    }
-    #Help
-    elseif($State -eq "1_4"){
-        Read-Host "State 1_4"
+    else{
+        Write-Host "Seemingly a critical error has occured"
+        Write-Host "Attempted to load $State"
+        Read-Host ":"
     }
 }

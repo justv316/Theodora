@@ -22,12 +22,6 @@ foreach($Directory in @('Module')){
     GCI "$PSScriptRoot\$Directory\*.ps1" | Foreach { . $_.FullName }
 }
 
-# Dot-Source Game Data Files
-
-foreach($Directory in @('dat')){
-    GCI "$PSScriptRoot\$Directory\*.xlsx" | Foreach { . $_.FullName }
-}
-
 #Requires -PSEdition Desktop
 #Requires -Version 5.0
 cls

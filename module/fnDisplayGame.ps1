@@ -1,10 +1,17 @@
 ﻿<# This Script controls the DisplayState of the game and works in tandem with fnGameLoop
 to accurately project the game state
 
+{Write-Host "";}
+
+    #_$_^
+    # = Main State Index (e.g Main Menu)
+    $ = Sub State Categorization (e.g Informational)
+    ^ = Sub State Index (e.g Error, Help)
+
 Common States: 
-    #_0 - Invalid Input Error
-    #_0_0 - Help Message
-    #_-1 - Game Termination  
+    #_0_0 - Invalid Input Error
+    #_0_1 - Help Message
+    #_-1 - Game Termination
 #>
 
 function fnDisplayGame{
@@ -20,6 +27,11 @@ function fnDisplayGame{
     $InnerBoxTop = {Write-Host "║┌────────────────────────────────────────────────────────────────────────────┐║";}
     $InnerBoxBottom = {Write-Host "║└────────────────────────────────────────────────────────────────────────────┘║";}
     $InnerBoxMiddle = {Write-Host "║├────────────────────────────────────────────────────────────────────────────┤║";}
+
+    $HelpBoxBannerTop = {Write-Host "║┌────────────────────────────┬──────────────────┬────────────────────────────┐║";}
+    $HelpBoxBannerBottom = {Write-Host "║├────────────────────────────┴──────────────────┴────────────────────────────┤║";}
+    $HelpBoxEmpty = {Write-Host "║│                                                                            │║";}
+    $EmptyExitHelp = {Write-Host "║│                                                 exit - Saves and closes    │║";}
 
     $InvalidInput = {
         $ErrorInput = {Write-Host "║     Error: Invalid Input! Type 'help' for valid commands at this field.      ║";}
@@ -78,46 +90,61 @@ function fnDisplayGame{
         &$StartBox
         &$BorderBottom
     }
-    $Menu = {
-            $MenuOne = {Write-Host "║│ 1. New Game                                                                │║";}
-            $MenuTwo = {Write-Host "║│ 2. Load Game                                                               │║";}
-            $MenuThree = {Write-Host "║│ 3. Settings                                                                │║";}
-            $MenuFour = {Write-Host "║│ 4. Help                                                                    │║";}
-            &$BorderTop
-            &$InnerBoxTop
-            &$MenuOne
-            &$InnerBoxMiddle
-            &$MenuTwo
-            &$InnerBoxMiddle
-            &$MenuThree
-            &$InnerBoxMiddle
-            &$MenuFour
-            &$InnerBoxBottom
-            &$BorderContinuation
-        }
-    $Disclaimer = {
-            $DisclaimerOne = {Write-Host "║               IMPORTANT: DO NOT RESIZE THE GAME WINDOW AT ALL!               ║";}
-            $DisclaimerTwo = {Write-Host "║            THE GAME WILL RESIZE THE CONSOLE HOST WINDOW AS NEEDED            ║";}
-            $DisclaimerThree = {Write-Host "║    RESIZING THE WINDOW MANUALLY OR ATTEMPTING TO FULLSCREEN WILL BREAK IT    ║";}
-            &$DisclaimerOne
-            &$DisclaimerTwo
-            &$DisclaimerThree
-            &$BorderContinuation
-        }
-    $SmallTheodora = {
-            $SmallTheodoraOne = {Write-Host "║│                  _____ _  _ ___ ___  ___   ___  ___    _                   │║";}
-            $SmallTheodoraTwo = {Write-Host "║│                 |_   _| || | __/ _ \|   \ / _ \| _ \  /_\                  │║";}
-            $SmallTheodoraThree = {Write-Host "║│                   | | | __ | _| (_) | |) | (_) |   / / _ \                 │║";}
-            $SmallTheodoraFour = {Write-Host "║│                   |_| |_||_|___\___/|___/ \___/|_|_\/_/ \_\                │║";}
-            &$InnerBoxTop
-            &$SmallTheodoraOne
-            &$SmallTheodoraTwo
-            &$SmallTheodoraThree
-            &$SmallTheodoraFour
-            &$InnerBoxBottom
-            &$BorderBottom
-        }
+    $SplashScreenHelp = {
+    
+        $HelpBoxBannerSplash = {Write-Host "║│         Menu Input         │<~Splash Sc Help~>│       Generic Inputs       │║";}
+        $SplashScreenHelpOne = {Write-Host "║│ start - Start the game                          help - Displays this       │║";}
+        &$BorderTop
+        &$HelpBoxBannerTop
+        &$HelpBoxBannerSplash
+        &$HelpBoxBannerBottom
+        &$SplashScreenHelpOne
+        &$EmptyExitHelp
+        &$HelpBoxEmpty
+        &$InnerBoxBottom
+        &$BorderBottom
+    }
+
     $MainMenu = {
+        $Menu = {
+                $MenuOne = {Write-Host "║│ 1. New Game                                                                │║";}
+                $MenuTwo = {Write-Host "║│ 2. Load Game                                                               │║";}
+                $MenuThree = {Write-Host "║│ 3. Settings                                                                │║";}
+                $MenuFour = {Write-Host "║│ 4. Help                                                                    │║";}
+                &$BorderTop
+                &$InnerBoxTop
+                &$MenuOne
+                &$InnerBoxMiddle
+                &$MenuTwo
+                &$InnerBoxMiddle
+                &$MenuThree
+                &$InnerBoxMiddle
+                &$MenuFour
+                &$InnerBoxBottom
+                &$BorderContinuation
+            }
+        $Disclaimer = {
+                $DisclaimerOne = {Write-Host "║               IMPORTANT: DO NOT RESIZE THE GAME WINDOW AT ALL!               ║";}
+                $DisclaimerTwo = {Write-Host "║            THE GAME WILL RESIZE THE CONSOLE HOST WINDOW AS NEEDED            ║";}
+                $DisclaimerThree = {Write-Host "║    RESIZING THE WINDOW MANUALLY OR ATTEMPTING TO FULLSCREEN WILL BREAK IT    ║";}
+                &$DisclaimerOne
+                &$DisclaimerTwo
+                &$DisclaimerThree
+                &$BorderContinuation
+            }
+        $SmallTheodora = {
+                $SmallTheodoraOne = {Write-Host "║│                  _____ _  _ ___ ___  ___   ___  ___    _                   │║";}
+                $SmallTheodoraTwo = {Write-Host "║│                 |_   _| || | __/ _ \|   \ / _ \| _ \  /_\                  │║";}
+                $SmallTheodoraThree = {Write-Host "║│                   | | | __ | _| (_) | |) | (_) |   / / _ \                 │║";}
+                $SmallTheodoraFour = {Write-Host "║│                   |_| |_||_|___\___/|___/ \___/|_|_\/_/ \_\                │║";}
+                &$InnerBoxTop
+                &$SmallTheodoraOne
+                &$SmallTheodoraTwo
+                &$SmallTheodoraThree
+                &$SmallTheodoraFour
+                &$InnerBoxBottom
+                &$BorderBottom
+            }
         Clear-Host;
         &$Menu
         &$Disclaimer
@@ -129,16 +156,21 @@ function fnDisplayGame{
         fnSetConsoleWinColor -Background Black -Foreground White
         &$SplashScreen
     }
-    if($DisplayResult -eq "0_0"){
+    if($DisplayResult -eq "0_0_0"){
         &fnSetConsoleWinSize -Width 80 -Height 27
         &$SplashScreen
         &$InvalidInput
+    }
+    if($DisplayResult -eq "0_0_1"){
+        &fnSetConsoleWinSize -Width 80 -Height 10
+        fnSetConsoleWinColor -Background Black -Foreground White
+        &$SplashScreenHelp
     }
     if($DisplayResult -eq 1){
         &fnSetConsoleWinSize -Width 80 -Height 23
         &$MainMenu
     }
-    if($DisplayResult -eq "1_0"){
+    if($DisplayResult -eq "1_0_0"){
         &fnSetConsoleWinSize -Width 80 -Height 26
         &$MainMenu
         &$InvalidInput
