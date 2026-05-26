@@ -14,10 +14,12 @@ Common States:
 
 function fnGameLoop{
     [CmdletBinding()]
+
     param(
         [Parameter(Mandatory=$false,Position=0)]
         [string]$State = 0
     )
+
     $fnState_0 = {
         $ValidInput = @("start","help")
         $In = Read-Host ":"
@@ -37,7 +39,7 @@ function fnGameLoop{
         }
         
     }
-    $ValidState_0 = @("0","0_0_0", "0_0_1")
+
     $fnState_1 = {
         $ValidInput = @("1","2","3","4","help")
         $In = Read-Host ":"
@@ -57,7 +59,10 @@ function fnGameLoop{
         }
 
     }
+
     $ValidState_1 = @("1","1_0_0", "1_0_1")
+    $ValidState_0 = @("0","0_0_0", "0_0_1")
+
     if($ValidState_0 -Contains $State){
         &fnDisplayGame $State
         &$fnState_0
