@@ -8,7 +8,7 @@
 ## Getting Started
 ### System Requirements
 1. Windows 11
-	b. For Linux users, spin up a Windows 11 VM to play this on. 
+	b. For Linux/MacOS users, spin up a Windows 11 VM to play this on. 
 
 2. PowerShell Version 5 or higher
 
@@ -17,9 +17,7 @@
 	b. Right click the empty space next to a tab and click Settings
 	c. Under Startup, for Default terminal application, change this to Windows Console Host, and ensure your Default profile is Windows PowerShell
 	
-Note: While this Game does utilize xlsx files to serve as databases, you do not need excel, or any spreadsheet software installed. 
+Note: While this game utilizes .xlsx files to serve as databases, you do not need excel, nor any spreadsheet software installed. 
 	
 ### Starting the Game
-0. Download the latest zip file from releases and extract it somewhere
-1. Double-Click the script file 'Theodora.ps1'
-2. You can also launch the script by Opening a PowerShell window in the extracted directory, and running the script from there. 
+0. Install the Theodora module

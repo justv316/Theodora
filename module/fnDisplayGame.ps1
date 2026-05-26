@@ -1,84 +1,14 @@
-﻿<#
-.SYNOPSIS
-A text based game created by Vanessa
+﻿<# This Script controls the DisplayState of the game and works in tandem with fnGameLoop
+to accurately project the game state
 
-.DESCRIPTION
-You will play as a member of Empress Theodora Louise's inner circle
-You are tasked with finding any evidence that points to the discovery of this worlds 'Rune of Life'
-
-.NOTES
-The game ends when the player reaches an ending, or perishes.
-
+Common States: 
+    #_0 - Invalid Input Error
+    #_0_0 - Help Message
+    #_-1 - Game Termination  
 #>
 
-# GLOBAL DEFINTIONS
-# CALLABLE FUNCTIONS : Save-Game
-
-#Requires -PSEdition Desktop
-#Requires -Version 5.0
-
-function fnInstallRequirements{
-    $ModulePaths = $env:PSModulePath -split ';'
-    $ModuleCheck = {
-            $ModuleVerification = @()
-            Foreach($Path in $ModulePaths){
-               $Result = Test-Path $path\ImportExcel
-               $ModuleVerification += $Result
-            }
-        if($ModuleVerification -contains "True"){
-        }
-        else{
-            Install-Module ImportExcel -Scope CurrentUser -Force
-        }
-    }
-    &$ModuleCheck
-}
-function fnSetConsoleWinSize{
-    Param(
-        [Parameter(Mandatory=$False,Position=0)]
-        [int]$Height = 40,
-        [Parameter(Mandatory=$False,Position=1)]
-        [int]$Width = 120
-    )
-    #Airlifted from https://ss64.com/ps/syntax-consolesize.html - Thanks m8
-    $Console = $host.ui.RawUI
-    $ConBuffer = $Console.BufferSize
-    $ConSize = $Console.WindowSize
-    $CurrWidth = $ConSize.Width
-    $CurrHeight = $ConSize.Height
-    if ($Height -gt $host.UI.RawUI.MaxPhysicalWindowSize.Height) {
-        $Height = $host.UI.RawUI.MaxPhysicalWindowSize.Height
-    }
-
-    if ($Width -gt $host.UI.RawUI.MaxPhysicalWindowSize.Width) {
-        $Width = $host.UI.RawUI.MaxPhysicalWindowSize.Width
-    }
-    If ($ConBuffer.Width -gt $Width ) {
-        $currWidth = $Width
-    }
-    If ($ConBuffer.Height -gt $Height ) {
-        $currHeight = $Height
-    }
-    $host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($currWidth,$currHeight)
-    $host.UI.RawUI.BufferSize = New-Object System.Management.Automation.Host.size($Width,2000)
-    $host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($Width,$Height)
-}
-function fnSetConsoleWinColor{
-    Param(
-        [Parameter(Mandatory=$False,Position=0)]
-        $Background = "Black",
-        [Parameter(Mandatory=$False,Position=1)]
-        $Foreground = "White"
-    )
-    $host.UI.RawUI.ForegroundColor = $Foreground
-    $host.UI.RawUI.BackgroundColor = $Background
-    cls
-}
-function fnConsoleInit{
-    &fnSetConsoleWinSize -Width 80 -Height 24
-    &fnSetConsoleWinColor
-}
 function fnDisplayGame{
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory=$False,Position=0)]
         [String]$DisplayResult = 0
@@ -97,7 +27,6 @@ function fnDisplayGame{
         &$ErrorInput
         &$BorderBottom
     }
-
     $SplashScreen = {
         $SplashBorder = {
             $InnerBorderTop = {Write-Host "║   )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )\  )  ║";}
@@ -197,7 +126,13 @@ function fnDisplayGame{
 
     if($DisplayResult -eq 0){
         &fnSetConsoleWinSize -Width 80 -Height 24
+        fnSetConsoleWinColor -Background Black -Foreground White
         &$SplashScreen
+    }
+    if($DisplayResult -eq "0_0"){
+        &fnSetConsoleWinSize -Width 80 -Height 27
+        &$SplashScreen
+        &$InvalidInput
     }
     if($DisplayResult -eq 1){
         &fnSetConsoleWinSize -Width 80 -Height 23
@@ -209,179 +144,3 @@ function fnDisplayGame{
         &$InvalidInput
     }
 }
-function fnDisplayIndex{
-    param(
-        [Parameter(Mandatory=$false,Position=0)]
-        [string]$Index = 0
-    )
-        fnDisplayGame $Index
-}
-function fnGameLoop{
-    param(
-        [Parameter(Mandatory=$false,Position=0)]
-        [string]$State = 0
-    )
-        if($State -eq 0){
-            &fnDisplayIndex 0
-            
-            $ValidInput = @("start")
-            $In = Read-Host ":"
-
-            if($ValidInput -Contains $In){
-                if($In -eq "start"){
-                    &fnGameLoop 1
-                }
-                else{
-                    &fnDisplayIndex 0
-                }
-            }
-            else{
-                &fnGameLoop 0
-            }
-        }
-        elseif($State -eq 1){
-            &fnDisplayIndex 1
-            $In = Read-Host ":"
-            if($In -eq "1"){
-                &fnGameLoop 1_1
-            }
-            elseif($In -eq "2"){
-                &fnGameLoop 1_2
-            }
-            elseif($In -eq "3"){
-                &fnGameLoop 1_3
-            }
-            elseif($In -eq "4"){
-                &fnGameLoop 1_4
-            }
-            else{
-                &fnGameLoop 1_0
-            }
-        }
-        elseif($State -eq "1_0"){
-            &fnDisplayIndex 1_0
-            $In = Read-Host ":"
-            if($In -eq "1"){
-                &fnGameLoop 1_1
-            }
-            elseif($In -eq "2"){
-                &fnGameLoop 1_2
-            }
-            elseif($In -eq "3"){
-                &fnGameLoop 1_3
-            }
-            elseif($In -eq "4"){
-                &fnGameLoop 1_4
-            }
-            else{
-                &fnGameLoop 1_0
-            }
-        }
-        #NewGame
-        elseif($State -eq "1_1"){
-            Read-Host "State 1_1"
-        }
-        #LoadGame
-        elseif($State -eq "1_2"){
-            Read-Host "State 1_2"
-        }
-        #Settings
-        elseif($State -eq "1_3"){
-            Read-Host "State 1_3"
-        }
-        #Help
-        elseif($State -eq "1_4"){
-            Read-Host "State 1_4"
-        }
-}
-function fnStartGame{
-    fnConsoleInit
-    fnInstallRequirements
-    fnGameLoop 0
-}
-function Save-Game{
-    $SavArr = @()
-    $Slot = 0
-    $ExportData = @(
-        $Player.Data)
-    $Savs = gci .\sav\*.xlsx
-    $fnOverWriteSave = {
-        Remove-Item $SavArr[$Slot-1].Path -force
-        &$fnWriteSave
-    }
-    $fnWriteSave = {
-        if($Slot -ge 1){
-            $Date = (Get-Date).ToString("MM-dd-yy")
-            $Time = (Get-Date).ToString("hh-mm-ss")
-            $SaveName = $("$Slot"+" - "+"Theodora"+" - "+$Date+" - "+$Time+".xlsx")
-            $SavePath = ".\sav\$SaveName"
-            $ExportData | Export-Excel -path "$SavePath"
-        }
-    }
-    $fnManualSaveInput = {
-        if($SavArr.Count -eq 3){
-            CLS
-            $SavArr | FL
-            $Slot = Read-Host "Save slots full, please choose a slot to overwrite. [1, 2, 3]"
-            $Slot = $Slot -as [int]
-            if($Slot -eq 1 -or $Slot -eq 2 -or $Slot -eq 3){
-                &$fnOverWriteSave
-            }
-            else{
-                Write-Host "Invalid Input."
-                .$fnManualSaveInput
-            }
-        }
-        elseif($SavArr.Count -lt 3){
-            CLS
-            $SavArr | FL
-            $Slot = Read-Host "Select save slot, choose an empty slot or a slot to overwrite [1, 2, 3]"
-            $Slot = $Slot -as [int]
-            if(Test-Path $SavArr[$Slot-1].Path){
-                &$fnOverWriteSave
-            }
-            if($Slot -eq 1 -or $Slot -eq 2 -or $Slot -eq 3){
-                &$fnWriteSave
-            }
-            else{
-                Write-Host "Invalid Input."
-                .$fnManualSaveInput
-            }
-        }
-    }
-    $fnNewSave = {
-        CLS
-        $SaveVerify = Read-Host "No Save Data Found: Create it? [Y/N]"
-        if($SaveVerify -eq "Y"){
-            $Slot = 1
-            &$fnWriteSave
-        }
-        elseif($SaveVerify -eq "N"){
-            Read-Host "The game cannot proceed without Save Data."
-            break
-        }
-        else{
-            Write-Host "Invalid Input"
-            .$fnNewSave
-        }
-    }
-    $fnBuildSavArr = {
-        $Savs | Foreach{
-            $SavObject = [PSCustomObject]@{
-            Slot = 1+$Slot++
-            Name = $_.Name
-            Path = $_.FullName
-            }
-            $SavArr += $SavObject
-        }
-        if($SavArr.Count -gt 0){
-            &$fnManualSaveInput
-        }
-        elseif($SavArr.Count -eq 0){
-            &$fnNewSave
-        }
-    }
-    &$fnBuildSavArr
-}
-
-fnStartGame
