@@ -75,6 +75,8 @@ function fnDisplayGame{
             MainMenuHelpTwo = "║│         2 - Load or continue                    exit - Saves and closes    │║"
             MainMenuHelpThree = "║│         3 - Configure options                                              │║"
             MainMenuHelpFour = "║│         4 - Displays this                                                  │║"
+            ExitBannerPreGame = "║│                            ~Thanks for playing~                            │║"
+
         }
         $WriteElement = {
             Write-Host $Elements.$Element -BackgroundColor $BackgroundColor -ForegroundColor $ForegroundColor;
@@ -114,6 +116,13 @@ function fnDisplayGame{
             &$fnSimpleElement InnerBoxTop
             &$fnSimpleElement InnerBoxMiddleStart
             &$fnSimpleElement InnerBoxBottom
+        }
+        $ExitBannerPreGame = {
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement InnerBoxTop
+            &$fnSimpleElement ExitBannerPreGame
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderContinuation
         }
         $SplashScreenHelp = {
             &$fnSimpleElement BorderTop
@@ -168,16 +177,17 @@ function fnDisplayGame{
             &$fnSimpleElement BorderBottom
         }
         $ComplexElements = @{
-            InvalidInput = $InvalidInput
             SplashBorder = $SplashBorder
             TheodoraSplash = $TheodoraSplash
+            SmallTheodora = $SmallTheodora
             SplashBox = $SplashBox
             StartBox = $StartBox
-            SplashScreenHelp = $SplashScreenHelp
             Menu = $Menu
-            Disclaimer = $Disclaimer
-            SmallTheodora = $SmallTheodora
+            SplashScreenHelp = $SplashScreenHelp
             MainMenuHelp = $MainMenuHelp
+            ExitBannerPreGame = $ExitBannerPreGame
+            InvalidInput = $InvalidInput
+            Disclaimer = $Disclaimer
         }
         $WriteComplexElement = {
             &$ComplexElements.$Element
@@ -190,7 +200,6 @@ function fnDisplayGame{
             [String]$Element
         )
         $SplashScreen = {
-            Clear-Host;
             &$fnSimpleElement BorderTop
             &$fnSimpleElement EmptySpace
             &$fnComplexElement SplashBorder
@@ -203,16 +212,21 @@ function fnDisplayGame{
             &$fnSimpleElement BorderBottom
         }
         $MainMenu = {
-            Clear-Host;
             &$fnComplexElement Menu
             &$fnComplexElement Disclaimer
+            &$fnComplexElement SmallTheodora
+        }
+        $ExitPregame = {
+            &$fnComplexElement ExitBannerPreGame
             &$fnComplexElement SmallTheodora
         }
         $AssembledElements = @{
             SplashScreen = $SplashScreen
             MainMenu = $MainMenu
+            ExitPregame = $ExitPregame
         }
         $WriteAssembledElement = {
+            Clear-Host;
             &$AssembledElements.$Element
         }
         &$WriteAssembledElement
@@ -231,9 +245,12 @@ function fnDisplayGame{
     }
     if($DisplayResult -eq "0_0_1"){
         fnSetConsoleWinSize -Width 80 -Height 33
-        fnSetConsoleWinColor -Background Black -Foreground White
         &$fnAssembledElement SplashScreen
         &$fnComplexElement SplashScreenHelp
+    }
+    if($DisplayResult -eq "0_0_2"){
+        fnSetConsoleWinSize -Width 80 -Height 13
+        &$fnAssembledElement ExitPregame
     }
     if($DisplayResult -eq 1){
         fnSetConsoleWinSize -Width 80 -Height 23

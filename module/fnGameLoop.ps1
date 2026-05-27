@@ -20,8 +20,9 @@ function fnGameLoop{
         [string]$State = 0
     )
 
+
     $fnState_0 = {
-        $ValidInput = @("start","help")
+        $ValidInput = @("start","help","exit")
         $In = Read-Host ":"
         if($ValidInput -Contains $In){
             if($In -eq "start"){
@@ -29,6 +30,9 @@ function fnGameLoop{
             }
             elseif($In -eq "help"){
                 &fnGameLoop 0_0_1
+            }
+            elseif($In -eq "exit"){
+                &fnGameLoop 0_0_2
             }
             else{
                 &fnGameLoop 0_0_0
@@ -40,8 +44,11 @@ function fnGameLoop{
         
     }
 
+
+
+
     $fnState_1 = {
-        $ValidInput = @("1","2","3","4","help")
+        $ValidInput = @("1","2","3","4","help","exit")
         $In = Read-Host ":"
         if($ValidInput -Contains $In){
             if(1..4 -eq $In){
@@ -49,6 +56,9 @@ function fnGameLoop{
             }
             elseif($In -eq "help"){
                 &fnGameLoop 1_0_1
+            }
+            elseif($In -eq "exit"){
+                &fnGameLoop 0_0_2
             }
             else{
                 &fnGameLoop 1_0_0
@@ -60,12 +70,22 @@ function fnGameLoop{
 
     }
 
+    $fnState_0_2 = {
+        Read-Host "Press enter to quit"
+        exit
+    }
+
     $ValidState_1 = @("1","1_0_0", "1_0_1")
-    $ValidState_0 = @("0","0_0_0", "0_0_1")
+    $ValidState_0 = @("0","0_0_0", "0_0_1", "0_0_2")
 
     if($ValidState_0 -Contains $State){
         &fnDisplayGame $State
-        &$fnState_0
+        if($State -eq "0_0_2"){
+            &$fnState_0_2
+        }
+        else{
+            &$fnState_0
+        }
     }
     elseif($ValidState_1 -Contains $State){
         &fnDisplayGame $State

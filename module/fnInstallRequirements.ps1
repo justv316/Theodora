@@ -7,9 +7,7 @@ function fnInstallRequirements{
                $Result = Test-Path $path\ImportExcel
                $ModuleVerification += $Result
             }
-        if($ModuleVerification -contains "True"){
-            "Module Installed"
-        }
+        if($ModuleVerification -contains "True"){}
         else{
             Install-Module ImportExcel -Scope CurrentUser -Force
         }
