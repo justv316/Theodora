@@ -1,4 +1,4 @@
-﻿<# This Script controls the DisplayState of the game and works in tandem with fnGameLoop
+<# This Script controls the DisplayState of the game and works in tandem with fnGameLoop
 to accurately project the game state
 
 {Write-Host "";}
@@ -59,7 +59,7 @@ function fnDisplayGame{
             InnerBoxMiddleStart = "║│                           <Enter Start to Begin>                           │║"
             HelpBoxBannerSplash = "║│         Menu Input         │<~Splash Sc Help~>│       Generic Inputs       │║"
             SplashScreenHelpOne = "║│ start - Start the game                          help - Displays this       │║"
-            MenuOne = "║│ 1. New Game                                                                │║"
+            MenuOne = "║│ 1. New Character                                                           │║"
             MenuTwo = "║│ 2. Load Game                                                               │║"
             MenuThree = "║│ 3. Settings                                                                │║"
             MenuFour = "║│ 4. Help                                                                    │║"
@@ -71,7 +71,7 @@ function fnDisplayGame{
             SmallTheodoraThree = "║│                   | | | __ | _| (_) | |) | (_) |   / / _ \                 │║"
             SmallTheodoraFour = "║│                   |_| |_||_|___\___/|___/ \___/|_|_\/_/ \_\                │║"
             HelpBoxBannerMain = "║│         Menu Input         │<~Main Menu Help~>│       Generic Inputs       │║"
-            MainMenuHelpOne = "║│ Numeric 1 - Starts a new game                   help - Displays this       │║"
+            MainMenuHelpOne = "║│ Numeric 1 - Creates a new character             help - Displays this       │║"
             MainMenuHelpTwo = "║│         2 - Load or continue                    exit - Saves and closes    │║"
             MainMenuHelpThree = "║│         3 - Configure options                                              │║"
             MainMenuHelpFour = "║│         4 - Displays this                                                  │║"
@@ -265,5 +265,9 @@ function fnDisplayGame{
         fnSetConsoleWinSize -Width 80 -Height 34
         &$fnAssembledElement MainMenu
         &$fnComplexElement MainMenuHelp
+    }
+    if($DisplayResult -eq 2){
+        fnSetConsoleWinSize -Width 80 -Height 24
+
     }
 }

@@ -20,7 +20,6 @@ function fnGameLoop{
         [string]$State = 0
     )
 
-
     $fnState_0 = {
         $ValidInput = @("start","help","exit")
         $In = Read-Host ":"
@@ -43,9 +42,6 @@ function fnGameLoop{
         }
         
     }
-
-
-
 
     $fnState_1 = {
         $ValidInput = @("1","2","3","4","help","exit")

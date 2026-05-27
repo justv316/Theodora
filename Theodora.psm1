@@ -19,11 +19,12 @@ The game ends when the player reaches an ending, or perishes.
 # Dot-Source Module Scripts
 
 foreach($Directory in @('Module')){
-    GCI "$PSScriptRoot\$Directory\*.ps1" | Foreach { . $_.FullName }
+    Get-ChildItem "$PSScriptRoot\$Directory\*.ps1" | ForEach-Object { . $_.FullName }
 }
+
 
 #Requires -PSEdition Desktop
 #Requires -Version 5.0
-cls
+Clear-Host
 Write-Host "Setup Complete - Run 'Play-Theodora' to launch." -BackgroundColor DarkGreen -ForegroundColor White
 
