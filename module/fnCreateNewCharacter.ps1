@@ -1,74 +1,61 @@
 ﻿function fnCreateNewCharacter{
     [CmdletBinding()]
     param()
-
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type -AssemblyName System.Drawing
-
-    $CharacterForm = New-Object System.Windows.Forms.Form
-    $CharacterForm.Size = New-Object System.Drawing.Size(500,400)
-    $CharacterForm.StartPosition = 'CenterScreen'
-    $CharacterForm.Text = 'New Character Creation'
-    $CharacterForm.BackColor = "#121212"
-    $CharacterForm.FormBorderStyle = "FixedDialog"
-
-    $CharacterNameLabel = New-Object System.Windows.Forms.Label
-    $CharacterNameLabel.text = "Character Name"
-    $CharacterNameLabel.AutoSize = $true
-    $CharacterNameLabel.location = New-Object System.Drawing.Point(20,20)
-    $CharacterNameLabel.Font = New-Object System.Drawing.Font("OpenDyslexic",12,[System.Drawing.FontStyle]::Bold)
-    $CharacterNameLabel.ForeColor = "#f4f4f4"
-    $CharacterForm.controls.AddRange(@($CharacterNameLabel))
-    [void]$CharacterForm.ShowDialog()
-
-<#
-
-    # ADD OTHER ELEMENTS ABOVE THIS LINE
-
-
-
-        $FontName = $_.Name
-        $FontName = $FontName -replace "[-]",""
-        $FontName = $FontName.Substring(0, $FontName.Length - 4)
-        $FontPath = $_.FullName
-        $OpenDyslexicFont.AddFontFile("$FontPath")
-
-    #Class Drop Down
-
-    $CharacterClass = New-Object System.Windows.Forms.Label
-    $CharacterClass.Location = New-Object System.Drawing.Point(10,20)
-    $CharacterClass.Text = 'Who are you?'
-    $CharacterClass.Font = New-Object System.Drawing.Font("Segoe UI",10,[System.Drawing.FontStyle]::Bold)
-    $CharacterForm.Controls.Add($CharacterClass)
-
-    
-    $ClassBox = New-Object System.Windows.Forms.ComboBox
-    $ClassBox.Location = New-Object System.Drawing.Point(10,60)
-    $ClassBox.Size = New-Object System.Drawing.Size(460,30)
-    $ClassBox.DropDownStyle = 'DropDownList'
-    $ClassBox.Items.AddRange(@('Agent','Arcanist','Swordarm'))
-    $ClassBox.SelectedIndex = 0
-    $CharacterForm.Controls.Add($ClassBox)
-
-    $CreateButton = New-Object System.Windows.Forms.Button
-    $CreateButton.Location = New-Object System.Drawing.Point(10,310)
-    $CreateButton.Size = New-Object System.Drawing.Size(220,40)
-    $CreateButton.Text = 'Proceed'
-    $CreateButton.Font = New-Object System.Drawing.Font("Segoe UI",10)
-
-    $CreateButton.Add_Click({
-        switch ($ClassBox.SelectedItem){
-            'Agent'{
-            }
-
-            'Arcanist'{
-            }
-
-            'Swordarm'{
-            }
+    [System.Windows.Forms.Application]::EnableVisualStyles()
+            $CharacterForm = [System.Windows.Forms.Form] @{
+            Text = 'New Character Creation'
+            StartPosition = 'CenterParent'
+            BackColor = "#363636"
+            FormBorderStyle = "FixedToolWindow"
+            WindowState = "Normal"
+            SizeGripStyle = "Hide"
+            ClientSize = New-Object System.Drawing.Size::new(600,480)
+            MinimizeBox = $false
+            MaximizeBox = $false
+            ShowInTaskbar = $false
+            Topmost = $true
+            Opacity = 0.96
+        }
+        $CharacterPanel = [System.Windows.Forms.Panel] @{
+            Location = New-Object System.Drawing.Point(12, 12)
+            Size = New-Object System.Drawing.Size(576, 456)
+            Anchor = 'Top','Bottom','Left','Right'
+            BackColor = "Transparent"
+            BorderStyle = "FixedSingle"
+        }
+        $CharacterNameLabel = [System.Windows.Forms.Label] @{
+            text = "Character Name"
+            AutoSize = $true
+            location = New-Object System.Drawing.Point(($CharacterPanel.Location.X) + 12), (($CharacterPanel.Location.Y) + 6)
+            Font = New-Object System.Drawing.Font("OpenDyslexicAlta",12,[System.Drawing.FontStyle]::Bold::Underline)
+            ForeColor = "#000000"
+            BackColor = "#dadada"
+            BorderStyle = "Fixed3D"
+            TextAlign = "MiddleCenter"
+        }
+        $CharacterNameBox = [System.Windows.Forms.TextBox] @{
+            Location = New-Object System.Drawing.Point(($CharacterNameLabel.Location.X) + 12), (($CharacterNameLabel.Location.Y) + 48) 
+            Size = New-Object System.Drawing.Size(180, 24)
+            Font = New-Object System.Drawing.Font("OpenDyslexicAlta",10,[System.Drawing.FontStyle]::Italic)
+            ForeColor = "#000000"
+            BackColor = "#dadada"
+            TabIndex = 0
+            MaxLength = 48
+            BorderStyle = "Fixed3D"
+            Text = "Characters Name" 
+            TextAlign = "Center"
         }
 
 
-    })
-#>
+
+        $CharacterPanel.Controls.AddRange(@($CharacterNameLabel, $CharacterNameBox))
+        $CharacterForm.Controls.AddRange(@($CharacterPanel))
+        [void]$CharacterForm.ShowDialog()
+        $Cleanup = @($CharacterForm, $CharacterPanel, $CharacterNameLabel, $CharacterNameBox)
+        foreach ($control in $Cleanup) {
+            $control.Dispose()
+        }
+    # ADD OTHER ELEMENTS ABOVE THIS LINE
 }
