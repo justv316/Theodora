@@ -78,7 +78,19 @@ function fnCreateNewCharacter{
         </StackPanel>
     </Grid>
 </Window>
-"@
+"@    
+function fnSubmitData{
+    $CharacterObject = [PSCustomObject]@{
+    Name = $Var_NameBox.Text
+    Profession = $Var_ProfessionBox.Text
+    Background = $Var_BackgroundBox.Text
+    }
+    $Var_Window.Close()
+}
+function fnInvalidInput{
+    [System.Windows.MessageBox]::Show("You must make valid selections!")
+}
+
     $inputXAML = $xamlFile -replace "x:Name", "Name"
     [XML]$XAML = $inputXAML
     $Reader = (New-Object System.Xml.XmlNodeReader $XAML)
@@ -89,24 +101,15 @@ function fnCreateNewCharacter{
     }catch{
     throw}
     }
-
-    $CharacterHash = @{}
-    # Forces the UI to refresh after updating 
     $Var_Window.Dispatcher.Invoke([Action] {}, [System.Windows.Threading.DispatcherPriority]::Render)
-    # Input Handling
-    function fnSubmitData{
-        $CharacterHash.Add("Name",$Var_NameBox.Text)
-        $CharacterHash.Add("Profession",$Var_ProfessionBox.Text)
-        $CharacterHash.Add("Background",$Var_BackgroundBox.Text)
-        $Var_Window.Close()
-    }
-    function fnInvalidInput{
-        [System.Windows.MessageBox]::Show("Invalid Character Name!")
-    }
+    $InvalidInput = @()
 
     $Var_SubmitButton.Add_Click({
-        if($Var_NameBox.Text -eq "Who Are You?"){fnInvalidInput}
-        else{fnSubmitData}
+        if($Var_NameBox.Text -eq "Who Are You?" -or $Var_ProfessionBox.Text -eq "What is Your Duty?" -or $Var_BackgroundBox.Text -eq "Where do You Hail?"){fnInvalidInput}
+        else{
+            fnSubmitData
+            fnSaveGame
+        }
     })
 
     # This will trigger a GameState
@@ -114,5 +117,4 @@ function fnCreateNewCharacter{
         $Var_Window.Close()
     })
     $Var_Window.ShowDialog()
-    $CharacterHash
  }

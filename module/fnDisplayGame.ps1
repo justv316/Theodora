@@ -1,4 +1,4 @@
-<# This Script controls the DisplayState of the game and works in tandem with fnGameLoop
+﻿<# This Script controls the DisplayState of the game and works in tandem with fnGameLoop
 to accurately project the game state
 
 {Write-Host "";}
@@ -76,7 +76,8 @@ function fnDisplayGame{
             MainMenuHelpThree = "║│         3 - Configure options                                              │║"
             MainMenuHelpFour = "║│         4 - Displays this                                                  │║"
             ExitBannerPreGame = "║│                            ~Thanks for playing~                            │║"
-
+            NewGameBannerOne = "║│                        A new Window has been opened                        │║"
+            NewGameBannerTwo = "║│          The game will continue here once youve made a character.          │║"
         }
         $WriteElement = {
             Write-Host $Elements.$Element -BackgroundColor $BackgroundColor -ForegroundColor $ForegroundColor;
@@ -176,6 +177,15 @@ function fnDisplayGame{
             &$fnSimpleElement InnerBoxBottom
             &$fnSimpleElement BorderBottom
         }
+        $NewGameBanner = {
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement InnerBoxTop
+            &$fnSimpleElement NewGameBannerOne
+            &$fnSimpleElement NewGameBannerTwo
+            &$fnSimpleElement HelpBoxEmpty
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderBottom
+        }
         $ComplexElements = @{
             SplashBorder = $SplashBorder
             TheodoraSplash = $TheodoraSplash
@@ -188,6 +198,7 @@ function fnDisplayGame{
             ExitBannerPreGame = $ExitBannerPreGame
             InvalidInput = $InvalidInput
             Disclaimer = $Disclaimer
+            NewGameBanner = $NewGameBanner
         }
         $WriteComplexElement = {
             &$ComplexElements.$Element
@@ -268,6 +279,6 @@ function fnDisplayGame{
     }
     if($DisplayResult -eq 2){
         fnSetConsoleWinSize -Width 80 -Height 24
-
+        &$fnComplexElement NewGameBanner
     }
 }

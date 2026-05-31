@@ -8,7 +8,11 @@ to accurately project the game state
 Common States: 
     #_0_0 - Invalid Input Error
     #_0_1 - Help Message
-    #_-1 - Game Termination  
+    #_-1 - Game Termination
+Major States:
+    0 - Splash Screen
+    1 - Main Menu
+    2 - New Game
 #>
 
 
@@ -19,7 +23,7 @@ function fnGameLoop{
         [Parameter(Mandatory=$false,Position=0)]
         [string]$State = 0
     )
-
+    #SplashScreen
     $fnState_0 = {
         $ValidInput = @("start","help","exit")
         $In = Read-Host ":"
@@ -42,13 +46,13 @@ function fnGameLoop{
         }
         
     }
-
+    # MainMenu
     $fnState_1 = {
         $ValidInput = @("1","2","3","4","help","exit")
         $In = Read-Host ":"
         if($ValidInput -Contains $In){
-            if(1..4 -eq $In){
-                &fnGameLoop 1_$In
+            if($In -eq "1"){
+                &fnGameLoop 2
             }
             elseif($In -eq "help"){
                 &fnGameLoop 1_0_1
@@ -71,8 +75,14 @@ function fnGameLoop{
         exit
     }
 
-    $ValidState_1 = @("1","1_0_0", "1_0_1")
+    #NewGame
+    $fnState_2 = {
+        fnCreateNewCharacter
+    }
+
     $ValidState_0 = @("0","0_0_0", "0_0_1", "0_0_2")
+    $ValidState_1 = @("1","1_0_0", "1_0_1")
+    $ValidState_2 = @("2")
 
     if($ValidState_0 -Contains $State){
         &fnDisplayGame $State
@@ -86,6 +96,10 @@ function fnGameLoop{
     elseif($ValidState_1 -Contains $State){
         &fnDisplayGame $State
         &$fnState_1
+    }
+    elseif($ValidState_2 -Contains $State){
+        &fnDisplayGame $State
+        &$fnState_2
     }
     else{
         Write-Host "Seemingly a critical error has occured"
