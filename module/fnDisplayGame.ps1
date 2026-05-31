@@ -78,6 +78,9 @@ function fnDisplayGame{
             ExitBannerPreGame = "║│                            ~Thanks for playing~                            │║"
             NewGameBannerOne = "║│                        A new Window has been opened                        │║"
             NewGameBannerTwo = "║│          The game will continue here once youve made a character.          │║"
+            SaveGameBannerOne = "║│                    No Save Data Found - Create it [Y/N]                    │║"
+            SaveGameBannerTwo = "║│                    Choose a slot to overwrite [1, 2, 3]                    │║"
+            SaveGameBannerThree = "║│            Choose an empty slot or a slot to overwrite [1, 2, 3]           │║"
         }
         $WriteElement = {
             Write-Host $Elements.$Element -BackgroundColor $BackgroundColor -ForegroundColor $ForegroundColor;
@@ -186,6 +189,30 @@ function fnDisplayGame{
             &$fnSimpleElement InnerBoxBottom
             &$fnSimpleElement BorderBottom
         }
+        $SaveGameBannerOne = {
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement InnerBoxTop
+            &$fnSimpleElement SaveGameBannerOne
+            &$fnSimpleElement HelpBoxEmpty
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderBottom
+        }
+        $SaveGameBannerTwo = {
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement InnerBoxTop
+            &$fnSimpleElement SaveGameBannerTwo
+            &$fnSimpleElement HelpBoxEmpty
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderBottom
+        }
+        $SaveGameBannerThree = {
+            &$fnSimpleElement BorderTop
+            &$fnSimpleElement InnerBoxTop
+            &$fnSimpleElement SaveGameBannerThree
+            &$fnSimpleElement HelpBoxEmpty
+            &$fnSimpleElement InnerBoxBottom
+            &$fnSimpleElement BorderBottom
+        }
         $ComplexElements = @{
             SplashBorder = $SplashBorder
             TheodoraSplash = $TheodoraSplash
@@ -199,6 +226,9 @@ function fnDisplayGame{
             InvalidInput = $InvalidInput
             Disclaimer = $Disclaimer
             NewGameBanner = $NewGameBanner
+            SaveGameBannerOne = $SaveGameBannerOne
+            SaveGameBannerTwo = $SaveGameBannerTwo
+            SaveGameBannerThree = $SaveGameBannerThree
         }
         $WriteComplexElement = {
             &$ComplexElements.$Element
@@ -280,5 +310,25 @@ function fnDisplayGame{
     if($DisplayResult -eq 2){
         fnSetConsoleWinSize -Width 80 -Height 24
         &$fnComplexElement NewGameBanner
+    }
+    if($DisplayResult -eq "2_1_0"){
+        fnSetConsoleWinSize -Width 80 -Height 24
+        Clear-Host
+        &$fnComplexElement SaveGameBannerOne
+    }
+    if($DisplayResult -eq "2_1_1"){
+        fnSetConsoleWinSize -Width 80 -Height 24
+        Clear-Host
+        &$fnComplexElement SaveGameBannerTwo
+    }
+    if($DisplayResult -eq "2_1_2"){
+        fnSetConsoleWinSize -Width 80 -Height 24
+        Clear-Host
+        &$fnComplexElement SaveGameBannerThree
+    }
+    if($DisplayResult -eq "2_0_0"){
+        fnSetConsoleWinSize -Width 80 -Height 24
+        Clear-Host
+        &$fnComplexElement InvalidInput
     }
 }

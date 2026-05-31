@@ -77,12 +77,45 @@ function fnGameLoop{
 
     #NewGame
     $fnState_2 = {
-        fnCreateNewCharacter
+        if($State -eq "2"){
+            &fnCreateNewCharacter
+        }
+        elseif($State -eq "2_1_0"){
+            $ValidInput = @("Y","N")
+            $In = Read-Host ":"
+            if($ValidInput -Contains $In){
+                if($In -eq "Y"){
+                    &fnSaveGame New
+                }
+                elseif($In -eq "N"){
+                    &$fnGameLoop 1
+                }
+                else{
+                    &fnGameLoop 2_0_0
+                }
+            }
+        }
+        elseif($State -eq "2_1_1"){
+            $ValidInput = @("1","2","3","exit")
+            $In = Read-Host "2_1_1:"
+
+        }
+        elseif($State -eq "2_1_2"){
+            $ValidInput = @("1","2","3","exit")
+            $In = Read-Host "2_1_2:"
+
+        }
+    }
+
+    $fnState_3 = {
+        $ValidInput = @("Y","N")
+        $In = Read-Host "3:"
     }
 
     $ValidState_0 = @("0","0_0_0", "0_0_1", "0_0_2")
     $ValidState_1 = @("1","1_0_0", "1_0_1")
-    $ValidState_2 = @("2")
+    $ValidState_2 = @("2", "2_1", "2_1_0", "2_1_1","2_1_2","2_0_0")
+    $ValidState_3 = @("3")
 
     if($ValidState_0 -Contains $State){
         &fnDisplayGame $State
@@ -100,6 +133,10 @@ function fnGameLoop{
     elseif($ValidState_2 -Contains $State){
         &fnDisplayGame $State
         &$fnState_2
+    }
+    elseif($ValidState_3 -Contains $State){
+        &fnDisplayGame $State
+        &$fnState_3
     }
     else{
         Write-Host "Seemingly a critical error has occured"

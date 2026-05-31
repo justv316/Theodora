@@ -79,13 +79,15 @@ function fnCreateNewCharacter{
     </Grid>
 </Window>
 "@    
-function fnSubmitData{
+$fnSubmitData = {
     $CharacterObject = [PSCustomObject]@{
     Name = $Var_NameBox.Text
     Profession = $Var_ProfessionBox.Text
     Background = $Var_BackgroundBox.Text
     }
+    $ExportData += $CharacterObject
     $Var_Window.Close()
+    &fnBuildSavArr
 }
 function fnInvalidInput{
     [System.Windows.MessageBox]::Show("You must make valid selections!")
@@ -102,17 +104,17 @@ function fnInvalidInput{
     throw}
     }
     $Var_Window.Dispatcher.Invoke([Action] {}, [System.Windows.Threading.DispatcherPriority]::Render)
-    $InvalidInput = @()
+    $ExportData = @()
 
     $Var_SubmitButton.Add_Click({
-        if($Var_NameBox.Text -eq "Who Are You?" -or $Var_ProfessionBox.Text -eq "What is Your Duty?" -or $Var_BackgroundBox.Text -eq "Where do You Hail?"){fnInvalidInput}
+        if($Var_NameBox.Text -eq "Who Are You?" -or $Var_ProfessionBox.Text -eq "What is Your Duty?" -or $Var_BackgroundBox.Text -eq "Where do You Hail?"){
+            &fnInvalidInput
+        }
         else{
-            fnSubmitData
-            fnSaveGame
+            &$fnSubmitData
         }
     })
 
-    # This will trigger a GameState
     $Var_CancelButton.Add_Click({
         $Var_Window.Close()
     })
