@@ -87,7 +87,7 @@ $fnSubmitData = {
     }
     $ExportData += $CharacterObject
     $Var_Window.Close()
-    &fnBuildSavArr
+    &fnBuildSavArr Save
 }
 function fnInvalidInput{
     [System.Windows.MessageBox]::Show("You must make valid selections!")

@@ -79,8 +79,8 @@ function fnDisplayGame{
             NewGameBannerOne = "║│                        A new Window has been opened                        │║"
             NewGameBannerTwo = "║│          The game will continue here once youve made a character.          │║"
             SaveGameBannerOne = "║│                    No Save Data Found - Create it [Y/N]                    │║"
-            SaveGameBannerTwo = "║│                    Choose a slot to overwrite [1, 2, 3]                    │║"
-            SaveGameBannerThree = "║│            Choose an empty slot or a slot to overwrite [1, 2, 3]           │║"
+            SaveGameBannerTwo = "║│            Choose an empty slot or a slot to overwrite [1, 2, 3]           │║"
+            SaveGameBannerThree = "║│                    Choose a slot to overwrite [1, 2, 3]                    │║"
         }
         $WriteElement = {
             Write-Host $Elements.$Element -BackgroundColor $BackgroundColor -ForegroundColor $ForegroundColor;
@@ -320,11 +320,13 @@ function fnDisplayGame{
         fnSetConsoleWinSize -Width 80 -Height 24
         Clear-Host
         &$fnComplexElement SaveGameBannerTwo
+        &fnBuildSavArr List
     }
     if($DisplayResult -eq "2_1_2"){
         fnSetConsoleWinSize -Width 80 -Height 24
         Clear-Host
         &$fnComplexElement SaveGameBannerThree
+        &fnBuildSavArr List
     }
     if($DisplayResult -eq "2_0_0"){
         fnSetConsoleWinSize -Width 80 -Height 24

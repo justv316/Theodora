@@ -75,20 +75,23 @@ function fnGameLoop{
         exit
     }
 
-    #NewGame
+    #NewGameSaveLoad
     $fnState_2 = {
         if($State -eq "2"){
             &fnCreateNewCharacter
         }
         elseif($State -eq "2_1_0"){
-            $ValidInput = @("Y","N")
+            $ValidInput = @("Y","N","exit")
             $In = Read-Host ":"
             if($ValidInput -Contains $In){
                 if($In -eq "Y"){
-                    &fnSaveGame New
+                    &fnWriteSave 1
                 }
                 elseif($In -eq "N"){
                     &$fnGameLoop 1
+                }
+                elseif($In -eq "Exit"){
+                    &fnGameLoop 0_0_2
                 }
                 else{
                     &fnGameLoop 2_0_0
@@ -98,6 +101,17 @@ function fnGameLoop{
         elseif($State -eq "2_1_1"){
             $ValidInput = @("1","2","3","exit")
             $In = Read-Host "2_1_1:"
+            if($ValidInput -Contains $In){
+                if(1..3 -eq $In){
+                    &fnWriteSave $In
+                }
+                elseif($In -eq "Exit"){
+                    &fnGameLoop 0_0_2
+                }
+                else{
+                    &fnGameLoop 2_0_0
+                }
+            }
 
         }
         elseif($State -eq "2_1_2"){
