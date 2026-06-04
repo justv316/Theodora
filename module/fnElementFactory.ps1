@@ -5,14 +5,7 @@
     Author: Joakim Borger Svendsen WriteAscii Module
     Without you this would have sucked so much more to write
 #>
-Function fnCharacterXML {
-    $CharacterFile = 'E:\Documents\GitHub\PSGame\Theodora\module\characters.xml'
-    $CharXml = [xml] (Get-Content $CharacterFile)
-    $Characters = @{}
-    $CharXml.Chars.Char | ForEach-Object {
-        $Characters[$($_.Name)] = $_.Data
-    }
-}
+
 function fnElementFactory{
     [CmdletBinding()]
     param(
@@ -37,8 +30,10 @@ function fnElementFactory{
         [String] $Justification = "Center",
         [ValidateSet("DoubleSingle", "Double")]
         [String] $BorderType = "DoubleSingle",
-        [Int]$EnforcedStringLength = 80,
-        [Int]$MinimumPaddingLength = 4
+        [Int]$EnforcedMaxLength = 80,
+        [Int]$MinimumPaddingLength = 4,
+        [Int]$LineCount = 1,
+        [String] $Padding = " "
     )
 <#
     This script will produce elements that will be printed to the screen using a set of basic characters.
@@ -46,7 +41,6 @@ function fnElementFactory{
     ManualFormatting - Index number[0-79]: Which characters formatting should be changed."Example: -ind 1 fg red bg cyan -ind 5 fg green bg white"
     #>
 
-    #Build the Character Hash if it hasn't been done yet.
     $fnManualFormat = {
         param(
             [String]$StringToArr
@@ -93,8 +87,15 @@ function fnElementFactory{
             Write-Host "`r`n"
         }
     }
+    
+    #Build the Character Hash if it hasn't been done yet.
     if($CharXML -eq "" -or $null -eq $CharXML){
-        fnCharacterXML
+        $CharacterFile = 'E:\Documents\GitHub\PSGame\Theodora\module\characters.xml'
+        $CharXml = [xml] (Get-Content $CharacterFile)
+        $Characters = @{}
+        $CharXml.Chars.Char | ForEach-Object {
+            $Characters[$($_.Name)] = $_.Data
+        }
     }
     if($Border){
         if($BorderType -eq "Double"){
@@ -107,8 +108,10 @@ function fnElementFactory{
             $HorizontalBorder = $Characters.DoubleHorizontal
         }
         elseif($BorderType -eq "DoubleSingle"){
-            $LeftBorder = $Characters.DoubleVertical + $Characters.SingleVertical
-            $RightBorder = $Characters.SingleVertical + $Characters.DoubleVertical
+            $OuterBorder = $Characters.DoubleVertical
+            $InnerBorder = $Characters.SignalVertical
+            $LeftBorder = $OuterBorder + $InnerBorder
+            $RightBorder = $InnerBorder + $OuterBorder
             $TopBorderLC = $Characters.DoubleTopLeftCorner
             $TopBorderRC = $Characters.DoubleTopRightCorner
             $BottomBorderLC = $Characters.DoubleBottomLeftCorner
@@ -121,40 +124,56 @@ function fnElementFactory{
             $InnerHorizontalBorder = $Characters.SingleHorizontal
         }
     }
+    elseif($Border -eq $False){
+        $LeftBorder = ""
+        $RightBorder = ""
+    }
     if($Box){
         if($BorderType -eq "DoubleSingle"){
-            $TopBorder = $TopBorderLC + (($HorizontalBorder)*($EnforcedStringLength-2)) + $TopBorderRC
-            $BottomBorder = $BottomBorderLC + (($HorizontalBorder)*($EnforcedStringLength-2)) + $BottomBorderRC
-            $InnerTopBorder = $InnerTopBorderLC + (($InnerHorizontalBorder)*($EnforcedStringLength-2)) + $InnerTopBorderRC
-            $InnerBottomBorder = $InnerBottomBorderLC + (($InnerHorizontalBorder)*($EnforcedStringLength-2)) + $InnerBottomBorderRC
+            $TopBorder = $TopBorderLC + (($HorizontalBorder)*($EnforcedMaxLength-2)) + $TopBorderRC
+            $BottomBorder = $BottomBorderLC + (($HorizontalBorder)*($EnforcedMaxLength-2)) + $BottomBorderRC
+            $InnerTopBorder = $OuterBorder + $InnerTopBorderLC + (($InnerHorizontalBorder)*($EnforcedMaxLength-4)) + $InnerTopBorderRC + $OuterBorder
+            $InnerBottomBorder = $OuterBorder + $InnerBottomBorderLC + (($InnerHorizontalBorder)*($EnforcedMaxLength-4)) + $InnerBottomBorderRC + $OuterBorder
         }
         else{
-            $TopBorder = $TopBorderLC + (($HorizontalBorder)*($EnforcedStringLength-2)) + $TopBorderRC
-            $BottomBorder = $BottomBorderLC + (($HorizontalBorder)*($EnforcedStringLength-2)) + $BottomBorderRC
+            $TopBorder = $TopBorderLC + (($HorizontalBorder)*($EnforcedMaxLength-2)) + $TopBorderRC
+            $BottomBorder = $BottomBorderLC + (($HorizontalBorder)*($EnforcedMaxLength-2)) + $BottomBorderRC
         }
     }
-
-
-
     if($BuildType -eq "String"){
-        $InputLength = $InputString.Length
+        $InputLength = $InputString.Length        
+        $LineHash = @{}
+        $PerceivedStringMax = $EnforcedMaxLength - ($MinimumPaddingLength*2) - ($LeftBorder.Length + $RightBorder.Length)
+        if($InputLength -gt $PerceivedStringMax){
+            $LinesNeeded = [Math]::Ceiling($InputLength / $PerceivedStringMax)
+            if($LinesNeeded -gt 1){
+                $Counter = 1
+                $NextStringIndex = 0
+                while($Counter -le $LinesNeeded){
+                    $LineHash.$Counter = $InputString.Substring($NextStringIndex,($PerceivedStringMax))
+                    $NextStringIndex = $NextStringIndex+1+$PerceivedStringMax
+                    $Counter++
+                }
+            }
+        }
+
         if($Justification -eq "Center"){
-            $LeftPaddingRequired = (($EnforcedStringLength / 2) - ($InputLength / 2) - $LeftBorder.Length)
-            $RightPaddingRequired = (($EnforcedStringLength / 2) - ($InputLength / 2) - $RightBorder.Length)
+            $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($InputLength / 2) - $LeftBorder.Length)
+            $RightPaddingRequired = (($EnforcedMaxLength / 2) - ($InputLength / 2) - $RightBorder.Length)
             $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
             $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
         }
         elseif($Justification -eq "Left"){
             $LeftPaddingRequired = $MinimumPaddingLength
-            $RightPaddingRequired = (($EnforcedStringLength - $InputLength) - ($RightBorder.Length + $LeftBorder.Length)) - $LeftPaddingRequired
+            $RightPaddingRequired = (($EnforcedMaxLength - $InputLength) - ($RightBorder.Length + $LeftBorder.Length)) - $LeftPaddingRequired
         }
         elseif($Justification -eq "Right"){
             $RightPaddingRequired = $MinimumPaddingLength
-            $LeftPaddingRequired = (($EnforcedStringLength - $InputLength) - ($RightBorder.Length + $LeftBorder.Length)) - $RightPaddingRequired
+            $LeftPaddingRequired = (($EnforcedMaxLength - $InputLength) - ($RightBorder.Length + $LeftBorder.Length)) - $RightPaddingRequired
         }
-        $LeftPadding = $Basics.Padding*($LeftPaddingRequired)
+        $LeftPadding = ($Padding)*($LeftPaddingRequired)
         $LeftPadding = $LeftBorder + $LeftPadding
-        $RightPadding = $Basics.Padding*($RightPaddingRequired)
+        $RightPadding = ($Padding)*($RightPaddingRequired)
         $RightPadding = $RightPadding + $RightBorder
         if($Manual){
             if($Box){

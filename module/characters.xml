@@ -1,9 +1,5 @@
 ﻿<chars>
     <char>
-        <name>padding</name>
-        <data> </data>
-    </char>
-    <char>
         <name>DoubleVertical</name>
         <data>║</data>
     </char>
