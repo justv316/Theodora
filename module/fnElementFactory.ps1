@@ -13,7 +13,7 @@ function fnElementFactory{
         [ValidateSet("String")]
         [String]$BuildType,
         [Parameter(Mandatory=$False)]
-        [String]$InputString,
+        [String]$InputString = "",
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
         [String] $TextForegroundColor = 'White',
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
@@ -84,7 +84,7 @@ function fnElementFactory{
             $Counter++
         }
         if($Counter -eq $LetterArr.Count){
-            Write-Host "`r`n"
+            Write-Host "`r"
         }
     }
     
@@ -135,63 +135,81 @@ function fnElementFactory{
             $InnerTopBorder = $OuterBorder + $InnerTopBorderLC + (($InnerHorizontalBorder)*($EnforcedMaxLength-4)) + $InnerTopBorderRC + $OuterBorder
             $InnerBottomBorder = $OuterBorder + $InnerBottomBorderLC + (($InnerHorizontalBorder)*($EnforcedMaxLength-4)) + $InnerBottomBorderRC + $OuterBorder
         }
-        else{
+        elseif($BorderType -eq "Double"){
             $TopBorder = $TopBorderLC + (($HorizontalBorder)*($EnforcedMaxLength-2)) + $TopBorderRC
             $BottomBorder = $BottomBorderLC + (($HorizontalBorder)*($EnforcedMaxLength-2)) + $BottomBorderRC
         }
     }
     if($BuildType -eq "String"){
-        $InputLength = $InputString.Length        
+        $InputLength = $InputString.Length
         $LineHash = @{}
         $PerceivedStringMax = $EnforcedMaxLength - ($MinimumPaddingLength*2) - ($LeftBorder.Length + $RightBorder.Length)
-        if($InputLength -gt $PerceivedStringMax){
-            $LinesNeeded = [Math]::Ceiling($InputLength / $PerceivedStringMax)
-            if($LinesNeeded -gt 1){
-                $Counter = 1
-                $NextStringIndex = 0
-                while($Counter -le $LinesNeeded){
-                    $LineHash.$Counter = $InputString.Substring($NextStringIndex,($PerceivedStringMax))
-                    $NextStringIndex = $NextStringIndex+1+$PerceivedStringMax
-                    $Counter++
-                }
+        $LinesNeeded = [Math]::Ceiling($InputLength / $PerceivedStringMax)
+        $Counter = 1
+        $NextStringIndex = 0
+        while($Counter -le $LinesNeeded){
+            try{
+                $LineHash.$Counter = $InputString.Substring($NextStringIndex,($PerceivedStringMax))
+            }
+            catch{
+                $LineHash.$Counter = $InputString.Substring($NextStringIndex)
+            }
+            finally{
+                $NextStringIndex = $NextStringIndex+$PerceivedStringMax
+                $Counter++
             }
         }
-
-        if($Justification -eq "Center"){
-            $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($InputLength / 2) - $LeftBorder.Length)
-            $RightPaddingRequired = (($EnforcedMaxLength / 2) - ($InputLength / 2) - $RightBorder.Length)
-            $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
-            $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
+        $ReversedLineHash = [Ordered] @{}
+        Foreach ($Key in $LineHash.Keys){
+            $ReversedLineHash.Insert(0, $Key, $LineHash[$Key])
         }
-        elseif($Justification -eq "Left"){
-            $LeftPaddingRequired = $MinimumPaddingLength
-            $RightPaddingRequired = (($EnforcedMaxLength - $InputLength) - ($RightBorder.Length + $LeftBorder.Length)) - $LeftPaddingRequired
+        $StringHash = [Ordered] @{}
+        Foreach ($Key in $ReversedLineHash.Keys){
+            $SubStringLength = $ReversedLineHash.$Key.Length
+            if($Justification -eq "Center"){
+                $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($SubStringLength / 2) - $LeftBorder.Length)
+                $RightPaddingRequired = (($EnforcedMaxLength / 2) - ($SubStringLength / 2) - $RightBorder.Length)
+                $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
+                $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
+            }
+            elseif($Justification -eq "Left"){
+                $LeftPaddingRequired = $MinimumPaddingLength
+                $RightPaddingRequired = (($EnforcedMaxLength - $SubStringLength) - ($RightBorder.Length + $LeftBorder.Length)) - $LeftPaddingRequired
+            }
+            elseif($Justification -eq "Right"){
+                $RightPaddingRequired = $MinimumPaddingLength
+                $LeftPaddingRequired = (($EnforcedMaxLength - $SubStringLength) - ($RightBorder.Length + $LeftBorder.Length)) - $RightPaddingRequired
+            }
+            $LeftPadding = ($Padding)*($LeftPaddingRequired)
+            $LeftPadding = $LeftBorder + $LeftPadding
+            $RightPadding = ($Padding)*($RightPaddingRequired)
+            $RightPadding = $RightPadding + $RightBorder
+            $PaddedString = "$LeftPadding"+$ReversedLineHash.$Key+"$RightPadding"
+            $StringHash.Add("$Key","$PaddedString")
         }
-        elseif($Justification -eq "Right"){
-            $RightPaddingRequired = $MinimumPaddingLength
-            $LeftPaddingRequired = (($EnforcedMaxLength - $InputLength) - ($RightBorder.Length + $LeftBorder.Length)) - $RightPaddingRequired
-        }
-        $LeftPadding = ($Padding)*($LeftPaddingRequired)
-        $LeftPadding = $LeftBorder + $LeftPadding
-        $RightPadding = ($Padding)*($RightPaddingRequired)
-        $RightPadding = $RightPadding + $RightBorder
-        if($Manual){
+        if($ManualFormatting -ne "" -or $null -ne $ManualFormatting){
             if($Box){
                 if($BorderType -eq "DoubleSingle"){
                     Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $InnerTopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    &$fnManualFormat -StringToArr "$LeftPadding$InputString$RightPadding"
+                    Foreach($String in $StringHash.Keys){
+                        &$fnManualFormat -StringToArr $StringHash.$String
+                    }
                     Write-Host $InnerBottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                 }
-                else{
+                elseif($BorderType -eq "Double"){
                     Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    &$fnManualFormat -StringToArr "$LeftPadding$InputString$RightPadding"
+                    Foreach($String in $StringHash.Keys){
+                        &$fnManualFormat -StringToArr $StringHash.$String
+                    }
                     Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                 }
             }
             else{
-                &$fnManualFormat -StringToArr "$LeftPadding$InputString$RightPadding"
+                Foreach($String in $StringHash.Keys){
+                        &$fnManualFormat -StringToArr $StringHash.$String
+                    }
             }
         }
         else{
@@ -199,24 +217,24 @@ function fnElementFactory{
                 if($BorderType -eq "DoubleSingle"){
                     Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $InnerTopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    Write-Host $LeftPadding -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor -NoNewline
-                    Write-Host $InputString -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor -NoNewline
-                    Write-Host $RightPadding -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                    Foreach($String in $StringHash.Keys){
+                        Write-Host $StringHash.$String -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                    }
                     Write-Host $InnerBottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                 }
-                else{
+                elseif($BorderType -eq "Double"){
                     Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    Write-Host $LeftPadding -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor -NoNewline
-                    Write-Host $InputString -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor -NoNewline
-                    Write-Host $RightPadding -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                    Foreach($String in $StringHash.Keys){
+                        Write-Host $StringHash.$String -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                    }
                     Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                 }
             }
             else{
-                Write-Host $LeftPadding -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor -NoNewline
-                Write-Host $InputString -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor -NoNewline
-                Write-Host $RightPadding -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                Foreach($String in $StringHash.Keys){
+                    Write-Host $StringHash.$String -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                }
             }
         }
     }
