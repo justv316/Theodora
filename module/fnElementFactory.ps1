@@ -25,7 +25,7 @@ function fnElementFactory{
         [Switch] $Manual,
         [Switch] $Box,
         [Switch] $Border,
-        [String] $ManualFormatting,
+        [String] $ManualFormatting = "",
         [ValidateSet("Center","Left","Right")]
         [String] $Justification = "Center",
         [ValidateSet("DoubleSingle", "Double")]
@@ -41,45 +41,15 @@ function fnElementFactory{
     ManualFormatting - Index number[0-79]: Which characters formatting should be changed."Example: -ind 1 fg red bg cyan -ind 5 fg green bg white"
     #>
 
-    $fnManualFormat = {
+    $fnWriteManual = {
         param(
             [String]$StringToArr
         )
         $LetterArr = @()
+        $Counter = 0
         [Char[]]$StringToArr | Foreach-Object {
             $LetterArr += $_
         }
-        [System.Collections.ArrayList]$FormatArr = $ManualFormatting.Split("-")
-        if($FormatArr[0] -eq ""){
-            $FormatArr.RemoveAt(0)
-        }
-        #Turn the Format String into a modified write-host command
-        $ModifiedIndex = @()
-        $ModifiedLine = @()
-        $FormatArr | ForEach-Object{
-            $String = $_
-            $LineRegex = '\bline\b\s(\d+)'
-            $Matches = $null
-            if($String -match $LineRegex){
-                $ManualLine = $Matches[0]
-            }
-            $IndexRegex = '(\d+)'
-            $Matches = $null
-            $String -match $IndexRegex | Out-Null
-            $Index = $Matches[0] -as [Int]
-            $FGRegex = '\bfg\b\s([A-Za-z]+)'
-            $Matches = $null
-            $String -match $FGRegex | Out-Null
-            $FG = $Matches[1]
-            $BGRegex = '\bbg\b\s([A-Za-z]+)'
-            $Matches = $null
-            $String -match $BGRegex | Out-Null
-            $BG = $Matches[1]
-            Set-Variable -Name "write_$($Index)" -Value "Write-Host `$LetterArr[$($Index)] -ForegroundColor $($FG) -BackgroundColor $($BG) -NoNewLine"
-            $ModifiedIndex += $Index
-            $ModifiedLine += $ManualLine
-        }
-        $Counter = 0
         $LetterArr | Foreach-Object {
             if($ModifiedIndex -Contains $Counter){
                 $Expression = "`$Write_"+"$Counter"
@@ -195,12 +165,50 @@ function fnElementFactory{
             $StringHash.Add("$Key","$PaddedString")
         }
         if($Manual){
+            $FormatArr = @()
+            [System.Collections.ArrayList]$FormatArr = $ManualFormatting.Split("-")
+            if($FormatArr[0] -eq ""){
+                $FormatArr.RemoveAt(0)
+            }
+            #Turn the Format String into a modified write-host command
+            $ModifiedIndex = @()
+            $ModifiedLine = @()
+            $FormatArr | ForEach-Object{
+                $String = $_
+                $IndexRegex = '\bind\b\s(\d+)'
+                $LineRegex = '\bline\b\s(\d+)'
+                $FGRegex = '\bfg\b\s([A-Za-z]+)'
+                $BGRegex = '\bbg\b\s([A-Za-z]+)'
+                $Matches = $null
+                if($String -match $LineRegex){
+                    $String -match $LineRegex | Out-Null
+                    $ManualLine = $Matches[1] -as [Int]
+                    $ModifiedLine += $ManualLine
+                }
+                $Matches = $null
+                if($String -Match $IndexRegex){
+                    $String -match $IndexRegex | Out-Null
+                    $Index = $Matches[1] -as [Int]
+                    $ModifiedIndex += $Index
+                }
+                $Matches = $null
+                if($String -match $FGRegex){
+                    $String -match $FGRegex | Out-Null
+                    $FG = $Matches[1]
+                }
+                $Matches = $null
+                if($String -match $BGRegex){
+                    $String -match $BGRegex | Out-Null
+                    $BG = $Matches[1]
+                }
+                Set-Variable -Name "write_$($Index)" -Value "Write-Host `$LetterArr[$($Index)] -ForegroundColor $($FG) -BackgroundColor $($BG) -NoNewLine"
+            }
             if($Box){
                 if($BorderType -eq "DoubleSingle"){
                     Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $InnerTopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Foreach($String in $StringHash.Keys){
-                        &$fnManualFormat -StringToArr $StringHash.$String
+                        &$fnWriteManual -StringToArr $StringHash.$String
                     }
                     Write-Host $InnerBottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
@@ -210,27 +218,41 @@ function fnElementFactory{
                     $BorderLines = 2
                     $FinalLinesNeeded = $LinesNeeded + $BorderLines
                     while($Counter -le $FinalLinesNeeded){
-                        if($ModifiedLine -Contains $Counter){
-                            if($Counter -eq 1){
-                                &$fnManualFormat -StringToArr $TopBorder
+                        if($ModifiedLine.Count -gt 0){
+                            if($ModifiedLine -Contains $Counter){
+                                if($Counter -eq 1){
+                                    &$fnWriteManual -StringToArr $TopBorder
+                                }
+                                elseif($Counter -ne 1 -and $Counter -ne $FinalLinesNeeded){
+                                    &$fnWriteManual -StringToArr $StringHash["$Counter"-"$BorderLines"]
+                                }
+                                elseif($Counter -eq $FinalLinesNeeded){
+                                    &$fnWriteManual -StringToArr $BottomBorder
+                                }
+                                $Counter++
                             }
-                            elseif($Counter -ne 1 -and $Counter -ne $FinalLinesNeeded){
-                                &$fnManualFormat -StringToArr $StringHash["$Counter"-"$BorderLines"]
+                            else{
+                                if($Counter -eq 1){
+                                    Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                                }
+                                elseif($Counter -ne 1 -and $Counter -ne $FinalLinesNeeded){
+                                    Write-Host $StringHash["$Counter"-"$BorderLines"] -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                                }
+                                elseif($Counter -eq $FinalLinesNeeded){
+                                    Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                                }
+                                $Counter++
                             }
-                            elseif($Counter -eq $FinalLinesNeeded){
-                                &$fnManualFormat -StringToArr $BottomBorder
-                            }
-                            $Counter++
                         }
                         else{
                             if($Counter -eq 1){
-                                &$fnManualFormat -StringToArr $TopBorder
+                                &$fnWriteManual -StringToArr $TopBorder
                             }
                             elseif($Counter -ne 1 -and $Counter -ne $FinalLinesNeeded){
-                                &$fnManualFormat -StringToArr $StringHash["$Counter"-"$BorderLines"]
+                                &$fnWriteManual -StringToArr $StringHash["$Counter"-"$BorderLines"]
                             }
                             elseif($Counter -eq $FinalLinesNeeded){
-                                &$fnManualFormat -StringToArr $BottomBorder
+                                &$fnWriteManual -StringToArr $BottomBorder
                             }
                             $Counter++
                         }
@@ -239,7 +261,7 @@ function fnElementFactory{
             }
             else{
                 Foreach($String in $StringHash.Keys){
-                    &$fnManualFormat -StringToArr $StringHash.$String
+                    &$fnWriteManual -StringToArr $StringHash.$String
                 }
             }
         }
