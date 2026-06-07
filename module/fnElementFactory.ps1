@@ -36,22 +36,32 @@ function fnElementFactory{
         [String] $Padding = " "
     )
 <#
+    .SYNOPSIS
     This script will produce elements that will be printed to the screen using a set of basic characters.
-    Parameter InputString - The String to be printed surrounded by a border
-    ManualFormatting - Index number[0-79]: Which characters formatting should be changed."Example: -ind 1 fg red bg cyan -ind 5 fg green bg white"
-    #>
+    .PARAMETERS
+    (String) InputString - The string to be printed
+    (String) BuildType - What structure should be produced (String)
+    (Bool) Box - Draws a Box (Requires Border)
+    (Bool) Border - Draws a Border
+    (String) BorderType - What border should be produced (Default: DoubleSingle, Double)
+    (String) Justification - Justifies the text (Default: Center, Left, Right)
+    (Int) EnforcedMaxLength - The max length of a string (Default: 80)
+    (Int) MinimumPaddingLength - The minimum amount of padding to be added to each side of a string (Default: 4)
+    (Int) LineCount - How many lines should the text be printed to [Needs to be designed, apparently]
+    (String) Padding - The character used for padding (Default: Space)
+    (Bool) Manual - Enables manual Formatting, requires ManualFormatting
+    (String) ManualFormatting
+        Order of Parameters does not matter
+        "Example: -ind 1 fg red bg cyan -line 1 ind 5 fg green bg white"
+        Ind [0-79]: Which characters formatting should be changed.
+        Line - Which Line number should be selected
+        FG - ForegroundColor
+        BG - BackgroundColor
+#>
 
     $fnWriteManual = {
         param(
-            [String]$StringToArr,
-            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
-            [String] $TextForegroundColor = 'White',
-            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
-            [String] $TextBackgroundColor = 'Black',
-            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
-            [String] $BorderForegroundColor = 'White',
-            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
-            [String] $BorderBackgroundColor = 'Black'
+            [String]$StringToArr
         )
         $LetterArr = @()
         $Counter = 0
