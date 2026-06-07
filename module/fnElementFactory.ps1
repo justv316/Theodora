@@ -43,7 +43,15 @@ function fnElementFactory{
 
     $fnWriteManual = {
         param(
-            [String]$StringToArr
+            [String]$StringToArr,
+            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+            [String] $TextForegroundColor = 'White',
+            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+            [String] $TextBackgroundColor = 'Black',
+            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+            [String] $BorderForegroundColor = 'White',
+            [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+            [String] $BorderBackgroundColor = 'Black'
         )
         $LetterArr = @()
         $Counter = 0
@@ -86,7 +94,7 @@ function fnElementFactory{
         }
         elseif($BorderType -eq "DoubleSingle"){
             $OuterBorder = $Characters.DoubleVertical
-            $InnerBorder = $Characters.SignalVertical
+            $InnerBorder = $Characters.SingleVertical
             $LeftBorder = $OuterBorder + $InnerBorder
             $RightBorder = $InnerBorder + $OuterBorder
             $TopBorderLC = $Characters.DoubleTopLeftCorner
@@ -119,7 +127,10 @@ function fnElementFactory{
     }
     if($BuildType -eq "String"){
         $InputLength = $InputString.Length
+        $StringHash = [Ordered] @{}
         $LineHash = @{}
+        $ReversedLineHash = [Ordered] @{}
+        $StringArr=@()
         $PerceivedStringMax = $EnforcedMaxLength - ($MinimumPaddingLength*2) - ($LeftBorder.Length + $RightBorder.Length)
         $LinesNeeded = [Math]::Ceiling($InputLength / $PerceivedStringMax)
         $Counter = 1
@@ -136,11 +147,9 @@ function fnElementFactory{
                 $Counter++
             }
         }
-        $ReversedLineHash = [Ordered] @{}
         Foreach ($Key in $LineHash.Keys){
             $ReversedLineHash.Insert(0, $Key, $LineHash[$Key])
         }
-        $StringHash = [Ordered] @{}
         Foreach ($Key in $ReversedLineHash.Keys){
             $SubStringLength = $ReversedLineHash.$Key.Length
             if($Justification -eq "Center"){
@@ -161,8 +170,15 @@ function fnElementFactory{
             $LeftPadding = $LeftBorder + $LeftPadding
             $RightPadding = ($Padding)*($RightPaddingRequired)
             $RightPadding = $RightPadding + $RightBorder
-            $PaddedString = "$LeftPadding"+$ReversedLineHash.$Key+"$RightPadding"
-            $StringHash.Add("$Key","$PaddedString")
+            if($Manual){
+                $PaddedString = "$LeftPadding"+$ReversedLineHash.$Key+"$RightPadding"
+                $StringHash.Add("$Key","$PaddedString")
+            }
+            else{
+                $StringArr += $LeftPadding
+                $StringArr += $ReversedLineHash.$Key
+                $StringArr += $RightPadding
+            }
         }
         if($Manual){
             $FormatArr = @()
@@ -205,13 +221,67 @@ function fnElementFactory{
             }
             if($Box){
                 if($BorderType -eq "DoubleSingle"){
-                    Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    Write-Host $InnerTopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    Foreach($String in $StringHash.Keys){
-                        &$fnWriteManual -StringToArr $StringHash.$String
+                    $Counter = 1
+                    $BorderLines = 4
+                    $FinalLinesNeeded = $LinesNeeded + $BorderLines
+                    while($Counter -le $FinalLinesNeeded){
+                        if($ModifiedLine.Count -gt 0){
+                            if($ModifiedLine -Contains $Counter){
+                                if($Counter -eq 1){
+                                    &$fnWriteManual -StringToArr $TopBorder
+                                }
+                                elseif($Counter -eq 2){
+                                    &$fnWriteManual -StringToArr $InnerTopBorder
+                                }
+                                elseif($Counter -gt 2 -and $Counter -ne $FinalLinesNeeded){
+                                    &$fnWriteManual -StringToArr $StringHash["$Counter"-"$BorderLines"]
+                                }
+                                elseif($Counter -eq $FinalLinesNeeded-1){
+                                    &$fnWriteManual -StringToArr $InnerBottomBorder
+                                }
+                                elseif($Counter -eq $FinalLinesNeeded){
+                                    &$fnWriteManual -StringToArr $BottomBorder
+                                }
+                                $Counter++
+                            }
+                            else{
+                                if($Counter -eq 1){
+                                    Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                                }
+                                elseif($Counter -eq 2){
+                                    Write-Host $InnerTopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                                }
+                                elseif($Counter -gt 2 -and $Counter -ne $FinalLinesNeeded){
+                                    Write-Host $StringHash["$Counter"-"$BorderLines"] -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                                }
+                                elseif($Counter -eq $FinalLinesNeeded-1){
+                                    Write-Host $InnerBottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                                }
+                                elseif($Counter -eq $FinalLinesNeeded){
+                                    Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                                }
+                                $Counter++
+                            }
+                        }
+                        else{
+                            if($Counter -eq 1){
+                                &$fnWriteManual -StringToArr $TopBorder
+                            }
+                            elseif($Counter -eq 2){
+                                &$fnWriteManual -StringToArr $InnerTopBorder
+                            }
+                            elseif($Counter -gt 2 -and $Counter -ne $FinalLinesNeeded){
+                                &$fnWriteManual -StringToArr $StringHash["$Counter"-"$BorderLines"]
+                            }
+                            elseif($Counter -eq $FinalLinesNeeded-1){
+                                &$fnWriteManual -StringToArr $InnerBottomBorder
+                            }
+                            elseif($Counter -eq $FinalLinesNeeded){
+                                &$fnWriteManual -StringToArr $BottomBorder
+                            }
+                            $Counter++
+                        }
                     }
-                    Write-Host $InnerBottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                 }
                 elseif($BorderType -eq "Double"){
                     $Counter = 1
@@ -270,23 +340,80 @@ function fnElementFactory{
                 if($BorderType -eq "DoubleSingle"){
                     Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $InnerTopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    Foreach($String in $StringHash.Keys){
-                        Write-Host $StringHash.$String -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                    $Counter = 1
+                    $Counter2 = 0
+                    while($Counter -le 3){
+                        if($Counter2 -le $StringArr.Count - 1){
+                            if($Counter -eq 1){
+                                $Counter++
+                                Write-Host $StringArr[$Counter2] -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor -NoNewline
+                            }
+                            elseif($Counter -eq 2){
+                                $Counter++
+                                Write-Host $StringArr[$Counter2] -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor -NoNewline
+                            }
+                            elseif($Counter -eq 3){
+                                $Counter = 1
+                                Write-Host $StringArr[$Counter2] -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                            }
+                            $Counter2++
+                        }
+                        elseif($Counter2 -eq $StringArr.Count){
+                            break
+                        }
                     }
                     Write-Host $InnerBottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                     Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                 }
                 elseif($BorderType -eq "Double"){
                     Write-Host $TopBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
-                    Foreach($String in $StringHash.Keys){
-                        Write-Host $StringHash.$String -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                    $Counter = 1
+                    $Counter2 = 0
+                    while($Counter -le 3){
+                        if($Counter2 -le $StringArr.Count - 1){
+                            if($Counter -eq 1){
+                                $Counter++
+                                Write-Host $StringArr[$Counter2] -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor -NoNewline
+                            }
+                            elseif($Counter -eq 2){
+                                $Counter++
+                                Write-Host $StringArr[$Counter2] -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor -NoNewline
+                            }
+                            elseif($Counter -eq 3){
+                                $Counter = 1
+                                Write-Host $StringArr[$Counter2] -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                            }
+                            $Counter2++
+                        }
+                        elseif($Counter2 -eq $StringArr.Count){
+                            break
+                        }
                     }
                     Write-Host $BottomBorder -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
                 }
             }
             else{
-                Foreach($String in $StringHash.Keys){
-                    Write-Host $StringHash.$String -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor
+                $Counter = 1
+                $Counter2 = 0
+                while($Counter -le 3){
+                    if($Counter2 -le $StringArr.Count - 1){
+                        if($Counter -eq 1){
+                            $Counter++
+                            Write-Host $StringArr[$Counter2] -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor -NoNewline
+                        }
+                        elseif($Counter -eq 2){
+                            $Counter++
+                            Write-Host $StringArr[$Counter2] -BackgroundColor $TextBackgroundColor -ForegroundColor $TextForegroundColor -NoNewline
+                        }
+                        elseif($Counter -eq 3){
+                            $Counter = 1
+                            Write-Host $StringArr[$Counter2] -BackgroundColor $BorderBackgroundColor -ForegroundColor $BorderForegroundColor
+                        }
+                        $Counter2++
+                    }
+                    elseif($Counter2 -eq $StringArr.Count){
+                        break
+                    }
                 }
             }
         }
