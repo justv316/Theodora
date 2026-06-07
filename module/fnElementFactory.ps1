@@ -38,19 +38,19 @@ function fnElementFactory{
 <#
     .SYNOPSIS
     This script will produce elements that will be printed to the screen using a set of basic characters.
-    .PARAMETERS
-    (String) InputString - The string to be printed
-    (String) BuildType - What structure should be produced (String)
-    (Bool) Box - Draws a Box (Requires Border)
-    (Bool) Border - Draws a Border
-    (String) BorderType - What border should be produced (Default: DoubleSingle, Double)
-    (String) Justification - Justifies the text (Default: Center, Left, Right)
-    (Int) EnforcedMaxLength - The max length of a string (Default: 80)
-    (Int) MinimumPaddingLength - The minimum amount of padding to be added to each side of a string (Default: 4)
-    (Int) LineCount - How many lines should the text be printed to [Needs to be designed, apparently]
-    (String) Padding - The character used for padding (Default: Space)
-    (Bool) Manual - Enables manual Formatting, requires ManualFormatting
-    (String) ManualFormatting
+   
+    .PARAMETER (String) InputString - The string to be printed
+    .PARAMETER (String) BuildType - What structure should be produced (String)
+    .PARAMETER (Bool) Box - Draws a Box (Requires Border)
+    .PARAMETER (Bool) Border - Draws a Border
+    .PARAMETER (String) BorderType - What border should be produced (Default: DoubleSingle, Double)
+    .PARAMETER (String) Justification - Justifies the text (Default: Center, Left, Right)
+    .PARAMETER (Int) EnforcedMaxLength - The max length of a string (Default: 80)
+    .PARAMETER (Int) MinimumPaddingLength - The minimum amount of padding to be added to each side of a string (Default: 4)
+    .PARAMETER (Int) LineCount - How many lines should the text be printed to [Needs to be designed, apparently]
+    .PARAMETER (String) Padding - The character used for padding (Default: Space)
+    .PARAMETER (Bool) Manual - Enables manual Formatting, requires ManualFormatting
+    .PARAMETER (String) ManualFormatting
         Order of Parameters does not matter
         "Example: -ind 1 fg red bg cyan -line 1 ind 5 fg green bg white"
         Ind [0-79]: Which characters formatting should be changed.
