@@ -1,0 +1,134 @@
+<chars>
+    <char>
+        <name>usA</name>
+        <fixation>default</fixation>
+        <lines>4</lines>
+        <width>7</width>
+        <size>Small</size>
+        <case>Upper</case>
+        <data>   _   
+  /_\  
+ / _ \ 
+/_/ \_\</data>
+    </char>
+    <char>
+        <name>lsa</name>
+        <fixation>default</fixation>
+        <lines>3</lines>
+        <width>6</width>
+        <size>Small</size>
+        <case>Lower</case>
+        <data> __ _ 
+/ _` |
+\__,_|</data>
+    </char>
+    <char>
+        <name>usJ</name>
+        <fixation>default</fixation>
+        <lines>4</lines>
+        <width>6</width>
+        <size>Small</size>
+        <case>Upper</case>
+        <data>    _ 
+ _ | |
+| || |
+ \__/ 
+</data>
+    </char>
+    <char>
+        <name>lsj</name>
+        <fixation>default</fixation>
+        <lines>5</lines>
+        <width>5</width>
+        <size>Small</size>
+        <case>Lower</case>
+        <data>   _ 
+  (_)
+  | |
+ _/ |
+|__/ 
+</data>
+    </char>
+    <char>
+        <name>_</name>
+        <fixation>default</fixation>
+        <lines>8</lines>
+        <width>3</width>
+        <size>Small</size>
+        <case></case>
+        <data>&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;</data>
+    </char>
+    <char>
+        <name>ulA</name>
+        <fixation>default</fixation>
+        <lines>5</lines>
+        <width>6</width>
+        <size>Large</size>
+        <case>Upper</case>
+        <data>    /\    
+   /  \   
+  / /\ \  
+ / ____ \ 
+/_/    \_\</data>
+    </char>
+    <char>
+        <name>lla</name>
+        <fixation>default</fixation>
+        <lines>4</lines>
+        <width>6</width>
+        <size>Large</size>
+        <case>Lower</case>
+        <data>  __ _ 
+ / _` |
+| (_| |
+ \__,_|</data>
+    </char>
+    <char>
+        <name>ulJ</name>
+        <fixation>default</fixation>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <case>Upper</case>
+        <data>      _ 
+     | |
+     | |
+ _   | |
+| |__| |
+ \____/ 
+</data>
+    </char>
+    <char>
+        <name>llj</name>
+        <fixation>default</fixation>
+        <lines>8</lines>
+        <width>5</width>
+        <size>Large</size>
+        <case>Lower</case>
+        <data>   _ 
+  (_)
+   _ 
+  | |
+  | |
+  | |
+ _/ |
+|__/ 
+</data>
+    </char>
+    <char>
+        <name>template</name>
+        <fixation>default</fixation>
+        <lines>5</lines>
+        <width>6</width>
+        <size>Small</size>
+        <case></case>
+        <data></data>
+    </char>
+</chars>
