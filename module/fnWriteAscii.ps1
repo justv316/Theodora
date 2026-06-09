@@ -200,7 +200,6 @@ Function fnWriteAscii {
                     if($Letters.$Letter.Width -eq $Maxwidth){
                         $Letters.$Letter
                     }
-
                 }
                 $LetterPos = 0
                 $LetterArray | ForEach-Object {
@@ -215,15 +214,16 @@ Function fnWriteAscii {
                     }
                     $Letter = [String]$Letter
                     if($LetterLinesArray[$LetterPos] -eq 8){
-                        #if($Letters.$Letter.Width -lt $MaxWidth){
-                        #    Foreach($Num in $WidestLetter.Width){
-                        #        $Lines.$Num += ' ' * ($MaxWidth - $Letter.$Letter.#Width)
-                        #    }
-                        #}
                         foreach($Num in 1..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-1]
                             if($LineFragment.Length -lt $Letters.$Letter.Width){
                                 $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
+                            }
+                            if($Letters.$Letter.Width -lt $MaxWidth -and $Num -le ($Letters.$Letter.Lines - $WidestLetter.Lines) -and $Letter -ne "_"){
+                                if(1..$WidestLetter.Lines -contains $Num){
+                                    $PaddingDeficit = ' ' * (($MaxWidth - $Letters.$Letter.Width)) -as [String]
+                                    $LineFragment = $PaddingDeficit + $LineFragment
+                                }
                             }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
