@@ -54,11 +54,25 @@
         <fixation>default</fixation>
         <lines>8</lines>
         <width>3</width>
-        <size>Small</size>
+        <size>Large</size>
         <case></case>
         <data>&#xA0;&#xA0;&#xA0;
 &#xA0;&#xA0;&#xA0;
 &#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;
+&#xA0;&#xA0;&#xA0;</data>
+    </char>
+    <char>
+        <name>s_</name>
+        <fixation>default</fixation>
+        <lines>6</lines>
+        <width>3</width>
+        <size>Small</size>
+        <case></case>
+        <data>&#xA0;&#xA0;&#xA0;
 &#xA0;&#xA0;&#xA0;
 &#xA0;&#xA0;&#xA0;
 &#xA0;&#xA0;&#xA0;

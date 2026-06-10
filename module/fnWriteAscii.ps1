@@ -29,48 +29,12 @@ Function fnWriteAscii {
             )
             $Text = $InputObject -replace ' ','_'
             $LetterArray = [Char[]] $Text
-            $MaxLines = 0
-            if(-not $Compress -and $Size -eq "Large"){
-                $MaxLines = 8
-            }
-            elseif(-not $Compress -and $Size -eq "Small"){
-                $MaxLines = 6
-            }
-            
-
             if($Size -eq "Small"){
+                #Create Fresh Variables
+                $LetterPos = 0
                 $LetterWidthArray = @()
                 $LetterLinesArray = @()
-                $LetterArray | ForEach-Object{
-                    if($_ -match [Regex]('[a-z]')){
-                        $Letter = "ls$($_)"
-                        if($Letters.$Letter.Case -eq "Lower" -and $Letters.$Letter.Size -eq "Small"){
-                            $LetterWidthArray += $Letters.$Letter.Width
-                            $LetterLinesArray += $Letters.$Letter.Lines
-                            if($Letters.$Letter.Lines -gt $MaxLines){
-                                $MaxLines = $Letters.$Letter.Lines
-                            }
-                        }
-                    }
-                    elseif($_ -match [Regex]('[A-Z]')){
-                        $Letter = "us$($_)"
-                        if($Letters.$Letter.Case -eq "Upper" -and $Letters.$Letter.Size -eq "Small"){
-                            $LetterWidthArray += $Letters.$Letter.Width
-                            $LetterLinesArray += $Letters.$Letter.Lines
-                            if($Letters.$Letter.Lines -gt $MaxLines){
-                                $MaxLines = $Letters.$Letter.Lines
-                            }
-                        }
-                    }
-                    elseif($_ -eq "_"){
-                        $Letter = "$($_)"
-                        $LetterWidthArray += $Letters.$Letter.Width
-                        $LetterLinesArray += $Letters.$Letter.Lines
-                        if($Letters.$Letter.Lines -gt $MaxLines){
-                            $MaxLines = $Letters.$Letter.Lines
-                        }
-                    }
-                }
+                $TextLetterArray = @()
                 $Lines = @{
                     '1' = ''
                     '2' = ''
@@ -79,8 +43,8 @@ Function fnWriteAscii {
                     '5' = ''
                     '6' = ''
                 }
-                $LetterPos = 0
-                $LetterArray | ForEach-Object {
+                #Populate the Arrays
+                $LetterArray | Foreach-Object{
                     if($_ -match [Regex]('[a-z]')){
                         $Letter = "ls$($_)"
                     }
@@ -88,15 +52,17 @@ Function fnWriteAscii {
                         $Letter = "us$($_)"
                     }
                     elseif($_ -eq "_"){
-                        $Letter = "$($_)"
+                        $Letter = "s$($_)"
                     }
-                    $Letter = [String]$Letter
+                    $TextLetterArray  += $Letter
+                    $LetterWidthArray += $Letters.$Letter.Width
+                    $LetterLinesArray += $Letters.$Letter.Lines
+                }
+                $TextLetterArray | ForEach-Object {
+                    $Letter = [String]$_
                     if($LetterLinesArray[$LetterPos] -eq 6){
                         foreach($Num in 1..6){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-1]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
-                            }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
                         }
@@ -106,9 +72,6 @@ Function fnWriteAscii {
                         $Lines.'1' += $Padding
                         foreach($Num in 2..6){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-2]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
-                            }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
                         }
@@ -119,9 +82,6 @@ Function fnWriteAscii {
                         $Lines.'2' += $Padding
                         foreach($Num in 3..6){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-3]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
-                            }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
                         }
@@ -133,9 +93,6 @@ Function fnWriteAscii {
                         $Lines.'3' += $Padding
                         foreach($Num in 4..6){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-4]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
-                            }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
                         }
@@ -144,38 +101,11 @@ Function fnWriteAscii {
                 }
             } # End If(Size -eq Small)
             if($Size -eq "Large"){
+                #Create Fresh Variables
+                $LetterPos = 0
                 $LetterWidthArray = @()
                 $LetterLinesArray = @()
-                $LetterArray | ForEach-Object{
-                    if($_ -match [Regex]('[a-z]')){
-                        $Letter = "ll$($_)"
-                        if($Letters.$Letter.Case -eq "Lower" -and $Letters.$Letter.Size -eq "Large"){
-                            $LetterWidthArray += $Letters.$Letter.Width
-                            $LetterLinesArray += $Letters.$Letter.Lines
-                            if($Letters.([String] $_).Lines -gt $MaxLines){
-                                $MaxLines = $Letters.([String]$_).Lines
-                            }
-                        }
-                    }
-                    elseif($_ -match [Regex]('[A-Z]')){
-                        $Letter = "ul$($_)"
-                        if($Letters.$Letter.Case -eq "Upper" -and $Letters.$Letter.Size -eq "Large"){
-                            $LetterWidthArray += $Letters.$Letter.Width
-                            $LetterLinesArray += $Letters.$Letter.Lines
-                            if($Letters.([String] $_).Lines -gt $MaxLines){
-                                $MaxLines = $Letters.([String]$_).Lines
-                            }
-                        }
-                    }
-                    elseif($_ -eq "_"){
-                        $Letter = "$($_)"
-                        $LetterWidthArray += $Letters.$Letter.Width
-                        $LetterLinesArray += $Letters.$Letter.Lines
-                        if($Letters.([String] $_).Lines -gt $MaxLines){
-                            $MaxLines = $Letters.([String]$_).Lines
-                        }
-                    }
-                }
+                $TextLetterArray = @()
                 $Lines = @{
                     '1' = ''
                     '2' = ''
@@ -186,8 +116,8 @@ Function fnWriteAscii {
                     '7' = ''
                     '8' = ''
                 }
-                $MaxWidth = ($LetterWidthArray | Measure-Object -Maximum).Maximum
-                $WidestLetter = $LetterArray | Foreach-Object {
+                #Populate the Arrays
+                $LetterArray | Foreach-Object{
                     if($_ -match [Regex]('[a-z]')){
                         $Letter = "ll$($_)"
                     }
@@ -197,32 +127,49 @@ Function fnWriteAscii {
                     elseif($_ -eq "_"){
                         $Letter = "$($_)"
                     }
-                    if($Letters.$Letter.Width -eq $Maxwidth){
-                        $Letters.$Letter
-                    }
+                    $TextLetterArray  += $Letter
+                    $LetterWidthArray += $Letters.$Letter.Width
+                    $LetterLinesArray += $Letters.$Letter.Lines
                 }
-                $LetterPos = 0
-                $LetterArray | ForEach-Object {
-                    if($_ -match [Regex]('[a-z]')){
-                        $Letter = "ll$($_)"
-                    }
-                    elseif($_ -match [Regex]('[A-Z]')){
-                        $Letter = "ul$($_)"
-                    }
-                    elseif($_ -eq "_"){
-                        $Letter = "$($_)"
-                    }
-                    $Letter = [String]$Letter
+                #Populate the Lines
+                $TextLetterArray | ForEach-Object {
+                    $Letter = [String]$_
                     if($LetterLinesArray[$LetterPos] -eq 8){
                         foreach($Num in 1..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-1]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
-                            }
-                            if($Letters.$Letter.Width -lt $MaxWidth -and $Num -le ($Letters.$Letter.Lines - $WidestLetter.Lines) -and $Letter -ne "_"){
-                                if(1..$WidestLetter.Lines -contains $Num){
-                                    $PaddingDeficit = ' ' * (($MaxWidth - $Letters.$Letter.Width)) -as [String]
-                                    $LineFragment = $PaddingDeficit + $LineFragment
+                            if($LetterPos -ne 0){
+                                $CurrentCharacter = $Letter
+                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                                $PreviousLetter = 
+                                if($PreviousCharacter -eq "_"){
+                                    "$($TextLetterArray[$LetterPos-2])"
+                                }
+                                else{
+                                    "$($TextLetterArray[$LetterPos-1])"
+                                }
+                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
+                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
+                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
+                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
+                                if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                        if(1..$PreviousLetterLines -Contains $Num){
+                                            $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                            if($PaddingDeficit -gt 0){
+                                                $FragmentPadding = ' ' * $PaddingDeficit
+                                            }
+                                            $LineFragment = $FragmentPadding + $LineFragment
+                                        }
+                                    }
+                                }
+                                elseif($CurrentCharacterWidth -gt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    if(1..$PreviousLetterLines -Contains $Num){
+                                        $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                        if($PaddingDeficit -gt 0){
+                                            $FragmentPadding = ' ' * $PaddingDeficit
+                                        }
+                                        $LineFragment = $FragmentPadding + $LineFragment
+                                    }
                                 }
                             }
                             $StringNum = [String] $Num
@@ -234,8 +181,40 @@ Function fnWriteAscii {
                         $Lines.'1' += $Padding
                         foreach ($Num in 2..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-2]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
+                            if($LetterPos -ne 0){
+                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                                $PreviousLetter = 
+                                if($PreviousCharacter -eq "_"){
+                                    "$($TextLetterArray[$LetterPos-2])"
+                                }
+                                else{
+                                    "$($TextLetterArray[$LetterPos-1])"
+                                }
+                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
+                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
+                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
+                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
+                                if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                        if(1..$PreviousLetterLines -Contains $Num){
+                                            $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                            if($PaddingDeficit -gt 0){
+                                                $FragmentPadding = ' ' * $PaddingDeficit
+                                            }
+                                            $LineFragment = $FragmentPadding + $LineFragment
+                                        }
+                                    }
+                                }
+                                elseif($CurrentCharacterWidth -gt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    if(1..$PreviousLetterLines -Contains $Num){
+                                        $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                        if($PaddingDeficit -gt 0){
+                                            $FragmentPadding = ' ' * $PaddingDeficit
+                                        }
+                                        $LineFragment = $FragmentPadding + $LineFragment
+                                    }
+                                }
                             }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
@@ -247,8 +226,40 @@ Function fnWriteAscii {
                         $Lines.'2' += $Padding
                         foreach ($Num in 3..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-3]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
+                            if($LetterPos -ne 0){
+                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                                $PreviousLetter = 
+                                if($PreviousCharacter -eq "_"){
+                                    "$($TextLetterArray[$LetterPos-2])"
+                                }
+                                else{
+                                    "$($TextLetterArray[$LetterPos-1])"
+                                }
+                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
+                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
+                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
+                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
+                                if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                        if(1..$PreviousLetterLines -Contains $Num){
+                                            $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                            if($PaddingDeficit -gt 0){
+                                                $FragmentPadding = ' ' * $PaddingDeficit
+                                            }
+                                            $LineFragment = $FragmentPadding + $LineFragment
+                                        }
+                                    }
+                                }
+                                elseif($CurrentCharacterWidth -gt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    if(1..$PreviousLetterLines -Contains $Num){
+                                        $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                        if($PaddingDeficit -gt 0){
+                                            $FragmentPadding = ' ' * $PaddingDeficit
+                                        }
+                                        $LineFragment = $FragmentPadding + $LineFragment
+                                    }
+                                }
                             }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
@@ -261,8 +272,40 @@ Function fnWriteAscii {
                         $Lines.'3' += $Padding
                         foreach ($Num in 4..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-4]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
+                            if($LetterPos -ne 0){
+                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                                $PreviousLetter = 
+                                if($PreviousCharacter -eq "_"){
+                                    "$($TextLetterArray[$LetterPos-2])"
+                                }
+                                else{
+                                    "$($TextLetterArray[$LetterPos-1])"
+                                }
+                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
+                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
+                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
+                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
+                                if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                        if(1..$PreviousLetterLines -Contains $Num){
+                                            $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                            if($PaddingDeficit -gt 0){
+                                                $FragmentPadding = ' ' * $PaddingDeficit
+                                            }
+                                            $LineFragment = $FragmentPadding + $LineFragment
+                                        }
+                                    }
+                                }
+                                elseif($CurrentCharacterWidth -gt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    if(1..$PreviousLetterLines -Contains $Num){
+                                        $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                        if($PaddingDeficit -gt 0){
+                                            $FragmentPadding = ' ' * $PaddingDeficit
+                                        }
+                                        $LineFragment = $FragmentPadding + $LineFragment
+                                    }
+                                }
                             }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
@@ -276,18 +319,50 @@ Function fnWriteAscii {
                         $Lines.'4' += $Padding
                         foreach ($Num in 5..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-5]
-                            if($LineFragment.Length -lt $Letters.$Letter.Width){
-                                $LineFragment += ' ' * ($Letters.$Letter.Width - $LineFragment.Length)
+                            if($LetterPos -ne 0){
+                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                                $PreviousLetter = 
+                                if($PreviousCharacter -eq "_"){
+                                    "$($TextLetterArray[$LetterPos-2])"
+                                }
+                                else{
+                                    "$($TextLetterArray[$LetterPos-1])"
+                                }
+                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
+                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
+                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
+                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
+                                if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                        if(1..$PreviousLetterLines -Contains $Num){
+                                            $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                            if($PaddingDeficit -gt 0){
+                                                $FragmentPadding = ' ' * $PaddingDeficit
+                                            }
+                                            $LineFragment = $FragmentPadding + $LineFragment
+                                        }
+                                    }
+                                }
+                                elseif($CurrentCharacterWidth -gt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
+                                    if(1..$PreviousLetterLines -Contains $Num){
+                                        $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
+                                        if($PaddingDeficit -gt 0){
+                                            $FragmentPadding = ' ' * $PaddingDeficit
+                                        }
+                                        $LineFragment = $FragmentPadding + $LineFragment
+                                    }
+                                }
                             }
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
                         }
                     }
                     $LetterPos++
-                } #End $LetterArray | ForEach-Object
+                } #End $TextLetterArray | ForEach-Object
             } # End If(Size -eq Large)
             
-            $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | Where-Object { $_ -match '\S'} | ForEach-Object {
+            $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
                 $_
             }
         } #End Function fnGetAscii
