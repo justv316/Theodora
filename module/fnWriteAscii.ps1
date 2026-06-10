@@ -15,10 +15,7 @@ Function fnWriteAscii {
 
     )
     <#
-        .DESCRIPTION
-        Lowercase letters are prefixed with '-'
-        .PARAMETER InputObject
-        .PARAMETER Compress
+        Dont....Dont look at this....
     #>
     begin{
         Function fnGetAscii{
@@ -130,35 +127,59 @@ Function fnWriteAscii {
                     $TextLetterArray  += $Letter
                     $LetterWidthArray += $Letters.$Letter.Width
                     $LetterLinesArray += $Letters.$Letter.Lines
+                    if($Letters.$Letter.Lines -gt $MaxLines){
+                        $Maxlines = $Letters.$Letter.Lines
+                    }
                 }
                 #Populate the Lines
                 $TextLetterArray | ForEach-Object {
                     $Letter = [String]$_
                     if($LetterLinesArray[$LetterPos] -eq 8){
+                        $CurrentCharacter = $Letter
+                        $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                        $PreviousLetter = 
+                        if($PreviousCharacter -eq "_"){
+                            "$($TextLetterArray[$LetterPos-2])"
+                        }
+                        else{
+                            "$($TextLetterArray[$LetterPos-1])"
+                        }
+                        if($PreviousCharacter -eq "_"){
+                            $n = 2
+                        }
+                        else{
+                            $n = 1
+                        }
+                        if($PreviousLetter -ne $CurrentCharacter){
+                            $PreviousLetterCopies = 0
+                            while($n -ne 0){
+                                if($TextLetterArray[$LetterPos-$n] -eq $PreviousLetter){
+                                    $PreviousLetterCopies++
+                                    $n++
+                                }
+                                else{
+                                    $n = 0
+                                }
+                            }
+                            if($PreviousLetterCopies -gt 1){
+                                $AdditionalPadding = ' ' * ($PreviousLetterCopies-1)
+                            }
+                        }
+                        $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [int]
+                        $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [int]
+                        $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [int]
+                        $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [int]
                         foreach($Num in 1..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-1]
                             if($LetterPos -ne 0){
-                                $CurrentCharacter = $Letter
-                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
-                                $PreviousLetter = 
-                                if($PreviousCharacter -eq "_"){
-                                    "$($TextLetterArray[$LetterPos-2])"
-                                }
-                                else{
-                                    "$($TextLetterArray[$LetterPos-1])"
-                                }
-                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
-                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
-                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
-                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
                                 if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
-                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 3){
                                         if(1..$PreviousLetterLines -Contains $Num){
                                             $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
                                             if($PaddingDeficit -gt 0){
                                                 $FragmentPadding = ' ' * $PaddingDeficit
                                             }
-                                            $LineFragment = $FragmentPadding + $LineFragment
+                                            $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                         }
                                     }
                                 }
@@ -168,7 +189,7 @@ Function fnWriteAscii {
                                         if($PaddingDeficit -gt 0){
                                             $FragmentPadding = ' ' * $PaddingDeficit
                                         }
-                                        $LineFragment = $FragmentPadding + $LineFragment
+                                        $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                     }
                                 }
                             }
@@ -177,32 +198,58 @@ Function fnWriteAscii {
                         }
                     }
                     if($LetterLinesArray[$LetterPos] -eq 7){
+                        $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                        $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                        $PreviousLetter = 
+                        if($PreviousCharacter -eq "_"){
+                            "$($TextLetterArray[$LetterPos-2])"
+                        }
+                        else{
+                            "$($TextLetterArray[$LetterPos-1])"
+                        }
+                        if($PreviousCharacter -eq "_"){
+                            $n = 2
+                        }
+                        else{
+                            $n = 1
+                        }
+                        
+                        if($PreviousLetter -ne $CurrentCharacter){
+                            $PreviousLetterCopies = 0
+                            while($n -ne 0){
+                                if($TextLetterArray[$LetterPos-$n] -eq $PreviousLetter){
+                                    $PreviousLetterCopies++
+                                    $n++
+                                }
+                                else{
+                                    $n = 0
+                                }
+                            }
+                            if($MaxLines -gt 7){
+                                $AdditionalPadding1 = ' ' * ($PreviousLetterCopies)
+                                $Lines.'1' += $AdditionalPadding1
+                            }
+                            if($PreviousLetterCopies -gt 1){
+                                $AdditionalPadding = ' ' * ($PreviousLetterCopies-1)
+                            }
+                        }
+                        $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [int]
+                        $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [int]
+                        $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [int]
+                        $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [int]
                         $Padding = ' ' * $LetterWidthArray[$LetterPos]
                         $Lines.'1' += $Padding
                         foreach ($Num in 2..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-2]
                             if($LetterPos -ne 0){
-                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
-                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
-                                $PreviousLetter = 
-                                if($PreviousCharacter -eq "_"){
-                                    "$($TextLetterArray[$LetterPos-2])"
-                                }
-                                else{
-                                    "$($TextLetterArray[$LetterPos-1])"
-                                }
-                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
-                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
-                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
-                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
                                 if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
-                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 3){
                                         if(1..$PreviousLetterLines -Contains $Num){
                                             $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
                                             if($PaddingDeficit -gt 0){
                                                 $FragmentPadding = ' ' * $PaddingDeficit
                                             }
-                                            $LineFragment = $FragmentPadding + $LineFragment
+                                            $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                         }
                                     }
                                 }
@@ -212,7 +259,7 @@ Function fnWriteAscii {
                                         if($PaddingDeficit -gt 0){
                                             $FragmentPadding = ' ' * $PaddingDeficit
                                         }
-                                        $LineFragment = $FragmentPadding + $LineFragment
+                                        $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                     }
                                 }
                             }
@@ -221,33 +268,60 @@ Function fnWriteAscii {
                         }
                     }
                     if($LetterLinesArray[$LetterPos] -eq 6){
+                        $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                        $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                        $PreviousLetter = 
+                        if($PreviousCharacter -eq "_"){
+                            "$($TextLetterArray[$LetterPos-2])"
+                        }
+                        else{
+                            "$($TextLetterArray[$LetterPos-1])"
+                        }
+                        if($PreviousCharacter -eq "_"){
+                            $n = 2
+                        }
+                        else{
+                            $n = 1
+                        }
+                        
+                        if($PreviousLetter -ne $CurrentCharacter){
+                            $PreviousLetterCopies = 0
+                            while($n -ne 0){
+                                if($TextLetterArray[$LetterPos-$n] -eq $PreviousLetter){
+                                    $PreviousLetterCopies++
+                                    $n++
+                                }
+                                else{
+                                    $n = 0
+                                }
+                            }
+                            if($MaxLines -gt 6){
+                                $AdditionalPadding1 = ' ' * ($PreviousLetterCopies)
+                                $Lines.'1' += $AdditionalPadding1
+                                $Lines.'2' += $AdditionalPadding1
+                            }
+                            if($PreviousLetterCopies -gt 1){
+                                $AdditionalPadding = ' ' * ($PreviousLetterCopies-1)
+                            }
+                        }
+                        $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [int]
+                        $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [int]
+                        $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [int]
+                        $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [int]
                         $Padding = ' ' * $LetterWidthArray[$LetterPos]
                         $Lines.'1' += $Padding
                         $Lines.'2' += $Padding
                         foreach ($Num in 3..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-3]
                             if($LetterPos -ne 0){
-                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
-                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
-                                $PreviousLetter = 
-                                if($PreviousCharacter -eq "_"){
-                                    "$($TextLetterArray[$LetterPos-2])"
-                                }
-                                else{
-                                    "$($TextLetterArray[$LetterPos-1])"
-                                }
-                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
-                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
-                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
-                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
                                 if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
-                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 3){
                                         if(1..$PreviousLetterLines -Contains $Num){
                                             $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
                                             if($PaddingDeficit -gt 0){
                                                 $FragmentPadding = ' ' * $PaddingDeficit
                                             }
-                                            $LineFragment = $FragmentPadding + $LineFragment
+                                            $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                         }
                                     }
                                 }
@@ -257,7 +331,7 @@ Function fnWriteAscii {
                                         if($PaddingDeficit -gt 0){
                                             $FragmentPadding = ' ' * $PaddingDeficit
                                         }
-                                        $LineFragment = $FragmentPadding + $LineFragment
+                                        $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                     }
                                 }
                             }
@@ -267,33 +341,60 @@ Function fnWriteAscii {
                     }
                     if($LetterLinesArray[$LetterPos] -eq 5){
                         $Padding = ' ' * $LetterWidthArray[$LetterPos]
+                        $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                        $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                        $PreviousLetter = 
+                        if($PreviousCharacter -eq "_"){
+                            "$($TextLetterArray[$LetterPos-2])"
+                        }
+                        else{
+                            "$($TextLetterArray[$LetterPos-1])"
+                        }
+                        if($PreviousCharacter -eq "_"){
+                            $n = 2
+                        }
+                        else{
+                            $n = 1
+                        }
+                        if($PreviousLetter -ne $CurrentCharacter){
+                            $PreviousLetterCopies = 0
+                            while($n -ne 0){
+                                if($TextLetterArray[$LetterPos-$n] -eq $PreviousLetter){
+                                    $PreviousLetterCopies++
+                                    $n++
+                                }
+                                else{
+                                    $n = 0
+                                }
+                            }
+                            if($PreviousLetterCopies -gt 1){
+                                $AdditionalPadding = ' ' * ($PreviousLetterCopies-1)
+                            }
+                            if($MaxLines -gt 5){
+                                $AdditionalPadding1 = ' ' * ($PreviousLetterCopies)
+                                $Lines.'1' += $AdditionalPadding1
+                                $Lines.'2' += $AdditionalPadding1
+                                $Lines.'3' += $AdditionalPadding1
+                            }
+                        }
+                        $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [int]
+                        $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [int]
+                        $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [int]
+                        $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [int]
                         $Lines.'1' += $Padding
                         $Lines.'2' += $Padding
                         $Lines.'3' += $Padding
                         foreach ($Num in 4..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-4]
                             if($LetterPos -ne 0){
-                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
-                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
-                                $PreviousLetter = 
-                                if($PreviousCharacter -eq "_"){
-                                    "$($TextLetterArray[$LetterPos-2])"
-                                }
-                                else{
-                                    "$($TextLetterArray[$LetterPos-1])"
-                                }
-                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
-                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
-                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
-                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
                                 if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
-                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 3){
                                         if(1..$PreviousLetterLines -Contains $Num){
                                             $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
                                             if($PaddingDeficit -gt 0){
                                                 $FragmentPadding = ' ' * $PaddingDeficit
                                             }
-                                            $LineFragment = $FragmentPadding + $LineFragment
+                                            $LineFragment =  $AdditionalPadding + $FragmentPadding + $LineFragment
                                         }
                                     }
                                 }
@@ -303,7 +404,7 @@ Function fnWriteAscii {
                                         if($PaddingDeficit -gt 0){
                                             $FragmentPadding = ' ' * $PaddingDeficit
                                         }
-                                        $LineFragment = $FragmentPadding + $LineFragment
+                                        $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                     }
                                 }
                             }
@@ -312,6 +413,19 @@ Function fnWriteAscii {
                         }
                     }
                     if($LetterLinesArray[$LetterPos] -eq 4){
+                        $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
+                        $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
+                        $PreviousLetter = 
+                        if($PreviousCharacter -eq "_"){
+                            "$($TextLetterArray[$LetterPos-2])"
+                        }
+                        else{
+                            "$($TextLetterArray[$LetterPos-1])"
+                        }
+                        $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [int]
+                        $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [int]
+                        $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [int]
+                        $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [int]
                         $Padding = ' ' * $LetterWidthArray[$LetterPos]
                         $Lines.'1' += $Padding
                         $Lines.'2' += $Padding
@@ -320,27 +434,14 @@ Function fnWriteAscii {
                         foreach ($Num in 5..8){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-5]
                             if($LetterPos -ne 0){
-                                $CurrentCharacter = "$($TextLetterArray[$LetterPos])"
-                                $PreviousCharacter = "$($TextLetterArray[$LetterPos-1])"
-                                $PreviousLetter = 
-                                if($PreviousCharacter -eq "_"){
-                                    "$($TextLetterArray[$LetterPos-2])"
-                                }
-                                else{
-                                    "$($TextLetterArray[$LetterPos-1])"
-                                }
-                                $CurrentCharacterWidth = $Letters.$CurrentCharacter.Width -as [INT]
-                                $PreviousLetterWidth = $Letters.$PreviousLetter.Width -as [INT]
-                                $CurrentCharacterLines = $Letters.$CurrentCharacter.Lines -as [INT]
-                                $PreviousLetterLines = $Letters.$PreviousLetter.Lines -as [INT]
                                 if($CurrentCharacterWidth -lt $PreviousLetterWidth -and $CurrentCharacterLines -gt $PreviousLetterLines -and $CurrentCharacter -ne "_"){
-                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 2){
+                                    If($CurrentCharacterLines - $PreviousLetterLines -gt 3){
                                         if(1..$PreviousLetterLines -Contains $Num){
                                             $PaddingDeficit = $PreviousLetterWidth - $CurrentCharacterWidth
                                             if($PaddingDeficit -gt 0){
                                                 $FragmentPadding = ' ' * $PaddingDeficit
                                             }
-                                            $LineFragment = $FragmentPadding + $LineFragment
+                                            $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                         }
                                     }
                                 }
@@ -350,7 +451,7 @@ Function fnWriteAscii {
                                         if($PaddingDeficit -gt 0){
                                             $FragmentPadding = ' ' * $PaddingDeficit
                                         }
-                                        $LineFragment = $FragmentPadding + $LineFragment
+                                        $LineFragment = $AdditionalPadding + $FragmentPadding + $LineFragment
                                     }
                                 }
                             }
