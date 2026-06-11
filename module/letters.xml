@@ -1,11 +1,9 @@
 <chars>
     <char>
         <name>usA</name>
-        <fixation>default</fixation>
         <lines>4</lines>
         <width>7</width>
         <size>Small</size>
-        <case>Upper</case>
         <data>   _   
   /_\  
  / _ \ 
@@ -13,22 +11,18 @@
     </char>
     <char>
         <name>lsa</name>
-        <fixation>default</fixation>
         <lines>3</lines>
         <width>6</width>
         <size>Small</size>
-        <case>Lower</case>
         <data> __ _ 
 / _` |
 \__,_|</data>
     </char>
     <char>
         <name>usJ</name>
-        <fixation>default</fixation>
         <lines>4</lines>
         <width>6</width>
         <size>Small</size>
-        <case>Upper</case>
         <data>    _ 
  _ | |
 | || |
@@ -37,11 +31,9 @@
     </char>
     <char>
         <name>lsj</name>
-        <fixation>default</fixation>
         <lines>5</lines>
         <width>5</width>
         <size>Small</size>
-        <case>Lower</case>
         <data>   _ 
   (_)
   | |
@@ -50,42 +42,10 @@
 </data>
     </char>
     <char>
-        <name>_</name>
-        <fixation>default</fixation>
-        <lines>8</lines>
-        <width>3</width>
-        <size>Large</size>
-        <case></case>
-        <data>&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;</data>
-    </char>
-    <char>
-        <name>s_</name>
-        <fixation>default</fixation>
-        <lines>6</lines>
-        <width>3</width>
-        <size>Small</size>
-        <case></case>
-        <data>&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;
-&#xA0;&#xA0;&#xA0;</data>
-    </char>
-    <char>
         <name>ulA</name>
-        <fixation>default</fixation>
         <lines>5</lines>
         <width>10</width>
         <size>Large</size>
-        <case>Upper</case>
         <data>    /\    
    /  \   
   / /\ \  
@@ -94,38 +54,219 @@
     </char>
     <char>
         <name>lla</name>
-        <fixation>default</fixation>
         <lines>4</lines>
-        <width>6</width>
+        <width>7</width>
         <size>Large</size>
-        <case>Lower</case>
         <data>  __ _ 
  / _` |
 | (_| |
  \__,_|</data>
     </char>
     <char>
-        <name>ulJ</name>
-        <fixation>default</fixation>
+        <name>ulb</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> ____  
+|  _ \ 
+| |_) |
+|  _ &lt; 
+| |_) |
+|____/ </data>
+    </char>
+    <char>
+        <name>llb</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _     
+| |    
+| |__  
+| '_ \ 
+| |_) |
+|_.__/ </data>
+    </char>
+    <char>
+        <name>ulc</name>
+        <lines>5</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data>  _____ 
+ / ____|
+| |     
+| |     
+| |____ 
+ \_____|</data>
+    </char>
+    <char>
+        <name>llc</name>
+        <lines>4</lines>
+        <width>6</width>
+        <size>Large</size>
+        <data>  ___ 
+ / __|
+| (__ 
+ \___|</data>
+    </char>
+    <char>
+        <name>uld</name>
         <lines>6</lines>
         <width>8</width>
         <size>Large</size>
-        <case>Upper</case>
+        <data> _____  
+|  __ \ 
+| |  | |
+| |  | |
+| |__| |
+|_____/ </data>
+    </char>
+    <char>
+        <name>lld</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data>     _ 
+    | |
+  __| |
+ / _` |
+| (_| |
+ \__,_|</data>
+    </char>
+    <char>
+        <name>ule</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> ______ 
+|  ____|
+| |__   
+|  __|  
+| |____ 
+|______|</data>
+    </char>
+    <char>
+        <name>lle</name>
+        <lines>4</lines>
+        <width>6</width>
+        <size>Large</size>
+        <data>  ___ 
+ / _ \
+|  __/
+ \___|</data>
+    </char>
+    <char>
+        <name>ulf</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> ______ 
+|  ____|
+| |__   
+|  __|  
+| |     
+|_|     </data>
+    </char>
+    <char>
+        <name>llf</name>
+        <lines>6</lines>
+        <width>5</width>
+        <size>Large</size>
+        <data>  __ 
+ / _|
+| |_ 
+|  _|
+| |  
+|_|  </data>
+    </char>
+    <char>
+        <name>ulg</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data>  _____ 
+ / ____|
+| |  __ 
+| | |_ |
+| |__| |
+ \_____|</data>
+    </char>
+    <char>
+        <name>llg</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data>  __ _ 
+ / _` |
+| (_| |
+ \__, |
+  __/ |
+ |___/ </data>
+    </char>
+    <char>
+        <name>ulh</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> _    _ 
+| |  | |
+| |__| |
+|  __  |
+| |  | |
+|_|  |_|</data>
+    </char>
+    <char>
+        <name>llh</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _     
+| |    
+| |__  
+| '_ \ 
+| | | |
+|_| |_|</data>
+    </char>
+    <char>
+        <name>uli</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _____ 
+|_   _|
+  | |  
+  | |  
+ _| |_ 
+|_____|</data>
+    </char>
+    <char>
+        <name>lli</name>
+        <lines>6</lines>
+        <width>3</width>
+        <size>Large</size>
+        <data> _ 
+(_)
+ _ 
+| |
+| |
+|_|</data>
+    </char>
+    <char>
+        <name>ulJ</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
         <data>      _ 
      | |
      | |
  _   | |
 | |__| |
- \____/ 
-</data>
+ \____/ </data>
     </char>
     <char>
         <name>llj</name>
-        <fixation>default</fixation>
         <lines>8</lines>
         <width>5</width>
         <size>Large</size>
-        <case>Lower</case>
         <data>   _ 
   (_)
    _ 
@@ -133,16 +274,377 @@
   | |
   | |
  _/ |
-|__/ 
-</data>
+|__/ </data>
+    </char>
+    <char>
+        <name>ulk</name>
+        <lines>6</lines>
+        <width>6</width>
+        <size>Large</size>
+        <data> _  __
+| |/ /
+| ' / 
+|  &lt;  
+| . \ 
+|_|\_\</data>
+    </char>
+    <char>
+        <name>llk</name>
+        <lines>6</lines>
+        <width>6</width>
+        <size>Large</size>
+        <data> _    
+| |   
+| | __
+| |/ /
+|   &lt; 
+|_|\_\</data>
+    </char>
+    <char>
+        <name>ull</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> _      
+| |     
+| |     
+| |     
+| |____ 
+|______|</data>
+    </char>
+    <char>
+        <name>lll</name>
+        <lines>6</lines>
+        <width>3</width>
+        <size>Large</size>
+        <data> _ 
+| |
+| |
+| |
+| |
+|_|</data>
+    </char>
+    <char>
+        <name>ulm</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> __  __ 
+|  \/  |
+| \  / |
+| |\/| |
+| |  | |
+|_|  |_|</data>
+    </char>
+    <char>
+        <name>llm</name>
+        <lines>4</lines>
+        <width>11</width>
+        <size>Large</size>
+        <data> _ __ ___  
+| '_ ` _ \ 
+| | | | | |
+|_| |_| |_|</data>
+    </char>
+    <char>
+        <name>uln</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _   _ 
+| \ | |
+|  \| |
+| . ` |
+| |\  |
+|_| \_|</data>
+    </char>
+    <char>
+        <name>lln</name>
+        <lines>4</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _ __  
+| '_ \ 
+| | | |
+|_| |_|</data>
+    </char>
+    <char>
+        <name>ulo</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data>  ____  
+ / __ \ 
+| |  | |
+| |  | |
+| |__| |
+ \____/ </data>
+    </char>
+    <char>
+        <name>llo</name>
+        <lines>4</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data>  ___  
+ / _ \ 
+| (_) |
+ \___/ </data>
+    </char>
+    <char>
+        <name>ulp</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> _____  
+|  __ \ 
+| |__) |
+|  ___/ 
+| |     
+|_|     </data>
+    </char>
+    <char>
+        <name>llp</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _ __  
+| '_ \ 
+| |_) |
+| .__/ 
+| |    
+|_|    </data>
+    </char>
+    <char>
+        <name>ulq</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data>  ____  
+ / __ \ 
+| |  | |
+| |  | |
+| |__| |
+ \___\_\</data>
+    </char>
+    <char>
+        <name>llq</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data>  __ _ 
+ / _` |
+| (_| |
+ \__, |
+    | |
+    |_|</data>
+    </char>
+    <char>
+        <name>ulr</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> _____  
+|  __ \ 
+| |__) |
+|  _  / 
+| | \ \ 
+|_|  \_\</data>
+    </char>
+    <char>
+        <name>llr</name>
+        <lines>4</lines>
+        <width>6</width>
+        <size>Large</size>
+        <data> _ __ 
+| '__|
+| |   
+|_|   </data>
+    </char>
+    <char>
+        <name>uls</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data>  _____ 
+ / ____|
+| (___  
+ \___ \ 
+ ____) |
+|_____/ </data>
+    </char>
+    <char>
+        <name>lls</name>
+        <lines>4</lines>
+        <width>5</width>
+        <size>Large</size>
+        <data> ___ 
+/ __|
+\__ \
+|___/</data>
+    </char>
+    <char>
+        <name>ult</name>
+        <lines>6</lines>
+        <width>9</width>
+        <size>Large</size>
+        <data> _______ 
+|__   __|
+   | |   
+   | |   
+   | |   
+   |_|   </data>
+    </char>
+    <char>
+        <name>llt</name>
+        <lines>6</lines>
+        <width>5</width>
+        <size>Large</size>
+        <data> _   
+| |  
+| |_ 
+| __|
+| |_ 
+ \__|</data>
+    </char>
+    <char>
+        <name>ulu</name>
+        <lines>6</lines>
+        <width>8</width>
+        <size>Large</size>
+        <data> _    _ 
+| |  | |
+| |  | |
+| |  | |
+| |__| |
+ \____/ </data>
+    </char>
+    <char>
+        <name>llu</name>
+        <lines>4</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _   _ 
+| | | |
+| |_| |
+ \__,_|</data>
+    </char>
+    <char>
+        <name>ulv</name>
+        <lines>6</lines>
+        <width>10</width>
+        <size>Large</size>
+        <data>__      __
+\ \    / /
+ \ \  / / 
+  \ \/ /  
+   \  /   
+    \/    </data>
+    </char>
+    <char>
+        <name>llv</name>
+        <lines>4</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data>__   __
+\ \ / /
+ \ V / 
+  \_/  </data>
+    </char>
+    <char>
+        <name>ulw</name>
+        <lines>6</lines>
+        <width>14</width>
+        <size>Large</size>
+        <data>__          __
+\ \        / /
+ \ \  /\  / / 
+  \ \/  \/ /  
+   \  /\  /   
+    \/  \/    </data>
+    </char>
+    <char>
+        <name>llw</name>
+        <lines>4</lines>
+        <width>10</width>
+        <size>Large</size>
+        <data>__      __
+\ \ /\ / /
+ \ V  V / 
+  \_/\_/  </data>
+    </char>
+    <char>
+        <name>ulx</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data>__   __
+\ \ / /
+ \ V / 
+  &gt; &lt;  
+ / . \ 
+/_/ \_\</data>
+    </char>
+    <char>
+        <name>llx</name>
+        <lines>4</lines>
+        <width>6</width>
+        <size>Large</size>
+        <data>__  __
+\ \/ /
+ &gt;  &lt;
+/_/\_\</data>
+    </char>
+    <char>
+        <name>uly</name>
+        <lines>6</lines>
+        <width>9</width>
+        <size>Large</size>
+        <data>__     __
+\ \   / /
+ \ \_/ / 
+  \   /  
+   | |   
+   |_|   </data>
+    </char>
+    <char>
+        <name>lly</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> _   _ 
+| | | |
+| |_| |
+ \__, |
+  __/ |
+ |___/ </data>
+    </char>
+    <char>
+        <name>ulz</name>
+        <lines>6</lines>
+        <width>7</width>
+        <size>Large</size>
+        <data> ______
+|___  /
+   / / 
+  / /  
+ / /__ 
+/_____|</data>
+    </char>
+    <char>
+        <name>llz</name>
+        <lines>4</lines>
+        <width>5</width>
+        <size>Large</size>
+        <data> ____
+|_  /
+ / / 
+/___|</data>
     </char>
     <char>
         <name>template</name>
-        <fixation>default</fixation>
         <lines>5</lines>
         <width>6</width>
-        <size>Small</size>
-        <case></case>
+        <size>Large</size>
         <data></data>
     </char>
 </chars>
