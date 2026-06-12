@@ -17,7 +17,7 @@ function fnBuildASCII{
         $Boxes = @{
             "SingleBox" = @{
             "BorderLines" = 2
-            "OuterBorderLines" = 2
+            "OuterBorderLines" = 1
             "OuterBorder" = $Characters.SingleVertical
             "OuterHorizontalBorder" = $Characters.SingleHorizontal
             "OuterTopBorderLC" = $Characters.SingleTopLeftCorner
@@ -29,7 +29,7 @@ function fnBuildASCII{
             }
             "DoubleBox" = @{
             "BorderLines" = 2
-            "OuterBorderLines" = 2
+            "OuterBorderLines" = 1
             "OuterBorder" = $Characters.DoubleVertical
             "OuterHorizontalBorder" = $Characters.DoubleHorizontal
             "OuterTopBorderLC" = $Characters.DoubleTopLeftCorner
@@ -87,18 +87,21 @@ function fnBuildASCII{
             $Segment = $ASCII[$Num-$Start]
             #Determine Segment Padding Needed
             if($Justification -eq "Center"){
-                $LeftPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - ($Build["LeftBorder"]).Length - $Segment.Length) / 2
-                $RightPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - ($Build["RightBorder"]).Length - $Segment.Length) / 2
+                $LeftPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length) - $Segment.Length) / 2
+                $RightPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length) - $Segment.Length) / 2
                 $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
+                if($OuterBuildLines -eq 1){
+                    $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired) + 1
+                }
                 $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
             }
             elseif($Justification -eq "Left"){
                 $LeftPaddingRequired = $MinimumPaddingLength
-                $RightPaddingRequired = (($EnforcedMaxLength - ($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $LeftPaddingRequired
+                $RightPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $LeftPaddingRequired
             }
             elseif($Justification -eq "Right"){
                 $RightPaddingRequired = $MinimumPaddingLength
-                $LeftPaddingRequired = (($EnforcedMaxLength - ($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $RightPaddingRequired
+                $LeftPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $RightPaddingRequired
             }
             $RightPadding = ("$($Padding)") * ($RightPaddingRequired)
             $LeftPadding = ("$($Padding)") * ($LeftPaddingRequired)

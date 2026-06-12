@@ -6,27 +6,65 @@ function fnWriteAscii{
         [Parameter(Mandatory=$True,Position=1)]
         [ValidateSet("Large","Small")]
         [String] $Font,
-        [ValidateSet("Unspecified","Box")]
+        [ValidateSet("Unspecified","SingleBox","DoubleBox","SingleDoubleBox")]
         [String] $BuildType = "Unspecified",
+        [ValidateSet("Center","Left","Right")]
+        [String] $Justification = "Center",
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
-        [Alias('Foreground')]
         [String] $ForegroundColor = 'Default',
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray","DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
-        [Alias('Background')]
-        [String] $BackgroundColor = 'Default'
+        [String] $BackgroundColor = 'Default',
+        [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray","DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [String] $TextForegroundColor = 'Default',
+        [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray","DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [String] $TextBackgroundColor = 'Default',
+        [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray","DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [String] $BorderForegroundColor = 'Default',
+        [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray","DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [String] $BorderBackgroundColor = 'Default'
     )
-    if($BuildType -ne "Unspecified"){
+    begin{
+        $Colors = @($ForegroundColor, $BackgroundColor, $TextForegroundColor, $TextBackgroundColor, $BorderForegroundColor, $BorderBackgroundColor)
         foreach($Text in $InputObject){
             $ASCII = fnGetAscii $Text $Font
-            $ConstructedASCII = fnBuildASCII $ASCII $BuildType
-        }
-        foreach($Line in $ConstructedASCII){
-            Write-Host $Line
+            if($BuildType -ne "Unspecified"){
+                $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification
+            }
         }
     }
-    if($BuildType -eq "Unspecified"){
-        foreach($Text in $InputObject){
-            $ASCII = fnGetAscii $Text $Font
+    process{
+        if($BuildType -ne "Unspecified"){
+            foreach($Line in $ConstructedASCII){
+                if($ForegroundColor -ne 'Default' -and $BackgroundColor -ne 'Default'){
+                    if($ForegroundColor -ieq 'rainbow' -or $BackGroundColor -ieq 'rainbow'){
+                        fnWriteRainbow -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor -Line $Line
+                    }
+                    else{
+                        Write-Host $Line -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
+                    }
+                }
+                elseif($ForegroundColor -ne 'Default'){
+                    if($ForegroundColor -ieq 'rainbow'){
+                        fnWriteRainbow -ForegroundColor $ForegroundColor -Line $Line
+                    }
+                    else{
+                        Write-Host $Line -ForegroundColor $ForegroundColor
+                    }
+                }
+                elseif($BackgroundColor -ne 'Default'){
+                    if($BackgroundColor -ieq 'rainbow'){
+                        fnWriteRainbow -BackgroundColor $BackgroundColor -Line $Line
+                    }
+                    else{
+                        Write-Host $Line BackgroundColor $BackgroundColor
+                    }
+                }
+                else{
+                    Write-Host $Line
+                }
+            }
+        }
+        if($BuildType -eq "Unspecified"){
             if($ForegroundColor -ne 'Default' -and $BackgroundColor -ne 'Default'){
                 if($ForegroundColor -ieq 'rainbow' -or $BackGroundColor -ieq 'rainbow'){
                     $ASCII | ForEach-Object {
