@@ -3,17 +3,17 @@ function fnBuildASCII{
     param(
         [Array]$ASCII,
         [String]$BuildType,
-        [ValidateSet("Center","Left","Right")]
+        [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
         [String] $Padding = ' ',
         [int]$EnforcedMaxLength = 160,
         [int]$MinimumPaddingLength = 4
     )
 
-    begin
-    {if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
-        fnXMLCharacter
-    }
+    begin{
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
+            fnXMLCharacter
+        }
         $Boxes = @{
             "SingleBox" = @{
             "BorderLines" = 2
@@ -63,20 +63,40 @@ function fnBuildASCII{
         $BuildLines = ($Boxes[$($BuildType)])["BorderLines"]
         $OuterBuildLines = ($Boxes[$($BuildType)])["OuterBorderLines"]
         $Lines = [System.Collections.SortedList]::new()
-        $MaxLines = $ASCII.count
+        $MaxLines = $ASCII.Count
+        $MaxWidth = 0
         foreach($Num in 1..($MaxLines + $BuildLines)){
             $Lines[$($Num)] = ("")
         }
+        foreach($Line in $ASCII){
+            if($Line.Length -gt $MaxWidth){
+                $MaxWidth = $Line.Length
+            }
+        }
+        
     }
     process{
         #Populate Border Lines
-        $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterTopBorderRC"])
-        $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterBottomBorderRC"])
+        if($Justification -eq "None"){
+            $EnforcedMaxLength = $MaxWidth + $OuterBuildLines
+            $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterTopBorderRC"])
+            $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterBottomBorderRC"])
+            if($BuildLines -eq 4){
+                $InnerTopBorder = ($Build["OuterBorder"]) + ($Build["InnerTopBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength - $OuterBuildLines)) + ($Build["InnerTopBorderRC"]) + ($Build["OuterBorder"])
+                $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength - $OuterBuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
+            }
+        }
+        else{
+            $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterTopBorderRC"])
+            $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterBottomBorderRC"])
+            if($BuildLines -eq 4){
+                $InnerTopBorder = ($Build["OuterBorder"]) + ($Build["InnerTopBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerTopBorderRC"]) + ($Build["OuterBorder"])
+                $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
+            }
+        }
         $Lines[1] += $TopBorder
         $Lines[($Maxlines + $BuildLines)] += $BottomBorder
         if($BuildLines -eq 4){
-            $InnerTopBorder = ($Build["OuterBorder"]) + ($Build["InnerTopBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerTopBorderRC"]) + ($Build["OuterBorder"])
-            $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
             $Lines[2] += $InnerTopBorder
             $Lines[(($Maxlines + $BuildLines)-1)] += $InnerBottomBorder
         }
@@ -90,9 +110,6 @@ function fnBuildASCII{
                 $LeftPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length) - $Segment.Length) / 2
                 $RightPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length) - $Segment.Length) / 2
                 $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
-                if($OuterBuildLines -eq 1){
-                    $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired) + 1
-                }
                 $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
             }
             elseif($Justification -eq "Left"){
@@ -102,6 +119,13 @@ function fnBuildASCII{
             elseif($Justification -eq "Right"){
                 $RightPaddingRequired = $MinimumPaddingLength
                 $LeftPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $RightPaddingRequired
+            }
+            elseif($Justification -eq "None"){
+                $RightPaddingRequired = $MaxWidth - $Segment.Length
+                $LeftPaddingRequired = 0
+            }
+            if($OuterBuildLines -eq 1){
+                $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired) + 1
             }
             $RightPadding = ("$($Padding)") * ($RightPaddingRequired)
             $LeftPadding = ("$($Padding)") * ($LeftPaddingRequired)

@@ -8,7 +8,7 @@ function fnWriteAscii{
         [String] $Font,
         [ValidateSet("Unspecified","SingleBox","DoubleBox","SingleDoubleBox")]
         [String] $BuildType = "Unspecified",
-        [ValidateSet("Center","Left","Right")]
+        [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
         [String] $ForegroundColor = 'Default',
