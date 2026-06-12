@@ -1,19 +1,14 @@
 function fnWriteAscii{
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$False,Position=0)]
-        [Alias('InputText')]
-        [String[]] $InputObject
+        [Parameter(Mandatory=$True,Position=0)]
+        [String[]] $InputObject,
+        [Parameter(Mandatory=$True,Position=1)]
+        [ValidateSet("Large","Small")]
+        [String] $Font
     )
-
-    #$LetterArray = [String[]]($Letters.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Name)
-    #$AcceptedChars = [regex] ( '(?i)[^' + ([regex]::Escape(($LetterArray -join '')) -replace '-', '\-' -replace '\]', '\]') + ' ]' )
-    #if($InputObject -match $AcceptedChars){
-    #    "Unsupported Character."
-    #    Return
-    #}
     foreach($Text in $InputObject){
-        $ASCII = fnGetAscii ($Text -replace ' ', '_')
+        $ASCII = fnGetAscii $Text $Font
         Write-Host ($ASCII -join "`n")
     }
 }

@@ -10,7 +10,7 @@ Function fnLetterXML{
                 'ASCII' = $_.Data
                 'Width' = $_.Width
                 'Lines' = $_.lines
-                'Size' = $_.Size
+                'Font' = $_.Font
             }
         }
     }

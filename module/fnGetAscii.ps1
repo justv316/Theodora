@@ -1,42 +1,44 @@
 function fnGetAscii {
+    [CmdletBinding()]
     param(
+        [Parameter(Mandatory=$True,Position=0)]
         [String] $InputObject,
+        [Parameter(Mandatory=$True,Position=1)]
         [ValidateSet("Large","Small")]
-        [String] $Size
+        [String] $Font
     )
     begin{
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
             fnLetterXML
         }
         #Create Fresh Variables
-        $Text = $InputObject -replace ' ','_'
+        $Text = $InputObject -replace ' ','¤'
         $LetterArray = [Char[]] $Text
-        $MaxWidth = 0
         $MaxLines = 0
-        $LetterWidthArray = @()
-        $LetterLinesArray = @()
         $TextLetterArray = @()
         $Lines = [System.Collections.SortedList]::new()
         #Populate the Arrays
         $LetterArray | Foreach-Object{
+            
             if($_ -match [Regex]('[a-z]')){
                 $Letter = "ll$($_)"
             }
             elseif($_ -match [Regex]('[A-Z]')){
                 $Letter = "ul$($_)"
             }
-            elseif($_ -eq "_"){
-                $Letter = "$($_)"
+            elseif($_ -match [Regex]('\d+') -or $_ -match [Regex]('\p{P}') -or $_ -match [Regex]('\p{S}') -and $_ -ne "&" -and $_ -ne "¤"){
+                $Letter = "l$($_)"
             }
-            if(($Letters.$Letter.Width -as [int]) -gt $MaxWidth){
-                $MaxWidth = $Letters.$Letter.Width
+            elseif($_ -eq "¤"){
+                $Letter = "$_"
+            }
+            elseif($_ -eq "&"){
+                $Letter = "lamp"
             }
             if(($Letters.$Letter.Lines -as [int]) -gt $MaxLines){
                 $MaxLines = $Letters.$Letter.Lines
             }
             $TextLetterArray  += $Letter
-            $LetterWidthArray += $Letters.$Letter.Width -as [int]
-            $LetterLinesArray += $Letters.$Letter.Lines -as [int]
         }
         #Create a line hash that is how many lines we need
         foreach($Num in 1..$MaxLines){
@@ -52,7 +54,12 @@ function fnGetAscii {
         }
         $FiveLineOffsetHash = @{
             "8" = 1
+            "7" = 2
             "6" = 3
+        }
+        $SixLineOffsetHash = @{
+            "8" = 3
+            "7" = 4
         }
         #Populate the Lines Hash
         $TextLetterArray | Foreach-Object {
@@ -60,7 +67,7 @@ function fnGetAscii {
             $LetterLines = $Letters.$Letter.Lines -as [int]
             $LetterWidth = $Letters.$Letter.Width -as [int]
             #If the character is not a space
-            if($Letter -ne "_"){
+            if($Letter -ne "¤"){
                 if($LetterLines -lt $MaxLines){
                     foreach($Num in 1..($MaxLines-$LetterLines)){
                         $Padding = ' ' * ($LetterWidth)
@@ -82,8 +89,15 @@ function fnGetAscii {
                         }
                     }
                     if($LetterLines -eq 6){
-                        foreach($Num in ($LetterLines - 3)..$MaxLines){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - 3)]
+                        foreach($Num in ($LetterLines - $SixLineOffsetHash["$MaxLineStr"])..$MaxLines){
+                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - $SixLineOffsetHash["$MaxLineStr"])]
+                            $StringNum = [String] $Num
+                            $Lines.$StringNum += $LineFragment
+                        }
+                    }
+                    if($LetterLines -eq 7){
+                        foreach($Num in ($LetterLines - 5)..$MaxLines){
+                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - 5)]
                             $StringNum = [String] $Num
                             $Lines.$StringNum += $LineFragment
                         }
@@ -91,14 +105,14 @@ function fnGetAscii {
                 }
                 elseif($LetterLines -eq $MaxLines){
                     foreach($Num in 1..$MaxLines){
-                        $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines + 1)]
+                        $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num - 1]
                         $StringNum = [String] $Num
                         $Lines.$StringNum += $LineFragment
                     }
                 }
             }
             #Create space padding
-            elseif($Letter -eq "_"){
+            elseif($Letter -eq "¤"){
                 foreach($Num in 1..$MaxLines){
                     $Padding = ' ' * 4
                     $StringNum = [String] $Num
