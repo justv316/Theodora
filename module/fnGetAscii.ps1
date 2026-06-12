@@ -19,21 +19,39 @@ function fnGetAscii {
         $Lines = [System.Collections.SortedList]::new()
         #Populate the Arrays
         $LetterArray | Foreach-Object{
-            
-            if($_ -match [Regex]('[a-z]')){
-                $Letter = "ll$($_)"
+            if($Font -eq "Large"){
+                if($_ -match [Regex]('[a-z]')){
+                    $Letter = "ll$($_)"
+                }
+                elseif($_ -match [Regex]('[A-Z]')){
+                    $Letter = "ul$($_)"
+                }
+                elseif($_ -match [Regex]('\d+') -or $_ -match [Regex]('\p{P}') -or $_ -match [Regex]('\p{S}') -and $_ -ne "&" -and $_ -ne "¤"){
+                    $Letter = "l$($_)"
+                }
+                elseif($_ -eq "¤"){
+                    $Letter = "$_"
+                }
+                elseif($_ -eq "&"){
+                    $Letter = "lamp"
+                }
             }
-            elseif($_ -match [Regex]('[A-Z]')){
-                $Letter = "ul$($_)"
-            }
-            elseif($_ -match [Regex]('\d+') -or $_ -match [Regex]('\p{P}') -or $_ -match [Regex]('\p{S}') -and $_ -ne "&" -and $_ -ne "¤"){
-                $Letter = "l$($_)"
-            }
-            elseif($_ -eq "¤"){
-                $Letter = "$_"
-            }
-            elseif($_ -eq "&"){
-                $Letter = "lamp"
+            elseif($Font -eq "Small"){
+                if($_ -match [Regex]('[a-z]')){
+                    $Letter = "ls$($_)"
+                }
+                elseif($_ -match [Regex]('[A-Z]')){
+                    $Letter = "us$($_)"
+                }
+                elseif($_ -match [Regex]('\d+') -or $_ -match [Regex]('\p{P}') -or $_ -match [Regex]('\p{S}') -and $_ -ne "&" -and $_ -ne "¤"){
+                    $Letter = "s$($_)"
+                }
+                elseif($_ -eq "¤"){
+                    $Letter = "$_"
+                }
+                elseif($_ -eq "&"){
+                    $Letter = "samp"
+                }
             }
             if(($Letters.$Letter.Lines -as [int]) -gt $MaxLines){
                 $MaxLines = $Letters.$Letter.Lines
