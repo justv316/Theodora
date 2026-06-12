@@ -9,7 +9,7 @@ function fnGetAscii {
     )
     begin{
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
-            fnLetterXML
+            fnXMLLetter
         }
         #Create Fresh Variables
         $Text = $InputObject -replace ' ','¤'

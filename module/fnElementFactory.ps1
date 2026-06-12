@@ -84,14 +84,7 @@ function fnElementFactory{
     }
     
     #Build the Character Hash if it hasn't been done yet.
-    if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
-        $Script:Characters = @{}
-        $CharacterFile = 'E:\Documents\GitHub\PSGame\Theodora\module\characters.xml'
-        $CharXml = [xml] (Get-Content $CharacterFile)
-        $CharXml.Chars.Char | ForEach-Object {
-            $Characters[$($_.Name)] = $_.Data
-        }
-    }
+    fnCharacterXML
     if($Border){
         if($BorderType -eq "Double"){
             $LeftBorder = $Characters.DoubleVertical
