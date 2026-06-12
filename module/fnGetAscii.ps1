@@ -62,7 +62,7 @@ function fnGetAscii {
         foreach($Num in 1..$MaxLines){
             $Lines["$($Num)"] = ("")
         }
-        #A set offset is required to print letters in their correct space. This will be used in place of a mathematical function that determines it, for now.
+        #An offset is required to print letters in their correct place.
         $MaxLineStr = $MaxLines -as [String]
         $FourLineOffsetHash = @{
             "8" = -1
