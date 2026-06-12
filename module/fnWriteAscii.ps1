@@ -7,8 +7,10 @@ function fnWriteAscii{
         [ValidateSet("Large","Small")]
         [String] $Font,
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [Alias('Foreground')]
         [String] $ForegroundColor = 'Default',
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray","DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [Alias('Background')]
         [String] $BackgroundColor = 'Default'
     )
     foreach($Text in $InputObject){
@@ -40,7 +42,7 @@ function fnWriteAscii{
                 }
             }
             else{
-                Write-Host BackgroundColor $BackgroundColor ($ASCII -join "`n")
+                Write-Host -BackgroundColor $BackgroundColor ($ASCII -join "`n")
             }
         }
         else{
