@@ -6,6 +6,7 @@ function fnBuildASCII{
         [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
         [String] $Padding = ' ',
+        [Switch] $Segmented,
         [int]$EnforcedMaxLength = 160,
         [int]$MinimumPaddingLength = 4
     )
@@ -14,7 +15,8 @@ function fnBuildASCII{
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
             fnXMLCharacter
         }
-        $Boxes = @{
+        #We need to reference this hash table later, so making it persist while the module is active
+        $Script:Boxes = @{
             "SingleBox" = @{
             "BorderLines" = 2
             "OuterBorderLines" = 1
@@ -56,7 +58,6 @@ function fnBuildASCII{
             "InnerBottomBorderRC" = $Characters.SingleBottomRightCorner
             "LeftBorder" = $Characters.DoubleVertical + $Characters.SingleVertical
             "RightBorder" = $Characters.SingleVertical + $Characters.DoubleVertical
-
             }
         }
         $Build = ($Boxes[$($BuildType)])
@@ -65,18 +66,27 @@ function fnBuildASCII{
         $Lines = [System.Collections.SortedList]::new()
         $MaxLines = $ASCII.Count
         $MaxWidth = 0
-        foreach($Num in 1..($MaxLines + $BuildLines)){
-            $Lines[$($Num)] = ("")
+        #Create a Line Hashtable that is exactly the number of lines we need
+        #If we're sending a segmented hash, we need 3 lines for each Text Line. (Left Padding, Segment, Right Padding.)
+        if($Segmented){
+            foreach($Num in 1..(($MaxLines*3) + $BuildLines)){
+                $Lines[$($Num)] = ("")
+            }
         }
+        else{
+            foreach($Num in 1..($MaxLines + $BuildLines)){
+                $Lines[$($Num)] = ("")
+            }
+        }
+        #Find the Widest Character for Emergency Padding Purposes - We're unsure if we actually need this w/ proper XML entries 
         foreach($Line in $ASCII){
             if($Line.Length -gt $MaxWidth){
                 $MaxWidth = $Line.Length
             }
         }
-        
     }
     process{
-        #Populate Border Lines
+        #Create Border Lines
         if($Justification -eq "None"){
             $EnforcedMaxLength = $MaxWidth + $OuterBuildLines
             $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterTopBorderRC"])
@@ -94,21 +104,29 @@ function fnBuildASCII{
                 $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
             }
         }
+        #Adding the BorderLines is the same if segmented or not
         $Lines[1] += $TopBorder
-        $Lines[($Maxlines + $BuildLines)] += $BottomBorder
+        $Lines[($Lines.Count)] += $BottomBorder
         if($BuildLines -eq 4){
             $Lines[2] += $InnerTopBorder
-            $Lines[(($Maxlines + $BuildLines)-1)] += $InnerBottomBorder
+            $Lines[($Lines.Count - 1)] += $InnerBottomBorder
         }
         #Fill the Lines Array with Assembled Segments
         $Start = ($OuterBuildLines + 1)
-        $End = (($BuildLines + $MaxLines) - $OuterBuildLines)
+        $End = (($Lines.Count) - $OuterBuildLines)
+        $Counter = 0
+        $Counter2 = 0
         Foreach($Num in $Start..$End){
-            $Segment = $ASCII[$Num-$Start]
+            if($Segmented){
+                $Segment = $ASCII[$Counter2]
+            }
+            else{
+                $Segment = $ASCII[$Num-$Start]
+            }
             #Determine Segment Padding Needed
             if($Justification -eq "Center"){
-                $LeftPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length) - $Segment.Length) / 2
-                $RightPaddingRequired = (($EnforcedMaxLength) - (($Build["LeftBorder"]).Length) - (($Build["RightBorder"]).Length) - $Segment.Length) / 2
+                $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["LeftBorder"]).Length) - ($Segment.Length / 2)
+                $RightPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["RightBorder"]).Length) - ($Segment.Length / 2)
                 $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
                 $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
             }
@@ -127,12 +145,33 @@ function fnBuildASCII{
             if($OuterBuildLines -eq 1){
                 $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired) + 1
             }
-            $RightPadding = ("$($Padding)") * ($RightPaddingRequired)
-            $LeftPadding = ("$($Padding)") * ($LeftPaddingRequired)
-            $AssembledSegment = ($Build["LeftBorder"]) + $LeftPadding + $Segment + $RightPadding + ($Build["RightBorder"])
-            $Lines[$Num] += $AssembledSegment
-        }
+            $RightPadding = (("$($Padding)") * ($RightPaddingRequired)) + ($Build["RightBorder"])
+            $LeftPadding = ($Build["LeftBorder"]) + (("$($Padding)") * ($LeftPaddingRequired))
+            if($Segmented){
+                if($Counter -le 2){
+                    if($Counter2 -le $Maxlines){
+                        if($Counter -eq 0){
+                            $Lines[$Num] += $LeftPadding
+                            $Counter++
+                        }
+                        elseif($Counter -eq 1){
+                            $Lines[$Num] += $ASCII[$Counter2]
+                            $Counter++
+                        }
+                        elseif($Counter -eq 2){
+                            $Lines[$Num] += $RightPadding  
+                            $Counter = 0
+                            $Counter2++
+                        }
+                    }
+                }
+            }
+            else{
+                $AssembledSegment = $LeftPadding + $Segment + $RightPadding
+                $Lines[$Num] += $AssembledSegment
+            }
 
+        }
         #Return the Output
         $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
             $_
