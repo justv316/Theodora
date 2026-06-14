@@ -5,7 +5,8 @@ function fnWriteRainbow {
         [Alias('Foreground')]
         [String] $ForegroundColor = '',
         [Alias('Background')]
-        [String] $BackgroundColor = ''
+        [String] $BackgroundColor = '',
+        [Switch] $Segmented
     )
     begin{
         $Colors = @('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan', 'DarkRed', 'DarkMagenta', 'DarkYellow',
@@ -34,6 +35,8 @@ function fnWriteRainbow {
                 }
             }
         }
-        Write-Host ''
+        if(!($Segmented)){
+            Write-Host ''
+        }
     }
 }
