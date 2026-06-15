@@ -21,11 +21,13 @@ function fnWriteAscii{
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
         [String] $BorderForegroundColor = 'Default',
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
-        [String] $BorderBackgroundColor = 'Default'
+        [String] $BorderBackgroundColor = 'Default',
+        [int]$EnforcedMaxLength = 160,
+        [int]$MinimumPaddingLength = 4
     )
     begin{
         foreach($Text in $InputObject){
-            $ASCII = fnGetAscii $Text $Font
+            $ASCII = fnGetAscii $Text $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
             if($BuildType -ne "Unspecified"){
                 $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification
                 if($TextForegroundColor -ne 'default' -or $TextBackgroundColor -ne 'default' -or $BorderForegroundColor -ne 'default' -or $BorderBackgroundColor -ne 'default'){

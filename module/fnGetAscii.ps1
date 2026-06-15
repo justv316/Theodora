@@ -5,13 +5,20 @@ function fnGetAscii {
         [String] $InputObject,
         [Parameter(Mandatory=$True,Position=1)]
         [ValidateSet("Large","Small")]
-        [String] $Font
+        [String] $Font,
+        [Parameter(Mandatory=$True,Position=2)]
+        [String]$BuildType,
+        [Parameter(Position=3)]
+        [int] $EnforcedMaxLength = 160,
+        [Parameter(Position=4)]
+        [int] $MinimumPaddingLength = 4
     )
     begin{
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
             fnXMLLetter
         }
         #Create Fresh Variables
+        $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes[$($BuildType)])["BorderLines"])) / 12)
         $SubLineCount = 0
         $WrapReg = "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
         $Reg = $InputObject | Select-String -AllMatches -Pattern $WrapReg
@@ -69,42 +76,44 @@ function fnGetAscii {
         foreach($Num in 1..($SubLineCount)){
             $Lines[$Num] = ("")
         }
-        #Populate the Lines Hash
+        $StartLine = 1
         foreach($GroupNum in 1..$CountTextGroups){
-            $TextGroups[$GroupNum].Text | Foreach-Object{
+            $Textgroups[$GroupNum].Text | Foreach-Object{
                 $Letter = [String]$_
                 $LetterLines = $Letters.$Letter.Lines -as [int]
                 $LetterWidth = $Letters.$Letter.Width -as [int]
-                $Offset = ($LetterLines * 2) - ($TextGroups[$GroupNum].MaxLines) - 1
-                $StartLine = 1
                 $LastLine = $TextGroups[$GroupNum].MaxLines * $GroupNum
+                $LineIndex = 0
+                $CountPadding = 0
                 if($Letter -ne "¤"){
                     if($LetterLines -lt $TextGroups[$GroupNum].MaxLines){
-                        #Create Padding above the character to the maxline
-                        foreach($Num in $StartLine..($TextGroups[$GroupNum].MaxLines - $LetterLines)){
-                            $Padding = ' ' * ($LetterWidth)
+                        foreach($Num in $StartLine..($LastLine - $LetterLines)){
+                            $Padding = ' ' * $LetterWidth
                             $Lines[$Num] += $Padding
+                            $CountPadding++
                         }
-                        foreach($Num in (($LetterLines - $Offset)..$LastLine)){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - $Offset)]
+                        foreach($Num in ($StartLine + $CountPadding)..$LastLine){
+                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$LineIndex]
                             $Lines[$Num] += $LineFragment
+                            $LineIndex++
                         }
                     }
                     elseif($LetterLines -eq $TextGroups[$GroupNum].MaxLines){
-                        foreach($Num in 1..$TextGroups[$GroupNum].MaxLines){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num - 1]
+                        foreach($Num in $StartLine..$LastLine){
+                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$LineIndex]
                             $Lines[$Num] += $LineFragment
+                            $LineIndex++
                         }
                     }
                 }
-                #Create space padding
                 elseif($Letter -eq "¤"){
-                    foreach($Num in 1..$TextGroups[$GroupNum].MaxLines){
+                    foreach($Num in $StartLine..$LastLine){
                         $Padding = ' ' * 4
                         $Lines[$Num] += $Padding
                     }
                 }
             }
+            $StartLine += $TextGroups[$GroupNum].MaxLines
         }
     } #End Begin
     process{
