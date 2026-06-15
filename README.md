@@ -16,8 +16,8 @@
 	a. Open a new Terminal window
 	b. Right click the empty space next to a tab and click Settings
 	c. Under Startup, for Default terminal application, change this to Windows Console Host, and ensure your Default profile is Windows PowerShell
-	
-Note: While this game utilizes .xlsx files to serve as databases, you do not need excel, nor any spreadsheet software installed. 
+
 	
 ### Starting the Game
 0. Install the Theodora module
+1. Run the commandlet: 'Start-Theodora'
