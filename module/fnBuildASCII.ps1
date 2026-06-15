@@ -91,8 +91,14 @@ function fnBuildASCII{
                 $LeftPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $RightPaddingRequired
             }
             elseif($Justification -eq "None"){
-                $RightPaddingRequired = $MaxLineWidth - $Segment.Length
-                $LeftPaddingRequired = 0
+                if($Segment.Length -lt $MaxLineWidth){
+                    $RightPaddingRequired = [Math]::floor(($MaxLineWidth - $Segment.Length) / 2)
+                    $LeftPaddingRequired = [Math]::ceiling(($MaxLineWidth - $Segment.Length) / 2)
+                }
+                else{
+                    $RightPaddingRequired = $MaxLineWidth - $Segment.Length
+                    $LeftPaddingRequired = 0
+                }
             }
             if($OuterBuildLines -eq 1){
                 $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired) + 1

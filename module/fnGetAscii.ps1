@@ -29,7 +29,7 @@ function fnGetAscii {
         $TextGroups = [System.Collections.SortedList]::new()
         foreach($Num in 1..$CountTextGroups){
             $TextGroups[$Num] = @{
-                Text = @()
+                Text = [System.Collections.ArrayList]@()
                 MaxLines = 0
                 MaxWidth = 0
             }
@@ -67,6 +67,10 @@ function fnGetAscii {
         foreach($num in 1..$CountTextGroups){
             $Textgroups[$Num] | Foreach-Object{
                 $SubLineCount += $_.MaxLines
+                if($TextGroups[$Num].Text[-1] -eq "¤"){
+                    $Arr = $TextGroups[$Num].Text
+                    $TextGroups[$Num].Text = $Arr[0..($Arr.Count - 2)]
+                }
             }
         }
         $Lines = [System.Collections.SortedList]::new()
