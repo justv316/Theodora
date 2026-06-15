@@ -65,11 +65,11 @@ function fnBuildASCII{
         $OuterBuildLines = ($Boxes[$($BuildType)])["OuterBorderLines"]
         $Lines = [System.Collections.SortedList]::new()
         $MaxLines = $ASCII.Count
-        $MaxWidth = 0
+        $MaxLineWidth = 0
         #Create a Line Hashtable that is exactly the number of lines we need
         #If we're sending a segmented hash, we need 3 lines for each Text Line. (Left Padding, Segment, Right Padding.)
         if($Segmented){
-            foreach($Num in 1..(($MaxLines*3) + $BuildLines)){
+            foreach($Num in 1..(($MaxLines * 3) + $BuildLines)){
                 $Lines[$($Num)] = ("")
             }
         }
@@ -78,17 +78,15 @@ function fnBuildASCII{
                 $Lines[$($Num)] = ("")
             }
         }
-        #Find the Widest Character for Emergency Padding Purposes - We're unsure if we actually need this w/ proper XML entries 
+        #Find the Widest Line for both emergency padding purposes, and to properly align the border in None-type Justification
         foreach($Line in $ASCII){
-            if($Line.Length -gt $MaxWidth){
-                $MaxWidth = $Line.Length
+            if($Line.Length -gt $MaxLineWidth){
+                $MaxLineWidth = $Line.Length
             }
         }
-    }
-    process{
         #Create Border Lines
         if($Justification -eq "None"){
-            $EnforcedMaxLength = $MaxWidth + $OuterBuildLines
+            $EnforcedMaxLength = $MaxLineWidth + $OuterBuildLines
             $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterTopBorderRC"])
             $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterBottomBorderRC"])
             if($BuildLines -eq 4){
@@ -111,6 +109,8 @@ function fnBuildASCII{
             $Lines[2] += $InnerTopBorder
             $Lines[($Lines.Count - 1)] += $InnerBottomBorder
         }
+    }
+    process{
         #Fill the Lines Array with Assembled Segments
         $Start = ($OuterBuildLines + 1)
         $End = (($Lines.Count) - $OuterBuildLines)
@@ -139,7 +139,7 @@ function fnBuildASCII{
                 $LeftPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $RightPaddingRequired
             }
             elseif($Justification -eq "None"){
-                $RightPaddingRequired = $MaxWidth - $Segment.Length
+                $RightPaddingRequired = $MaxLineWidth - $Segment.Length
                 $LeftPaddingRequired = 0
             }
             if($OuterBuildLines -eq 1){

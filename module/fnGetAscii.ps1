@@ -12,133 +12,100 @@ function fnGetAscii {
             fnXMLLetter
         }
         #Create Fresh Variables
-        $Text = $InputObject -replace ' ','¤'
-        $LetterArray = [Char[]] $Text
-        $MaxLines = 0
-        $TextLetterArray = @()
+        $SubLineCount = 0
+        $WrapReg = "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
+        $Reg = $InputObject | Select-String -AllMatches -Pattern $WrapReg
+        $CountTextGroups = $Reg.Matches.Count
+        $TextGroups = [System.Collections.SortedList]::new()
+        foreach($Num in 1..$CountTextGroups){
+            $TextGroups[$Num] = @{
+                Text = @()
+                MaxLines = 0
+                MaxWidth = 0
+            }
+        }
+        $StringPos = 1
+        if($Font -eq "Large"){
+            $FontC = "l"
+        }
+        elseif($Font -eq "Small"){
+            $FontC = "s"
+        }
+        $Strings = $Reg.Matches | Foreach-Object{$_.Value}
+        $Strings | Foreach-Object{
+            $LetterArray = [Char[]] $_
+            foreach($Character in $LetterArray){
+                if($Character -match [Regex]('[a-z]')){
+                    $Letter = "l$($FontC)$($Character)"
+                }
+                elseif($Character -match [Regex]('[A-Z]')){
+                    $Letter = "u$($FontC)$($Character)"
+                }
+                elseif($Character -match [Regex]('\d+') -or $Character -match [Regex]('\p{P}') -or $Character -match [Regex]('\p{S}') -and $Character -ne "&" -and $Character -ne "¤"){
+                    $Letter = "$($FontC)$($Character)"
+                }
+                elseif($Character -eq " "){
+                    $Letter = "¤"
+                }
+                elseif($Character -eq "&"){
+                    $Letter = "$($FontC)amp"
+                }
+                if(($Letters.$Letter.Width -as [int]) -gt $TextGroups[$StringPos].MaxWidth){
+                    $TextGroups[$StringPos].MaxWidth = $Letters.$Letter.Width -as [Int]
+                }
+                if(($Letters.$Letter.Lines -as [int]) -gt $TextGroups[$StringPos].MaxLines){
+                    $TextGroups[$StringPos].MaxLines = $Letters.$Letter.Lines -as [int]
+                }
+                $TextGroups[$StringPos].Text += $Letter
+            }
+            $StringPos++
+        }
+        foreach($num in 1..$CountTextGroups){
+            $Textgroups[$Num] | Foreach-Object{
+                $SubLineCount += $_.MaxLines
+            }
+        }
         $Lines = [System.Collections.SortedList]::new()
-        #Populate the Arrays
-        $LetterArray | Foreach-Object{
-            if($Font -eq "Large"){
-                if($_ -match [Regex]('[a-z]')){
-                    $Letter = "ll$($_)"
-                }
-                elseif($_ -match [Regex]('[A-Z]')){
-                    $Letter = "ul$($_)"
-                }
-                elseif($_ -match [Regex]('\d+') -or $_ -match [Regex]('\p{P}') -or $_ -match [Regex]('\p{S}') -and $_ -ne "&" -and $_ -ne "¤"){
-                    $Letter = "l$($_)"
-                }
-                elseif($_ -eq "¤"){
-                    $Letter = "$_"
-                }
-                elseif($_ -eq "&"){
-                    $Letter = "lamp"
-                }
-            }
-            elseif($Font -eq "Small"){
-                if($_ -match [Regex]('[a-z]')){
-                    $Letter = "ls$($_)"
-                }
-                elseif($_ -match [Regex]('[A-Z]')){
-                    $Letter = "us$($_)"
-                }
-                elseif($_ -match [Regex]('\d+') -or $_ -match [Regex]('\p{P}') -or $_ -match [Regex]('\p{S}') -and $_ -ne "&" -and $_ -ne "¤"){
-                    $Letter = "s$($_)"
-                }
-                elseif($_ -eq "¤"){
-                    $Letter = "$_"
-                }
-                elseif($_ -eq "&"){
-                    $Letter = "samp"
-                }
-            }
-            if(($Letters.$Letter.Lines -as [int]) -gt $MaxLines){
-                $MaxLines = $Letters.$Letter.Lines
-            }
-            $TextLetterArray  += $Letter
-        }
-        #Create a line hash that is how many lines we need
-        foreach($Num in 1..$MaxLines){
-            $Lines["$($Num)"] = ("")
-        }
-        #An offset is required to print letters in their correct place.
-        $MaxLineStr = $MaxLines -as [String]
-        $FourLineOffsetHash = @{
-            "8" = -1
-            "7" = 0
-            "6" = 1
-            "5" = 2
-        }
-        $FiveLineOffsetHash = @{
-            "8" = 1
-            "7" = 2
-            "6" = 3
-        }
-        $SixLineOffsetHash = @{
-            "8" = 3
-            "7" = 4
+        foreach($Num in 1..($SubLineCount)){
+            $Lines[$Num] = ("")
         }
         #Populate the Lines Hash
-        $TextLetterArray | Foreach-Object {
-            $Letter = [String]$_
-            $LetterLines = $Letters.$Letter.Lines -as [int]
-            $LetterWidth = $Letters.$Letter.Width -as [int]
-            #If the character is not a space
-            if($Letter -ne "¤"){
-                if($LetterLines -lt $MaxLines){
-                    foreach($Num in 1..($MaxLines-$LetterLines)){
-                        $Padding = ' ' * ($LetterWidth)
-                        $StringNum = [String] $Num
-                        $Lines.$StringNum += $Padding
-                    }
-                    if($LetterLines -eq 4){
-                        foreach($Num in ($LetterLines - $FourLineOffsetHash["$MaxLineStr"])..$MaxLines){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - $FourLineOffsetHash["$MaxLineStr"])]
-                            $StringNum = [String] $Num
-                            $Lines.$StringNum += $LineFragment
+        foreach($GroupNum in 1..$CountTextGroups){
+            $TextGroups[$GroupNum].Text | Foreach-Object{
+                $Letter = [String]$_
+                $LetterLines = $Letters.$Letter.Lines -as [int]
+                $LetterWidth = $Letters.$Letter.Width -as [int]
+                $Offset = ($LetterLines * 2) - ($TextGroups[$GroupNum].MaxLines) - 1
+                $StartLine = 1
+                $LastLine = $TextGroups[$GroupNum].MaxLines * $GroupNum
+                if($Letter -ne "¤"){
+                    if($LetterLines -lt $TextGroups[$GroupNum].MaxLines){
+                        #Create Padding above the character to the maxline
+                        foreach($Num in $StartLine..($TextGroups[$GroupNum].MaxLines - $LetterLines)){
+                            $Padding = ' ' * ($LetterWidth)
+                            $Lines[$Num] += $Padding
+                        }
+                        foreach($Num in (($LetterLines - $Offset)..$LastLine)){
+                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - $Offset)]
+                            $Lines[$Num] += $LineFragment
                         }
                     }
-                    if($LetterLines -eq 5){
-                        foreach($Num in ($LetterLines - $FiveLineOffsetHash["$MaxLineStr"])..$MaxLines){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - $FiveLineOffsetHash["$MaxLineStr"])]
-                            $StringNum = [String] $Num
-                            $Lines.$StringNum += $LineFragment
-                        }
-                    }
-                    if($LetterLines -eq 6){
-                        foreach($Num in ($LetterLines - $SixLineOffsetHash["$MaxLineStr"])..$MaxLines){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - $SixLineOffsetHash["$MaxLineStr"])]
-                            $StringNum = [String] $Num
-                            $Lines.$StringNum += $LineFragment
-                        }
-                    }
-                    if($LetterLines -eq 7){
-                        foreach($Num in ($LetterLines - 5)..$MaxLines){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num-($LetterLines - 5)]
-                            $StringNum = [String] $Num
-                            $Lines.$StringNum += $LineFragment
+                    elseif($LetterLines -eq $TextGroups[$GroupNum].MaxLines){
+                        foreach($Num in 1..$TextGroups[$GroupNum].MaxLines){
+                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num - 1]
+                            $Lines[$Num] += $LineFragment
                         }
                     }
                 }
-                elseif($LetterLines -eq $MaxLines){
-                    foreach($Num in 1..$MaxLines){
-                        $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$Num - 1]
-                        $StringNum = [String] $Num
-                        $Lines.$StringNum += $LineFragment
+                #Create space padding
+                elseif($Letter -eq "¤"){
+                    foreach($Num in 1..$TextGroups[$GroupNum].MaxLines){
+                        $Padding = ' ' * 4
+                        $Lines[$Num] += $Padding
                     }
-                }
-            }
-            #Create space padding
-            elseif($Letter -eq "¤"){
-                foreach($Num in 1..$MaxLines){
-                    $Padding = ' ' * 4
-                    $StringNum = [String] $Num
-                    $Lines.$StringNum += $Padding
                 }
             }
         }
-        
     } #End Begin
     process{
         $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
