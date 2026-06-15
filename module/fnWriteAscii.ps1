@@ -320,6 +320,206 @@ function fnWriteAscii{
                         }
                     }
                 }
+                elseif($BorderForegroundColor -ne 'Default' -and $TextForegroundColor -ne 'Default'){
+                    #Border and Text Foregrounds have been specified
+                    while($LineCounter -le $LineCount){
+                        if($BorderLines -contains $LineCounter){
+                            if($BorderForegroundColor -eq 'rainbow'){
+                                fnWriteRainbow -ForegroundColor $BorderForegroundColor -Line $ConstructedASCII[$LineCounter-1]
+                            }
+                            else{
+                                Write-Host $ConstructedASCII[$LineCounter-1] -ForegroundColor $BorderForegroundColor
+                            }
+                            $LineCounter++
+                        }
+                        else{
+                            if($ASCIICounter -le $MaxLines){
+                                if($Counter -eq 1){
+                                    if($BorderForegroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -ForegroundColor $BorderForegroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -ForegroundColor $BorderForegroundColor -NoNewLine
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseif($Counter -eq 2){
+                                    if($TextForegroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -ForegroundColor $TextForegroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -NoNewLine -ForegroundColor $TextForegroundColor
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseIf($Counter -eq 3){
+                                    if($BorderForegroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -ForegroundColor $BorderForegroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                        Write-Host ' '
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -ForegroundColor $BorderForegroundColor
+                                    }
+                                    $Counter = 1
+                                    $LineCounter++
+                                    $ASCIICounter++
+                                }
+                            }
+                        }
+                    }
+                }
+                elseif($BorderBackgroundColor -ne 'Default' -and $TextBackgroundColor -ne 'Default'){
+                    #Border and Text Backgrounds have been specified
+                    while($LineCounter -le $LineCount){
+                        if($BorderLines -contains $LineCounter){
+                            if($BorderBackgroundColor -eq 'rainbow'){
+                                fnWriteRainbow -BackgroundColor $BorderBackgroundColor -Line $ConstructedASCII[$LineCounter-1]
+                            }
+                            else{
+                                Write-Host $ConstructedASCII[$LineCounter-1] -BackgroundColor $BorderBackgroundColor
+                            }
+                            $LineCounter++
+                        }
+                        else{
+                            if($ASCIICounter -le $MaxLines){
+                                if($Counter -eq 1){
+                                    if($BorderBackgroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -BackgroundColor $BorderBackgroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -BackgroundColor $BorderBackgroundColor -NoNewLine
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseif($Counter -eq 2){
+                                    if($TextBackgroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -BackgroundColor $TextBackgroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -NoNewLine -BackgroundColor $TextBackgroundColor
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseIf($Counter -eq 3){
+                                    if($BorderBackgroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -BackgroundColor $BorderBackgroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                        Write-Host ' '
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -BackgroundColor $BorderBackgroundColor
+                                    }
+                                    $Counter = 1
+                                    $LineCounter++
+                                    $ASCIICounter++
+                                }
+                            }
+                        }
+                    }
+                }
+                elseif($BorderBackgroundColor -ne 'Default' -and $TextForegroundColor -ne 'Default'){
+                    #Border Background and Text Foreground have been specified
+                    while($LineCounter -le $LineCount){
+                        if($BorderLines -contains $LineCounter){
+                            if($BorderBackgroundColor -eq 'rainbow'){
+                                fnWriteRainbow -BackgroundColor $BorderBackgroundColor -Line $ConstructedASCII[$LineCounter-1]
+                            }
+                            else{
+                                Write-Host $ConstructedASCII[$LineCounter-1] -BackgroundColor $BorderBackgroundColor
+                            }
+                            $LineCounter++
+                        }
+                        else{
+                            if($ASCIICounter -le $MaxLines){
+                                if($Counter -eq 1){
+                                    if($BorderBackgroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -BackgroundColor $BorderBackgroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -BackgroundColor $BorderBackgroundColor -NoNewLine
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseif($Counter -eq 2){
+                                    if($TextForegroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -ForegroundColor $TextForegroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -NoNewLine -ForegroundColor $TextForegroundColor
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseIf($Counter -eq 3){
+                                    if($BorderBackgroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -BackgroundColor $BorderBackgroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                        Write-Host ' '
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -BackgroundColor $BorderBackgroundColor
+                                    }
+                                    $Counter = 1
+                                    $LineCounter++
+                                    $ASCIICounter++
+                                }
+                            }
+                        }
+                    }
+                }
+                elseif($BorderForegroundColor -ne 'Default' -and $TextBackgroundColor -ne 'Default'){
+                    #Border Foreground and Text Background have been specified
+                    while($LineCounter -le $LineCount){
+                        if($BorderLines -contains $LineCounter){
+                            if($BorderBackgroundColor -eq 'rainbow'){
+                                fnWriteRainbow -ForegroundColor $BorderForegroundColor -Line $ConstructedASCII[$LineCounter-1]
+                            }
+                            else{
+                                Write-Host $ConstructedASCII[$LineCounter-1] -ForegroundColor $BorderForegroundColor
+                            }
+                            $LineCounter++
+                        }
+                        else{
+                            if($ASCIICounter -le $MaxLines){
+                                if($Counter -eq 1){
+                                    if($BorderForegroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -ForegroundColor $BorderForegroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -ForegroundColor $BorderForegroundColor -NoNewLine
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseif($Counter -eq 2){
+                                    if($TextForegroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -BackgroundColor $TextBackgroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -NoNewLine -BackgroundColor $TextBackgroundColor
+                                    }
+                                    $Counter++
+                                    $LineCounter++
+                                }
+                                elseIf($Counter -eq 3){
+                                    if($BorderForegroundColor -eq 'rainbow'){
+                                        fnWriteRainbow -ForegroundColor $BorderForegroundColor -Line $ConstructedASCII[$LineCounter-1] -Segmented
+                                        Write-Host ' '
+                                    }
+                                    else{
+                                        Write-Host $ConstructedASCII[$LineCounter-1] -ForegroundColor $BorderForegroundColor
+                                    }
+                                    $Counter = 1
+                                    $LineCounter++
+                                    $ASCIICounter++
+                                }
+                            }
+                        }
+                    }
+                }
                 elseif($TextForegroundColor -ne 'Default' -and $TextBackgroundColor -ne 'Default'){
                     #Both TextColors have been specified and Border colors are default.
                     while($LineCounter -le $LineCount){
