@@ -18,7 +18,7 @@ function fnGetAscii {
             fnXMLLetter
         }
         #Create Fresh Variables
-        $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes[$($BuildType)])["BorderLines"])) / 12)
+        $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes[$($BuildType)])["BorderLines"])) / 10)
         $SubLineCount = 0
         $WrapReg = "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
         $Reg = $InputObject | Select-String -AllMatches -Pattern $WrapReg
