@@ -26,6 +26,56 @@ function fnWriteAscii{
         [int]$MinimumPaddingLength = 4
     )
     begin{
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
+            fnXMLLetter
+        }
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
+            fnXMLCharacter
+        } 
+        $Script:Boxes = @{
+            "SingleBox" = @{
+            "BorderLines" = 2
+            "OuterBorderLines" = 1
+            "OuterBorder" = $Characters.SingleVertical
+            "OuterHorizontalBorder" = $Characters.SingleHorizontal
+            "OuterTopBorderLC" = $Characters.SingleTopLeftCorner
+            "OuterTopBorderRC" = $Characters.SingleTopRightCorner
+            "OuterBottomBorderLC" = $Characters.SingleBottomLeftCorner
+            "OuterBottomBorderRC" = $Characters.SingleBottomRightCorner
+            "LeftBorder" = $Characters.SingleVertical
+            "RightBorder" = $Characters.SingleVertical
+            }
+            "DoubleBox" = @{
+            "BorderLines" = 2
+            "OuterBorderLines" = 1
+            "OuterBorder" = $Characters.DoubleVertical
+            "OuterHorizontalBorder" = $Characters.DoubleHorizontal
+            "OuterTopBorderLC" = $Characters.DoubleTopLeftCorner
+            "OuterTopBorderRC" = $Characters.DoubleTopRightCorner
+            "OuterBottomBorderLC" = $Characters.DoubleBottomLeftCorner
+            "OuterBottomBorderRC" = $Characters.DoubleBottomRightCorner
+            "LeftBorder" = $Characters.DoubleVertical
+            "RightBorder" = $Characters.DoubleVertical
+            }
+            "SingleDoubleBox" = @{
+            "BorderLines" = 4
+            "OuterBorderLines" = 2
+            "OuterBorder" = $Characters.DoubleVertical
+            "OuterHorizontalBorder" = $Characters.DoubleHorizontal
+            "OuterTopBorderLC" = $Characters.DoubleTopLeftCorner
+            "OuterTopBorderRC" = $Characters.DoubleTopRightCorner
+            "OuterBottomBorderLC" = $Characters.DoubleBottomLeftCorner
+            "OuterBottomBorderRC" = $Characters.DoubleBottomRightCorner
+            "InnerBorder" = $Characters.SingleVertical
+            "InnerHorizontalBorder" = $Characters.SingleHorizontal
+            "InnerTopBorderLC" = $Characters.SingleTopLeftCorner
+            "InnerTopBorderRC" = $Characters.SingleTopRightCorner
+            "InnerBottomBorderLC" = $Characters.SingleBottomLeftCorner
+            "InnerBottomBorderRC" = $Characters.SingleBottomRightCorner
+            "LeftBorder" = $Characters.DoubleVertical + $Characters.SingleVertical
+            "RightBorder" = $Characters.SingleVertical + $Characters.DoubleVertical
+            }
+        }
         foreach($Text in $InputObject){
             $ASCII = fnGetAscii $Text $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
             if($BuildType -ne "Unspecified"){

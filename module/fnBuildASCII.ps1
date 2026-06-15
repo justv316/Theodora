@@ -12,9 +12,6 @@ function fnBuildASCII{
     )
 
     begin{
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
-            fnXMLCharacter
-        }
         $Build = ($Boxes[$($BuildType)])
         $BuildLines = ($Boxes[$($BuildType)])["BorderLines"]
         $OuterBuildLines = ($Boxes[$($BuildType)])["OuterBorderLines"]
