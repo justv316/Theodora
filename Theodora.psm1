@@ -24,7 +24,8 @@ foreach($Directory in @('Module')){
 
 
 #Requires -PSEdition Desktop
-#Requires -Version 5.0
+#Requires -Version 7.5
+#Requires -Modules argparser
 Clear-Host
 Write-Host "Setup Complete - Run 'Start-Theodora' to launch." -BackgroundColor DarkGreen -ForegroundColor White
 

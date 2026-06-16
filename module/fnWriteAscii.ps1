@@ -10,6 +10,7 @@ function fnWriteAscii{
         [String] $BuildType = "Unspecified",
         [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
+        [String] $ManualFormatting = '',
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
         [String] $ForegroundColor = 'Default',
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
@@ -83,6 +84,12 @@ function fnWriteAscii{
                 if($TextForegroundColor -ne 'default' -or $TextBackgroundColor -ne 'default' -or $BorderForegroundColor -ne 'default' -or $BorderBackgroundColor -ne 'default'){
                     $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification -Segmented
                 }
+                if($ManualFormatting -ne ''){
+                    fnWriteManual $ConstructedASCII $ManualFormatting -Segmented
+                }
+            }
+            if($ManualFormatting -ne ''){
+                fnWriteManual $ASCII $ManualFormatting
             }
         }
     }
