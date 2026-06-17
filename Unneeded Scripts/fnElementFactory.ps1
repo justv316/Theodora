@@ -1,11 +1,3 @@
-
-<#
-.ATTRIBUTION 
-    Material: Get-LetterXML, Reference material for the factory
-    Author: Joakim Borger Svendsen WriteAscii Module
-    Without you this would have sucked so much more to write
-#>
-
 function fnElementFactory{
     [CmdletBinding()]
     param(
