@@ -1,0 +1,47 @@
+<boxes>
+    <box>
+        <Name>SingleBox</Name>
+        <BorderLines value="2"/>
+        <OuterBorderLines value="1"/>
+        <OuterBorder value="$Characters.SingleVertical"/>
+        <OuterHorizontalBorder value="$Characters.SingleHorizontal"/>
+        <OuterTopBorderLC value="$Characters.SingleTopLeftCorner"/>
+        <OuterTopBorderRC value="$Characters.SingleTopRightCorner"/>
+        <OuterBottomBorderLC value="$Characters.SingleBottomLeftCorner"/>
+        <OuterBottomBorderRC value="$Characters.SingleBottomRightCorner"/>
+        <LeftBorder value="$Characters.SingleVertical"/>
+        <RightBorder value="$Characters.SingleVertical"/>
+    </box>
+    <box>
+        <Name>DoubleBox</Name>
+        <BorderLines Value="2"/>
+        <OuterBorderLines Value="1"/>
+        <OuterBorder Value="$Characters.DoubleVertical"/>
+        <OuterHorizontalBorder Value="$Characters.DoubleHorizontal"/>
+        <OuterTopBorderLC Value="$Characters.DoubleTopLeftCorner"/>
+        <OuterTopBorderRC Value="$Characters.DoubleTopRightCorner"/>
+        <OuterBottomBorderLC Value="$Characters.DoubleBottomLeftCorner"/>
+        <OuterBottomBorderRC Value="$Characters.DoubleBottomRightCorner"/>
+        <LeftBorder Value="$Characters.DoubleVertical"/>
+        <RightBorder Value="$Characters.DoubleVertical"/>
+    </box>
+    <box>
+        <Name>SingleDoubleBox</Name>
+            <BorderLines Value="4"/>
+            <OuterBorderLines Value="2"/>
+            <OuterBorder Value="$Characters.DoubleVertical"/>
+            <OuterHorizontalBorder Value="$Characters.DoubleHorizontal"/>
+            <OuterTopBorderLC Value="$Characters.DoubleTopLeftCorner"/>
+            <OuterTopBorderRC Value="$Characters.DoubleTopRightCorner"/>
+            <OuterBottomBorderLC Value="$Characters.DoubleBottomLeftCorner"/>
+            <OuterBottomBorderRC Value="$Characters.DoubleBottomRightCorner"/>
+            <InnerBorder Value="$Characters.SingleVertical"/>
+            <InnerHorizontalBorder Value="$Characters.SingleHorizontal"/>
+            <InnerTopBorderLC Value="$Characters.SingleTopLeftCorner"/>
+            <InnerTopBorderRC Value="$Characters.SingleTopRightCorner"/>
+            <InnerBottomBorderLC Value="$Characters.SingleBottomLeftCorner"/>
+            <InnerBottomBorderRC Value="$Characters.SingleBottomRightCorner"/>
+            <LeftBorder Value="$Characters.DoubleVertical + $Characters.SingleVertical"/>
+            <RightBorder Value="$Characters.SingleVertical + $Characters.DoubleVertical"/>
+    </box>
+</boxes>

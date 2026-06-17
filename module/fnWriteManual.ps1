@@ -41,22 +41,8 @@ function fnWriteManual {
         }
         $ParamHash = @{}
         $ParamKeys = $Params.Keys
-        $Line = @()
-        $Index = @()
         Foreach($Key in $ParamKeys){
             $ParamHash["$Key"] = $Params[$Key].Value
-        }
-        if($ParamHash["SelectionType"] -ne 'Unspecified'){
-            $SelectionType = $ParamHash["SelectionType"]
-        }
-        if($SelectionType -eq "Unspecified"){
-            $Index += $ParamHash["CharacterRange"]
-            $Line += $ParamHash["LineRange"]
-            $Index += $ParamHash["Character"]
-            $Line += $ParamHash["Line"]
-            if($Line.Count -gt 1 -and $Index.Count -gt 1){
-                # an X,Y range has been specified for modification
-            }
         }
         $ModList = [System.Collections.SortedList]::new()
         $LineArray = @()
