@@ -13,6 +13,9 @@ function fnGetAscii {
         [Parameter(Position=4)]
         [int] $MinimumPaddingLength = 4
     )
+    <# USAGE
+        fnGetAscii $Text $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
+    #>
     begin{
         #Create Fresh Variables
         if($Font -eq "Large"){

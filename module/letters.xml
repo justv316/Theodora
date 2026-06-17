@@ -2066,9 +2066,9 @@
         <width>8</width>
         <font>Large</font>
         <data>        
+        
  ______ 
 |______|
-        
         
         </data>
     </char>
@@ -2086,13 +2086,14 @@
     </char>
     <char>
         <name>l=</name>
-        <lines>4</lines>
+        <lines>5</lines>
         <width>8</width>
         <font>Large</font>
         <data> ______ 
 |______|
  ______ 
-|______|</data>
+|______|
+        </data>
     </char>
     <char>
         <name>l+</name>

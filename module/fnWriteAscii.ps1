@@ -6,10 +6,13 @@ function fnWriteAscii{
         [Parameter(Mandatory=$True,Position=1)]
         [ValidateSet("Large","Small")]
         [String] $Font,
+        [Parameter(Position=2)]
         [ValidateSet("Unspecified","SingleBox","DoubleBox","SingleDoubleBox")]
         [String] $BuildType = "Unspecified",
+        [Parameter(Position=3)]
         [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
+        [Parameter(Position=4)]
         [String] $ManualFormatting = '',
         [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
         [String] $ForegroundColor = 'Default',
@@ -26,6 +29,10 @@ function fnWriteAscii{
         [int]$EnforcedMaxLength = 160,
         [int]$MinimumPaddingLength = 4
     )
+    <# USAGE
+        fnWriteASCII "InputObject" "Font" -BuildType "Unspecified" -Justification "Center" -ManualFormatting "" -(Border/Text)ForegroundColor -(Border/Text)BackgroundColor -EnforcedMaxLength 160 -MinimumPaddingLength 4
+
+    #>
     begin{
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
             fnXMLLetter
@@ -80,23 +87,19 @@ function fnWriteAscii{
         foreach($Text in $InputObject){
             $ASCII = fnGetAscii $Text $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
             if($BuildType -ne "Unspecified"){
-                $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification
                 if($TextForegroundColor -ne 'default' -or $TextBackgroundColor -ne 'default' -or $BorderForegroundColor -ne 'default' -or $BorderBackgroundColor -ne 'default'){
                     $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification -Segmented
                 }
-                if($ManualFormatting -ne ''){
-                    fnWriteManual $ConstructedASCII $ManualFormatting -Segmented
+                elseif($TextForegroundColor -eq 'default' -and $TextBackgroundColor -eq 'default' -and $BorderForegroundColor -eq 'default' -and $BorderBackgroundColor -eq 'default'){
+                    $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification
                 }
-            }
-            if($ManualFormatting -ne ''){
-                fnWriteManual $ASCII $ManualFormatting
             }
         }
     }
     process{
         if($BuildType -ne "Unspecified"){
+            # All Specifics are Default
             if($TextForegroundColor -eq 'default' -and $TextBackgroundColor -eq 'default' -and $BorderForegroundColor -eq 'default' -and $BorderBackgroundColor -eq 'default'){
-                #All Specifics are Default
                 foreach($Line in $ConstructedASCII){
                     if($ForegroundColor -ne 'Default' -and $BackgroundColor -ne 'Default'){
                         if($ForegroundColor -ieq 'rainbow' -or $BackGroundColor -ieq 'rainbow'){
@@ -758,6 +761,10 @@ function fnWriteAscii{
                         }
                     }
                 }
+            }
+            # Manual Formatting has been specified
+            elseif($ManualFormatting -ne ''){
+                fnWriteManual $ConstructedASCII $ManualFormatting
             }
         }
         if($BuildType -eq "Unspecified"){

@@ -1,16 +1,25 @@
 function fnBuildASCII{
     [CmdletBinding()]
     param(
+        [Parameter(Position=0)]
         [Array]$ASCII,
+        [Parameter(Position=1)]
         [String]$BuildType,
+        [Parameter(Position=2)]
         [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
-        [String] $Padding = ' ',
+        [Parameter(Position=3)]
         [Switch] $Segmented,
+        [Parameter(Position=4)]
         [int]$EnforcedMaxLength = 160,
-        [int]$MinimumPaddingLength = 4
+        [Parameter(Position=5)]
+        [int]$MinimumPaddingLength = 4,
+        [Parameter(Position=6)]
+        [String] $Padding = ' '
     )
-
+    <# USAGE
+        fnBuildASCII $ASCII $BuildType $Justification -Segmented $EnforcedMaxLength $MinimumPaddingLength $Padding 
+    #>
     begin{
         $Build = ($Boxes[$($BuildType)])
         $BuildLines = ($Boxes[$($BuildType)])["BorderLines"]
