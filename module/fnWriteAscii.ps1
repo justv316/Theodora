@@ -46,10 +46,10 @@ function fnWriteAscii{
         foreach($Text in $InputObject){
             $ASCII = fnGetAscii $Text $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
             if($BuildType -ne "Unspecified"){
-                if($TextForegroundColor -ne 'default' -or $TextBackgroundColor -ne 'default' -or $BorderForegroundColor -ne 'default' -or $BorderBackgroundColor -ne 'default'){
+                if($TextForegroundColor -ne 'Default' -or $TextBackgroundColor -ne 'Default' -or $BorderForegroundColor -ne 'Default' -or $BorderBackgroundColor -ne 'Default'){
                     $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification -Segmented
                 }
-                elseif($TextForegroundColor -eq 'default' -and $TextBackgroundColor -eq 'default' -and $BorderForegroundColor -eq 'default' -and $BorderBackgroundColor -eq 'default'){
+                elseif($TextForegroundColor -eq 'Default' -and $TextBackgroundColor -eq 'Default' -and $BorderForegroundColor -eq 'Default' -and $BorderBackgroundColor -eq 'Default'){
                     $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification
                 }
             }
@@ -58,7 +58,7 @@ function fnWriteAscii{
     process{
         if($BuildType -ne "Unspecified"){
             # All Specifics are Default
-            if($TextForegroundColor -eq 'default' -and $TextBackgroundColor -eq 'default' -and $BorderForegroundColor -eq 'default' -and $BorderBackgroundColor -eq 'default'){
+            if($TextForegroundColor -eq 'Default' -and $TextBackgroundColor -eq 'Default' -and $BorderForegroundColor -eq 'Default' -and $BorderBackgroundColor -eq 'Default'){
                 foreach($Line in $ConstructedASCII){
                     if($ForegroundColor -ne 'Default' -and $BackgroundColor -ne 'Default'){
                         if($ForegroundColor -ieq 'rainbow' -or $BackGroundColor -ieq 'rainbow'){
@@ -90,7 +90,7 @@ function fnWriteAscii{
                 }
             }
             # At least 1 specific color is specified
-            elseif($TextForegroundColor -ne 'default' -or $TextBackgroundColor -ne 'default' -or $BorderForegroundColor -ne 'default' -or $BorderBackgroundColor -ne 'default'){
+            elseif($TextForegroundColor -ne 'Default' -or $TextBackgroundColor -ne 'Default' -or $BorderForegroundColor -ne 'Default' -or $BorderBackgroundColor -ne 'Default'){
                 $LineCount = $ConstructedASCII.Length
                 $MaxLines = $ASCII.Length
                 $LineCounter = 1
@@ -284,7 +284,7 @@ function fnWriteAscii{
                     }
                 }
                 elseif($BorderForegroundColor -ne 'Default' -and $BorderBackgroundColor -ne 'Default'){
-                    #Both BorderColors have been specified and text colors are default.
+                    #Both BorderColors have been specified and text colors are Default.
                     while($LineCounter -le $LineCount){
                         if($BorderLines -contains $LineCounter){
                             if($BorderForegroundColor -eq 'rainbow' -or $BorderBackgroundColor -eq 'rainbow'){
@@ -529,7 +529,7 @@ function fnWriteAscii{
                     }
                 }
                 elseif($TextForegroundColor -ne 'Default' -and $TextBackgroundColor -ne 'Default'){
-                    #Both TextColors have been specified and Border colors are default.
+                    #Both TextColors have been specified and Border colors are Default.
                     while($LineCounter -le $LineCount){
                         if($BorderLines -contains $LineCounter){
                             Write-Host $ConstructedASCII[$LineCounter-1]
@@ -722,12 +722,12 @@ function fnWriteAscii{
                 }
             }
             # Manual Formatting has been specified
-            elseif($ManualFormatting -ne ''){
-                fnWriteManual $ConstructedASCII $ManualFormatting
+            if($ManualFormatting -ne ''){
+                fnWriteManual $ConstructedASCII $ManualFormatting -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
             }
         }
         if($BuildType -eq "Unspecified"){
-            #Unspecified Build does not have a border. Therefore, default colors are considered "TextColors"
+            #Unspecified Build does not have a border. Therefore, Default colors are considered "TextColors"
             if($ForegroundColor -ne 'Default' -and $BackgroundColor -ne 'Default'){
                 if($ForegroundColor -ieq 'rainbow' -or $BackGroundColor -ieq 'rainbow'){
                     $ASCII | ForEach-Object {

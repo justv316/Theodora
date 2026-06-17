@@ -8,9 +8,9 @@ function fnWriteManual {
         [String] $BuildType,
         [String] $SelectionType = "Unspecified",
         [Switch] $Segmented,
-        [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [ValidateSet("Default", "Rainbow", "Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red",  "White", "Yellow")]
         [String] $ForegroundColor = 'Default',
-        [ValidateSet("Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Default", "Gray", "Green", "Magenta", "Red", "Rainbow", "White", "Yellow")]
+        [ValidateSet("Default", "Rainbow", "Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red",  "White", "Yellow")]
         [String] $BackgroundColor = 'Default'
     )
     <# USAGE
@@ -62,6 +62,18 @@ function fnWriteManual {
         # Create the Grid
         $CharacterGrid = [System.Collections.SortedList]::new()
         $LineArray = @()
+        if($ForegroundColor -eq "Default"){
+            $Foreground = 'White'
+        }
+        else{
+            $Foreground = $ForegroundColor
+        }
+        if($BackgroundColor -eq "Default"){
+            $Background = 'Black'
+        }
+        else{
+            $Background = $BackGroundColor
+        }
         Foreach($LineNumber in 0..($InputObject.Count - 1)){
             $CharacterGrid[$LineNumber] = @()
             $LineArray = [Char[]]$InputObject[$LineNumber]
@@ -71,30 +83,32 @@ function fnWriteManual {
                     'Index' = $CharNumber
                     'Line' = $LineNumber
                     'Character' = "$Char"
-                    'Foreground' = 'White'
-                    'Background' = 'Black'
+                    'Foreground' = "$Foreground"
+                    'Background' = "$Background"
                 }
                 $CharNumber++
                 $CharacterGrid[$LineNumber] += $Chars
             }
         }
         # Modify the Character Grid with the Parameters
-        foreach($Line in $LineRange){
-            # We have no idea why this produces errors, it does the modifications... Putting it in a Try catch block for now lol
-            try{
-            Foreach($Index in $IndexRange) {
-                if($Null -ne $ParamHash["Foreground"]){
-                    ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Foreground = $ParamHash["Foreground"]
+        if($SelectionType -eq "Unspecified"){
+            foreach($Line in $LineRange){
+                # We have no idea why this produces errors, it does the modifications... Putting it in a Try catch block for now lol
+                try{
+                Foreach($Index in $IndexRange) {
+                    if($Null -ne $ParamHash["Foreground"]){
+                        ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Foreground = $ParamHash["Foreground"]
+                    }
+                    if($Null -ne $ParamHash["Background"]){
+                        ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Background = $ParamHash["Background"]
+                    }
+                    if($Null -ne $ParamHash["Replace"]){
+                        ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
+                    }
+                    }
                 }
-                if($Null -ne $ParamHash["Background"]){
-                    ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Background = $ParamHash["Background"]
-                }
-                if($Null -ne $ParamHash["Replace"]){
-                    ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$Line] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
-                }
-                }
+                Catch{}
             }
-            Catch{}
         }
     } # end Begin
     process{
