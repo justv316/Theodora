@@ -13,6 +13,10 @@ function fnXML{
         }
         if($XML -eq 'Boxes' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes))){
             $Script:Boxes = @{
+                "Unspecified" = @{
+                    "BorderLines" = 0
+                    "OuterBorderLines" = 0
+                }
                 "SingleBox" = @{
                     "BorderLines" = 2
                     "OuterBorderLines" = 1
