@@ -70,8 +70,30 @@ fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" 
 fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red"
 fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Replace ' ','@'"
 
-<# Failed #>
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red --ForegroundColor=White"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red --ForegroundColor=White --Replace ' ','@'"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=White"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=White --Replace ' ','@'"
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red --ForegroundColor=Red"
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red"
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Red --BackgroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Red --BackgroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BackgroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+
+$Manualformatting = "--Character=12 --Line=4 --ForegroundColor=Red --BackgroundColor=Blue --Replace ' ','@'"
+$Buildtype = "SingleDoubleBox"
+$Justification = "None"
+$Font = "Small"
+$EnforcedMaxLength = 160
+$MinimumPaddingLength = 4
+$InputString = "Mommy"
+$ASCII = fnGetAscii $InputString $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
+$ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification 
+
+Remove-Variable ManualFormatting -ErrorAction SilentlyContinue
+Remove-Variable ColorFormatting -ErrorAction SilentlyContinue
+Remove-Variable ASCII -ErrorAction SilentlyContinue
+Remove-Variable ConstructedASCII -ErrorAction SilentlyContinue

@@ -140,18 +140,16 @@ function fnWriteManual {
             }
         }
         # Modify the Character Grid with the Parameters
-        if($SelectionType -eq "Unspecified"){
-            foreach($LineNum in $LineRange){
-                Foreach($Index in $IndexRange){
-                    if($Null -ne $ParamHash["ForegroundColor"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $ParamHash["ForegroundColor"]
-                    }
-                    if($Null -ne $ParamHash["BackgroundColor"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $ParamHash["BackgroundColor"]
-                    }
-                    if($Null -ne $ParamHash["Replace"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
-                    }
+        foreach($LineNum in $LineRange){
+            Foreach($Index in $IndexRange){
+                if($Null -ne $ParamHash["ForegroundColor"]){
+                    ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $ParamHash["ForegroundColor"]
+                }
+                if($Null -ne $ParamHash["BackgroundColor"]){
+                    ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $ParamHash["BackgroundColor"]
+                }
+                if($Null -ne $ParamHash["Replace"]){
+                    ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
                 }
             }
         }
@@ -167,12 +165,19 @@ function fnWriteManual {
                     if($_.Index -lt $CharacterGrid[$GridLine].Count){
                         Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline
                     }
-                    else{
-                        Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor
+                    elseif($_.Index -eq $CharacterGrid[$GridLine].Count){
+                        Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline
+                        Write-Host ''
                     }
                 }
             }
         }
 
     } # end Process
+    end{
+        Remove-Variable ManualFormatting -ErrorAction SilentlyContinue
+        Remove-Variable ColorFormatting -ErrorAction SilentlyContinue
+        Remove-Variable ASCII -ErrorAction SilentlyContinue
+        Remove-Variable ConstructedASCII -ErrorAction SilentlyContinue
+    } # end End
 }

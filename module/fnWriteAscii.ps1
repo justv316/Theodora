@@ -187,7 +187,8 @@ function fnWriteAscii{
                         fnWriteRainbow -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor -Line $Line
                     }
                     else{
-                        Write-Host $Line -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor;
+                        Write-Host $Line -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor -NoNewLine;
+                        Write-Host ''
                     }
                 }
             }

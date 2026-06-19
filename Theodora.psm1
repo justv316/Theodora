@@ -23,7 +23,6 @@ foreach($Directory in @('Module')){
 }
 
 
-#Requires -PSEdition Desktop
 #Requires -Version 7.5
 #Requires -Modules argparser
 Clear-Host
