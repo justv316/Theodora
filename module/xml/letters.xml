@@ -788,19 +788,19 @@
         <lines>5</lines>
         <width>7</width>
         <font>Small</font>
-        <data>       
+        <data>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
  _____ 
 |_____|
-       
-       </data>
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;</data>
     </char>
     <char>
         <name>s_</name>
         <lines>4</lines>
         <width>7</width>
         <font>Small</font>
-        <data>       
-       
+        <data>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
  _____ 
 |_____|</data>
     </char>
@@ -812,7 +812,7 @@
         <data> _____ 
 |_____|
 |_____|
-       </data>
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;</data>
     </char>
     <char>
         <name>s+</name>
@@ -832,8 +832,8 @@
         <data> _ 
 ( )
  \|
-   
-   </data>
+&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;</data>
     </char>
     <char>
         <name>s~</name>
@@ -842,9 +842,9 @@
         <font>Small</font>
         <data> /\/|
 |/\/ 
-     
-     
-     </data>
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;</data>
     </char>
     <char>
         <name>s[</name>
@@ -875,35 +875,35 @@
         <lines>6</lines>
         <width>5</width>
         <font>Small</font>
-        <data>   __
-  / /
- | | 
-&lt; &lt;  
- | | 
-  \_\</data>
+        <data>&#xa0;&#xa0;&#xa0;__
+&#xa0;&#xa0;/ /
+&#xa0;| |&#xa0;
+&lt; &lt;&#xa0;&#xa0;
+&#xa0;| |&#xa0;
+&#xa0;&#xa0;\_\</data>
     </char>
     <char>
         <name>s}</name>
         <lines>6</lines>
         <width>5</width>
         <font>Small</font>
-        <data>__   
-\ \  
- | | 
-  &gt; &gt;
- | | 
-/_/  </data>
+        <data>__&#xa0;&#xa0;&#xa0;
+\&#xa0;\&#xa0;&#xa0;
+&#xa0;|&#xa0;|&#xa0;
+&#xa0;&#xa0;&gt;&#xa0;&gt;
+&#xa0;|&#xa0;|&#xa0;
+/_/&#xa0;&#xa0;</data>
     </char>
     <char>
         <name>s\</name>
         <lines>5</lines>
         <width>6</width>
         <font>Small</font>
-        <data>__    
-\ \   
- \ \  
-  \ \ 
-   \_\</data>
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;<data>__&#xa0;&#xa0;&#xa0;&#xa0;
+\&#xa0;\&#xa0;&#xa0;&#xa0;
+&#xa0;\&#xa0;\&#xa0;&#xa0;
+&#xa0;&#xa0;\&#xa0;\&#xa0;
+&#xa0;&#xa0;&#xa0;\_\</data>
     </char>
     <char>
         <name>s|</name>
@@ -940,47 +940,45 @@
 |/ </data>
     </char>
     <char>
-        <name>s"</name>
-        <lines>6</lines>
-        <width>5</width>
-        <font>Small</font>
-        <data> _ _ 
-( | )
- V V 
-     
-     
-     </data>
-    </char>
-    <char>
         <name>s'</name>
-        <lines>6</lines>
+        <lines>5</lines>
         <width>3</width>
         <font>Small</font>
         <data> _ 
 ( )
 |/ 
-   
-   
-   </data>
+&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;</data>
+    </char>
+    <char>
+        <name>s"</name>
+        <lines>5</lines>
+        <width>5</width>
+        <font>Small</font>
+        <data> _ _ 
+( | )
+ V V 
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;</data>
     </char>
     <char>
         <name>s,</name>
         <lines>4</lines>
         <width>3</width>
         <font>Small</font>
-        <data>   
- _ 
-( )
-|/ </data>
+        <data>&#xa0;&#xa0;&#xa0;
+&#xa0;_&#xa0;
+(&#xa0;)
+|/&#xa0;</data>
     </char>
     <char>
         <name>s.</name>
         <lines>4</lines>
         <width>3</width>
         <font>Small</font>
-        <data>   
-   
- _ 
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;<data>&#xa0;&#xa0;&#xa0;
+&#xa0;&#xa0;&#xa0;
+&#xa0;_&#xa0;
 (_)</data>
     </char>
     <char>
@@ -988,33 +986,33 @@
         <lines>5</lines>
         <width>4</width>
         <font>Small</font>
-        <data>  __
- / /
-/ / 
-\ \ 
- \_\</data>
+        <data>&#xa0;&#xa0;__
+&#xa0;/ /
+/ /&#xa0;
+\ \&#xa0;
+&#xa0;\_\</data>
     </char>
     <char>
         <name>s&gt;</name>
         <lines>5</lines>
         <width>4</width>
         <font>Small</font>
-        <data>__  
-\ \ 
- \ \
- / /
-/_/ </data>
+        <data>__&#xa0;&#xa0;
+\ \&#xa0;
+&#xa0;\ \
+&#xa0;/ /
+/_/&#xa0;</data>
     </char>
     <char>
         <name>s/</name>
         <lines>5</lines>
         <width>6</width>
         <font>Small</font>
-        <data>    __
-   / /
-  / / 
- / /  
-/_/   </data>
+&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;<data>&#xa0;&#xa0;&#xa0;&#xa0;__
+&#xa0;&#xa0;&#xa0;/&#xa0;/
+&#xa0;&#xa0;/&#xa0;/&#xa0;
+&#xa0;/&#xa0;/&#xa0;&#xa0;
+/_/&#xa0;&#xa0;&#xa0;</data>
     </char>
     <char>
         <name>s?</name>
@@ -1724,8 +1722,8 @@
     </char>
     <char>
         <name>l9</name>
-        <lines>5</lines>
-        <width>6</width>
+        <lines>6</lines>
+        <width>7</width>
         <font>Large</font>
         <data>  ___  
  / _ \ 
@@ -1736,8 +1734,8 @@
     </char>
     <char>
         <name>l0</name>
-        <lines>5</lines>
-        <width>6</width>
+        <lines>6</lines>
+        <width>7</width>
         <font>Large</font>
         <data>  ___  
  / _ \ 
@@ -1888,7 +1886,7 @@
 (_)</data>
     </char>
     <char>
-        <name>&lt;</name>
+        <name>l&lt;</name>
         <lines>6</lines>
         <width>5</width>
         <font>Large</font>
@@ -1900,7 +1898,7 @@
   \_\ </data>
     </char>
     <char>
-        <name>&gt;</name>
+        <name>l&gt;</name>
         <lines>6</lines>
         <width>5</width>
         <font>Large</font>
@@ -1972,27 +1970,25 @@
     </char>
     <char>
         <name>l'</name>
-        <lines>6</lines>
+        <lines>5</lines>
         <width>3</width>
         <font>Large</font>
         <data> _ 
 ( )
 |/ 
    
-   
    </data>
     </char>
     <char>
         <name>l"</name>
-        <lines>6</lines>
-        <width>6</width>
+        <lines>5</lines>
+        <width>5</width>
         <font>Large</font>
-        <data> _ _  
-( | ) 
- V V  
-      
-      
-      </data>
+        <data> _ _ 
+( | )
+ V V 
+     
+     </data>
     </char>
     <char>
         <name>l[</name>

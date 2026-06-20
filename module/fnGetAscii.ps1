@@ -13,22 +13,15 @@ function fnGetAscii {
         [Parameter(Position=4)]
         [int] $MinimumPaddingLength = 4
     )
-    <# USAGE
-        fnGetAscii $Text $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
-    #>
     begin{
-        #Create Fresh Variables
-        if($Font -eq "Large"){
-            $FontC = "l"
-        }
-        elseif($Font -eq "Small"){
-            $FontC = "s"
-        }
-        $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes["$($BuildType)"])["BorderLines"])) / 10)
+        # Variables
+        $StringPos = 1
         $SubLineCount = 0
-        $WrapReg = "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
-        $Reg = $InputObject | Select-String -AllMatches -Pattern $WrapReg
+        $FontC = if($Font -eq "Large"){"l"}elseif($Font -eq "Small"){"s"}
+        $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes["$($BuildType)"])["BorderLines"])) / 10)
+        $Reg = $InputObject | Select-String -AllMatches -Pattern "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
         $CountTextGroups = $Reg.Matches.Count
+        # Create Text Groups
         $TextGroups = [System.Collections.SortedList]::new()
         foreach($Num in 1..$CountTextGroups){
             $TextGroups[$Num] = @{
@@ -37,26 +30,17 @@ function fnGetAscii {
                 MaxWidth = 0
             }
         }
-        $StringPos = 1
+        # Populate Text Groups with letters that can be used to search the letters xml
         $Strings = $Reg.Matches | Foreach-Object{$_.Value}
         $Strings | Foreach-Object{
             $LetterArray = [Char[]] $_
             foreach($Character in $LetterArray){
-                if($Character -match [Regex]('[a-z]')){
-                    $Letter = "l$($FontC)$($Character)"
-                }
-                elseif($Character -match [Regex]('[A-Z]')){
-                    $Letter = "u$($FontC)$($Character)"
-                }
-                elseif($Character -match [Regex]('\d+') -or $Character -match [Regex]('\p{P}') -or $Character -match [Regex]('\p{S}') -and $Character -ne "&" -and $Character -ne "¤"){
-                    $Letter = "$($FontC)$($Character)"
-                }
-                elseif($Character -eq " "){
-                    $Letter = "¤"
-                }
-                elseif($Character -eq "&"){
-                    $Letter = "$($FontC)amp"
-                }
+                $Letter = 
+                if($Character -match [Regex]('[a-z]')){"l$($FontC)$($Character)"}
+                elseif($Character -match [Regex]('[A-Z]')){"u$($FontC)$($Character)"}
+                elseif($Character -match [Regex]('\d+') -or $Character -match [Regex]('\p{P}') -or $Character -match [Regex]('\p{S}') -and $Character -ne "&" -and $Character -ne "¤"){"$($FontC)$($Character)"}
+                elseif($Character -eq " "){"¤"}
+                elseif($Character -eq "&"){"$($FontC)amp"}
                 if(($Letters.$Letter.Width -as [int]) -gt $TextGroups[$StringPos].MaxWidth){
                     $TextGroups[$StringPos].MaxWidth = $Letters.$Letter.Width -as [Int]
                 }
@@ -67,6 +51,7 @@ function fnGetAscii {
             }
             $StringPos++
         }
+        # Find the total line count, and trim spaces from the end
         foreach($num in 1..$CountTextGroups){
             $Textgroups[$Num] | Foreach-Object{
                 $SubLineCount += $_.MaxLines
@@ -76,34 +61,37 @@ function fnGetAscii {
                 }
             }
         }
+        # Create the Lines List
         $Lines = [System.Collections.SortedList]::new()
         foreach($Num in 1..($SubLineCount)){
             $Lines[$Num] = ("")
         }
+        # Populate the Lines with ASCII Fragments
         $StartLine = 1
         foreach($GroupNum in 1..$CountTextGroups){
+            $LineHeight = $TextGroups[$GroupNum].MaxLines
+            $EndLine = $StartLine + $Lineheight - 1
             $Textgroups[$GroupNum].Text | Foreach-Object{
                 $Letter = [String]$_
-                $LetterLines = $Letters.$Letter.Lines -as [int]
-                $LetterWidth = $Letters.$Letter.Width -as [int]
-                $LastLine = $TextGroups[$GroupNum].MaxLines * $GroupNum
-                $LineIndex = 0
+                $LetterLines = [Int]$Letters.$Letter.Lines
+                $LetterWidth = [Int]$Letters.$Letter.Width
                 $CountPadding = 0
+                $LineIndex = 0
                 if($Letter -ne "¤"){
-                    if($LetterLines -lt $TextGroups[$GroupNum].MaxLines){
-                        foreach($Num in $StartLine..($LastLine - $LetterLines)){
+                    if($LetterLines -lt $LineHeight){
+                        foreach($Num in $StartLine..($EndLine - $LetterLines)){
                             $Padding = ' ' * $LetterWidth
                             $Lines[$Num] += $Padding
                             $CountPadding++
                         }
-                        foreach($Num in ($StartLine + $CountPadding)..$LastLine){
+                        foreach($Num in ($StartLine + $CountPadding)..$EndLine){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$LineIndex]
                             $Lines[$Num] += $LineFragment
                             $LineIndex++
                         }
                     }
-                    elseif($LetterLines -eq $TextGroups[$GroupNum].MaxLines){
-                        foreach($Num in $StartLine..$LastLine){
+                    elseif($LetterLines -eq $LineHeight){
+                        foreach($Num in $StartLine..$EndLine){
                             $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$LineIndex]
                             $Lines[$Num] += $LineFragment
                             $LineIndex++
@@ -111,7 +99,7 @@ function fnGetAscii {
                     }
                 }
                 elseif($Letter -eq "¤"){
-                    foreach($Num in $StartLine..$LastLine){
+                    foreach($Num in $StartLine..$EndLine){
                         $Padding = ' ' * 4
                         $Lines[$Num] += $Padding
                     }
@@ -119,10 +107,10 @@ function fnGetAscii {
             }
             $StartLine += $TextGroups[$GroupNum].MaxLines
         }
-    } #End Begin
+    } # End Begin
     process{
         $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
             $_
         }
     } #end process
-} #end function
+}

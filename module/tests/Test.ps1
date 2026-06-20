@@ -1,87 +1,68 @@
-fnwriteascii "Mommy" "Large" -BuildType "Unspecified";
-fnwriteascii "Mommy" "Small" -BuildType "Unspecified";
-fnwriteascii "Mommy" "Large" -BuildType "SingleBox";
-fnwriteascii "Mommy" "Small" -BuildType "SingleBox";
-fnwriteascii "Mommy" "Large" -BuildType "DoubleBox";
-fnwriteascii "Mommy" "Small" -BuildType "DoubleBox";
-fnwriteascii "Mommy" "Large" -BuildType "SingleDoubleBox";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox";
-
-fnwriteascii "Mommy" "Large" -BuildType "Unspecified" -Justification "Left";
-fnwriteascii "Mommy" "Small" -BuildType "Unspecified" -Justification "Left";
-fnwriteascii "Mommy" "Large" -BuildType "SingleBox" -Justification "Left";
-fnwriteascii "Mommy" "Small" -BuildType "SingleBox" -Justification "Left";
-fnwriteascii "Mommy" "Large" -BuildType "DoubleBox" -Justification "Left";
-fnwriteascii "Mommy" "Small" -BuildType "DoubleBox" -Justification "Left";
-fnwriteascii "Mommy" "Large" -BuildType "SingleDoubleBox" -Justification "Left";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "Left";
-
-fnwriteascii "Mommy" "Large" -BuildType "Unspecified" -Justification "Right";
-fnwriteascii "Mommy" "Small" -BuildType "Unspecified" -Justification "Right";
-fnwriteascii "Mommy" "Large" -BuildType "SingleBox" -Justification "Right";
-fnwriteascii "Mommy" "Small" -BuildType "SingleBox" -Justification "Right";
-fnwriteascii "Mommy" "Large" -BuildType "DoubleBox" -Justification "Right";
-fnwriteascii "Mommy" "Small" -BuildType "DoubleBox" -Justification "Right";
-fnwriteascii "Mommy" "Large" -BuildType "SingleDoubleBox" -Justification "Right";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "Right";
-
-fnwriteascii "Mommy" "Large" -BuildType "Unspecified" -Justification "None";
-fnwriteascii "Mommy" "Small" -BuildType "Unspecified" -Justification "None";
-fnwriteascii "Mommy" "Large" -BuildType "SingleBox" -Justification "None";
-fnwriteascii "Mommy" "Small" -BuildType "SingleBox" -Justification "None";
-fnwriteascii "Mommy" "Large" -BuildType "DoubleBox" -Justification "None";
-fnwriteascii "Mommy" "Small" -BuildType "DoubleBox" -Justification "None";
-fnwriteascii "Mommy" "Large" -BuildType "SingleDoubleBox" -Justification "None";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None";
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Red";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Red --BackgroundColor Magenta";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Red";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Red";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Red --TextBackgroundColor DarkMagenta";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Red --BorderBackgroundColor DarkMagenta";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Red --BorderBackgroundColor DarkMagenta"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Red --TextBackgroundColor DarkMagenta"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Red --TextBackgroundColor DarkMagenta --BorderBackgroundColor White"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Red --TextBackgroundColor DarkMagenta --BorderBackgroundColor White --TextForegroundColor Black"
+$Script:Tests = @(Import-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml")
+$Script:BuiltTests = @(Import-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml")
+$Fonts = @("Large")
+$BuildTypes = @("SingleBox")
+$Texts = @("I am Mommy's good little baby doll")
+$ColorFormats = @("--ForegroundColor Red")
+$ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'", "--Character=12 --Line=4 --BackgroundColor=Red", "--Character=12 --Line=4 --ForegroundColor=Red --Replace ' ','@'", "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=White --Replace ' ','@'")
 
 
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Rainbow";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BackgroundColor Rainbow";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Rainbow --BackgroundColor Rainbow";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Rainbow";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Rainbow";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Rainbow --TextBackgroundColor Rainbow";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Rainbow --BorderBackgroundColor Rainbow";
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Rainbow --BorderBackgroundColor Rainbow"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Rainbow --TextBackgroundColor Rainbow"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Rainbow --TextBackgroundColor Rainbow --BorderBackgroundColor Rainbow"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BorderForegroundColor Rainbow --TextBackgroundColor Rainbow --BorderBackgroundColor Rainbow --TextForegroundColor Rainbow"
+    foreach($Font in $Fonts){
+        foreach($BuildType in $BuildTypes){
+            foreach($Justification in $Justifications){
+                foreach($ColorFormat in $ColorFormats){
+                    foreach($ManualFormat in $ManualFormats){
+                        Foreach($Text in $Texts){
+                            $TestIdentifier = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ColorFormat" + " - " + "$ManualFormat"
+                            if($BuiltTests -notcontains $TestIdentifier){
+                                $BuiltTests += $TestIdentifier
+                                $TestVar = [PSCustomObject] @{
+                                    'TestIdentifier' = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ManualFormat"
+                                    'Attempted_Text' = $Text
+                                    'Font' = $Font
+                                    'BuildType' = $BuildType
+                                    'Justification' = $Justification
+                                    'ColorFormatting' = $ColorFormat
+                                    'ManualFormatting' = $ManualFormat
+                                    'Result' = ''
+                                }
+                                $Tests += $TestVar
+                                $TestNum ++
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(([XML] (Get-Content "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml")).ChildNodes.ChildNodes.Count -ne $BuiltTests.Count){
+        $BuiltTests | Export-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml" -Force
+    }
 
+    $Tests | Foreach-Object{
+        if($_.Result -ne "Pass"){
+            $Text = $_.Attempted_Text
+            $Font = $_.Font
+            $BuildType = $_.BuildType
+            $Justification = $_.Justification
+            $ColorFormatting = $_.ColorFormatting
+            $ManualFormatting = $_.ManualFormatting
+            fnwriteascii "$($Text)" "$($Font)" -BuildType "$($BuildType)" -Justification "$($Justification)" -ColorFormatting "$($ColorFormatting)" -ManualFormatting "$($ManualFormatting)"
+            $Confirmation = Read-Host "Pass?"
+            if($Confirmation -eq "Y"){
+                $_.Result = "Pass"
+            }
+            else{
+                $_.Result = "Fail"
+            }
+        }
+    }
+    if(([XML] (Get-Content "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml")).ChildNodes.ChildNodes.Count -ne $Tests.Count){
+    $Tests | Export-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml" -Force
+    }
 
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --ForegroundColor=Red"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --ForegroundColor=Red --Replace ' ','@'"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --ForegroundColor=Red"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --ForegroundColor=Red --Replace ' ','@'"
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red --Replace ' ','@'"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Replace ' ','@'"
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red --ForegroundColor=Red"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--Character=12 --Line=4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red"
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--ForegroundColor Red --BackgroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Red --BackgroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
-
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--BackgroundColor Red" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+<#Failed - Missing Segmented - Manual #>
+fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Magenta" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
 
 $Manualformatting = "--Character=12 --Line=4 --ForegroundColor=Red --BackgroundColor=Blue --Replace ' ','@'"
 $Buildtype = "SingleDoubleBox"
@@ -89,7 +70,7 @@ $Justification = "None"
 $Font = "Small"
 $EnforcedMaxLength = 160
 $MinimumPaddingLength = 4
-$InputString = "Mommy"
+$InputString = "I am Mommys good little baby doll"
 $ASCII = fnGetAscii $InputString $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
 $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification 
 
