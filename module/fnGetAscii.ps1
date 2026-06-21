@@ -14,6 +14,16 @@ function fnGetAscii {
         [int] $MinimumPaddingLength = 4
     )
     begin{
+        # Build Reference Hashes
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
+            fnXML "Letters"
+        }
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
+            fnXML "Characters"
+        }
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes)){
+            fnXML "Boxes"
+        }
         # Variables
         $StringPos = 1
         $SubLineCount = 0

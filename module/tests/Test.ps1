@@ -3,7 +3,8 @@ $Script:BuiltTests = @(Import-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\
 $Fonts = @("Large")
 $BuildTypes = @("SingleBox")
 $Texts = @("I am Mommy's good little baby doll")
-$ColorFormats = @("--ForegroundColor Red")
+$Justifications = @("None", "Center")
+$ColorFormats = @("--ForegroundColor Red", "--ForegroundColor Rainbow", "--BackgroundColor Red", "--BackgroundColor Rainbow")
 $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'", "--Character=12 --Line=4 --BackgroundColor=Red", "--Character=12 --Line=4 --ForegroundColor=Red --Replace ' ','@'", "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=White --Replace ' ','@'")
 
 
@@ -11,7 +12,7 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
         foreach($BuildType in $BuildTypes){
             foreach($Justification in $Justifications){
                 foreach($ColorFormat in $ColorFormats){
-                    foreach($ManualFormat in $ManualFormats){
+                    #foreach($ManualFormat in $ManualFormats){
                         Foreach($Text in $Texts){
                             $TestIdentifier = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ColorFormat" + " - " + "$ManualFormat"
                             if($BuiltTests -notcontains $TestIdentifier){
@@ -30,14 +31,14 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
                                 $TestNum ++
                             }
                         }
-                    }
+                    #}
                 }
             }
         }
     }
-    if(([XML] (Get-Content "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml")).ChildNodes.ChildNodes.Count -ne $BuiltTests.Count){
-        $BuiltTests | Export-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml" -Force
-    }
+    #if(([XML] (Get-Content "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml")).ChildNodes.ChildNodes.Count -ne $BuiltTests.Count){
+    #    $BuiltTests | Export-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml" -Force
+    #}
 
     $Tests | Foreach-Object{
         if($_.Result -ne "Pass"){
@@ -57,14 +58,15 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
             }
         }
     }
-    if(([XML] (Get-Content "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml")).ChildNodes.ChildNodes.Count -ne $Tests.Count){
-    $Tests | Export-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml" -Force
-    }
+    #if(([XML] (Get-Content "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml")).ChildNodes.ChildNodes.Count -ne $Tests.Count){
+    #$Tests | Export-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml" -Force
+    #}
 
 <#Failed - Missing Segmented - Manual #>
 fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Magenta" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
 
-$Manualformatting = "--Character=12 --Line=4 --ForegroundColor=Red --BackgroundColor=Blue --Replace ' ','@'"
+$Manualformatting = "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+$ColorFormatting = "--TextForegroundColor Magenta --BorderBackgroundColor Red --IgnoreTextPadding --IgnoreBorderPadding"
 $Buildtype = "SingleDoubleBox"
 $Justification = "None"
 $Font = "Small"

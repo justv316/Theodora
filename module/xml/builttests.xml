@@ -1,90 +1,14 @@
 <Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --ForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --ForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --ForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --ForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --ForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --ForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --ForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --ForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --TextForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --TextForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --TextBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --TextForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --TextForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --TextBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --TextForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --TextForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --TextBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --TextForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --TextForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --TextBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Red</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Red --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderBackgroundColor White --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Red --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderBackgroundColor White --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Red --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderBackgroundColor White --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Red --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderBackgroundColor White --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Rainbow --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderBackgroundColor White --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Rainbow --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderBackgroundColor White --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Rainbow --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderBackgroundColor White --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Rainbow --TextForegroundColor Magenta --BorderBackgroundColor Yellow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderBackgroundColor White --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderBackgroundColor Rainbow --TextForegroundColor Magenta --BorderForegroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BorderForegroundColor Rainbow --TextForegroundColor Rainbow --BorderBackgroundColor Rainbow --TextBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Left - --BorderForegroundColor Rainbow --TextForegroundColor Rainbow --BorderBackgroundColor Rainbow --TextBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Right - --BorderForegroundColor Rainbow --TextForegroundColor Rainbow --BorderBackgroundColor Rainbow --TextBackgroundColor Rainbow</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Red --TextForegroundColor Magenta --BorderBackgroundColor Yellow --TextBackgroundColor White</S>
-  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BorderForegroundColor Rainbow --TextForegroundColor Rainbow --BorderBackgroundColor Rainbow --TextBackgroundColor Rainbow</S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None, Center - --ForegroundColor Red - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None, Center - --ForegroundColor Rainbow - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None, Center - --BackgroundColor Red - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None, Center - --BackgroundColor Rainbow - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --ForegroundColor Red - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --ForegroundColor Rainbow - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BackgroundColor Red - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - None - --BackgroundColor Rainbow - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --ForegroundColor Red - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --ForegroundColor Rainbow - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BackgroundColor Red - </S>
+  <S>Test: I am Mommy's good little baby doll - Large - SingleBox - Center - --BackgroundColor Rainbow - </S>
 </Objs>
