@@ -1,8 +1,8 @@
-function fnBuildASCII{
+function fnBuildObject{
     [CmdletBinding()]
     param(
         [Parameter(Position=0)]
-        [Array]$ASCII,
+        [Array]$InputObject,
         [Parameter(Position=1)]
         [String]$BuildType,
         [ValidateSet("Center","Left","Right","None")]
@@ -12,27 +12,28 @@ function fnBuildASCII{
         [String] $Padding = ' '
     )
     <# USAGE
-        fnBuildASCII $ASCII $BuildType $Justification -Segmented $EnforcedMaxLength $MinimumPaddingLength $Padding 
+        fnBuildBoxed $InputObject $BuildType $Justification -Segmented $EnforcedMaxLength $MinimumPaddingLength $Padding 
     #>
     begin{
         $Build = ($Boxes[$($BuildType)])
         $BuildLines = ($Boxes[$($BuildType)])["BorderLines"]
         $OuterBuildLines = ($Boxes[$($BuildType)])["OuterBorderLines"]
         $Lines = [System.Collections.SortedList]::new()
-        $MaxLines = $ASCII.Count
+        $MaxLines = $InputObject.Count
         $MaxLineWidth = 0
         #Create a Line Hashtable that is exactly the number of lines we need
         foreach($Num in 1..($MaxLines + $BuildLines)){
             $Lines[$($Num)] = ("")
         }
         #Find the Widest Line for both emergency padding purposes, and to properly align the border in None-type Justification
-        foreach($Line in $ASCII){
+        foreach($Line in $InputObject){
             if($Line.Length -gt $MaxLineWidth){
                 $MaxLineWidth = $Line.Length
             }
         } 
         #Create Border Lines
         if($Justification -eq "None"){
+            $EnforcedMaxLength = $MaxLineWidth + $OuterBuildLines
             $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterTopBorderRC"])
             $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterBottomBorderRC"])
             if($BuildLines -eq 4){
@@ -61,7 +62,7 @@ function fnBuildASCII{
         $Start = ($OuterBuildLines + 1)
         $End = (($Lines.Count) - $OuterBuildLines)
         Foreach($Num in $Start..$End){
-            $Segment = $ASCII[$Num-$Start]
+            $Segment = $InputObject[$Num-$Start]
             #Determine Segment Padding Needed
             if($Justification -eq "Center"){
                 $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["LeftBorder"]).Length) - ($Segment.Length / 2)

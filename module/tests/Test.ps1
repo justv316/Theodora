@@ -1,6 +1,7 @@
-$Script:Tests = @(Import-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml")
-$Script:BuiltTests = @(Import-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\builttests.xml")
+$Script:Tests = @()
+$Script:BuiltTests = @()
 $Fonts = @("Large")
+$ObjectTypes = @("ASCII","String")
 $BuildTypes = @("SingleBox")
 $Texts = @("I am Mommy's good little baby doll")
 $Justifications = @("None", "Center")
@@ -11,28 +12,31 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
     foreach($Font in $Fonts){
         foreach($BuildType in $BuildTypes){
             foreach($Justification in $Justifications){
-                foreach($ColorFormat in $ColorFormats){
-                    #foreach($ManualFormat in $ManualFormats){
-                        Foreach($Text in $Texts){
-                            $TestIdentifier = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ColorFormat" + " - " + "$ManualFormat"
-                            if($BuiltTests -notcontains $TestIdentifier){
-                                $BuiltTests += $TestIdentifier
-                                $TestVar = [PSCustomObject] @{
-                                    'TestIdentifier' = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ManualFormat"
-                                    'Attempted_Text' = $Text
-                                    'Font' = $Font
-                                    'BuildType' = $BuildType
-                                    'Justification' = $Justification
-                                    'ColorFormatting' = $ColorFormat
-                                    'ManualFormatting' = $ManualFormat
-                                    'Result' = ''
+                foreach($ObjectType in $ObjectTypes){
+                    #foreach($ColorFormat in $ColorFormats){
+                        #foreach($ManualFormat in $ManualFormats){
+                            Foreach($Text in $Texts){
+                                $TestIdentifier = "Test: " + "$Text" + " - " + "$Font"  + " - " + "$ObjectType" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ColorFormat" + " - " + "$ManualFormat"
+                                if($BuiltTests -notcontains $TestIdentifier){
+                                    $BuiltTests += $TestIdentifier
+                                    $TestVar = [PSCustomObject] @{
+                                        'TestIdentifier' = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ManualFormat"
+                                        'Attempted_Text' = $Text
+                                        'Font' = $Font
+                                        'ObjectType' = $ObjectType
+                                        'BuildType' = $BuildType
+                                        'Justification' = $Justification
+                                        'ColorFormatting' = $ColorFormat
+                                        'ManualFormatting' = $ManualFormat
+                                        'Result' = ''
+                                    }
+                                    $Tests += $TestVar
+                                    $TestNum ++
                                 }
-                                $Tests += $TestVar
-                                $TestNum ++
                             }
-                        }
+                        #}
                     #}
-                }
+                    }
             }
         }
     }
@@ -44,11 +48,12 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
         if($_.Result -ne "Pass"){
             $Text = $_.Attempted_Text
             $Font = $_.Font
+            $ObjectType = $_.ObjectType
             $BuildType = $_.BuildType
             $Justification = $_.Justification
             $ColorFormatting = $_.ColorFormatting
             $ManualFormatting = $_.ManualFormatting
-            fnwriteascii "$($Text)" "$($Font)" -BuildType "$($BuildType)" -Justification "$($Justification)" -ColorFormatting "$($ColorFormatting)" -ManualFormatting "$($ManualFormatting)"
+            fnwriteobject "$($Text)" -Font "$($Font)" -ObjectType "$($ObjectType)" -BuildType "$($BuildType)" -Justification "$($Justification)"
             $Confirmation = Read-Host "Pass?"
             if($Confirmation -eq "Y"){
                 $_.Result = "Pass"

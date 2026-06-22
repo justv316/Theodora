@@ -1,15 +1,14 @@
-function fnWriteAscii{
+function fnWriteObject{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$True,Position=0)]
         [String] $InputString,
-        [Parameter(Mandatory=$True,Position=1)]
-        [ValidateSet("Large","Small")]
+        [ValidateSet("ASCII","String")]
+        [String] $ObjectType,
+        [ValidateSet("Large","Standard")]
         [String] $Font,
-        [Parameter(Position=2)]
         [ValidateSet("Unspecified","SingleBox","DoubleBox","SingleDoubleBox")]
         [String] $BuildType = "Unspecified",
-        [Parameter(Position=3)]
         [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
         [String] $ManualFormatting = '',
@@ -22,8 +21,8 @@ function fnWriteAscii{
     #>
     begin{
         # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
-            fnXML "Letters"
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $Font)){
+            fnXML "$($Font)"
         }
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
             fnXML "Characters"
@@ -70,23 +69,33 @@ function fnWriteAscii{
             $BorderForegroundColor = if($Null -ne $BorderColors["BorderForegroundColor"]){$BorderColors["BorderForegroundColor"]}elseif($Null -ne $ForegroundColor){$ForegroundColor}else{"White"}
             $BorderBackgroundColor = if($Null -ne $BorderColors["BorderBackgroundColor"]){$BorderColors["BorderBackgroundColor"]}elseif($Null -ne $BackgroundColor){$BackgroundColor}else{"Black"}
         }
-        # GetASCII
-        $ASCII = fnGetAscii $InputString $Font -BuildType $Buildtype -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+        # Build Object
+        if($ObjectType -eq "ASCII"){
+            $ASCII = fnGetAscii $InputString $Font -BuildType $Buildtype -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+            if($BuildType -ne "Unspecified"){
+                $ConstructedASCII = fnBuildObject $ASCII $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+            }
+            $GridInput = if($ConstructedASCII -ne '' -and $Null -ne $ConstructedASCII){$ConstructedASCII}else{$ASCII}
+        }
+        elseif($ObjectType -eq "String"){
+            if($BuildType -ne "Unspecified"){
+                $ConstructedString = fnBuildObject $InputString $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength 
+            }
+            $GridInput = if($ConstructedString -ne '' -and $Null -ne $ConstructedString){$ConstructedString}else{$InputString}
+        }
+        $LineCount = $GridInput.Length
         if($BuildType -ne "Unspecified"){
-            $ConstructedASCII = fnBuildASCII $ASCII $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength 
-            $LineCount = $ConstructedASCII.Length
             #Get the number of Borderlines - Will always be at least the first and last lines
-            $BorderLines = @(1, $ConstructedASCII.Length)
-            $BorderColumns = @(1, $ConstructedASCII[0].Length) 
+            $BorderLines = @(1, $GridInput.Length)
+            $BorderColumns = @(1, $GridInput[0].Length) 
             #If there are more BorderLines, we add them to the array
             if(($Boxes[$($BuildType)])["OuterBorderLines"] -gt 1){
                 $BorderLines += ($Boxes[$($BuildType)])["OuterBorderLines"]
-                $BorderLines += $ConstructedASCII.Length - 1
+                $BorderLines += $GridInput.Length - 1
                 $BorderColumns += ($Boxes[$($BuildType)])["OuterBorderLines"]
-                $BorderColumns += $ConstructedASCII[0].Length - 1
+                $BorderColumns += $GridInput[0].Length - 1
             }
         }
-        $GridInput = if($ConstructedASCII -ne '' -and $Null -ne $ConstructedASCII){$ConstructedASCII}else{$ASCII}
         #Create a Character Grid
         $CharacterGrid = [System.Collections.SortedList]::new()
         foreach($LineNumber in 1..($LineCount)){

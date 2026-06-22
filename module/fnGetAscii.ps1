@@ -4,7 +4,7 @@ function fnGetAscii {
         [Parameter(Mandatory=$True,Position=0)]
         [String] $InputObject,
         [Parameter(Mandatory=$True,Position=1)]
-        [ValidateSet("Large","Small")]
+        [ValidateSet("Large","Standard")]
         [String] $Font,
         [Parameter(Mandatory=$True,Position=2)]
         [String]$BuildType,
@@ -27,7 +27,8 @@ function fnGetAscii {
         # Variables
         $StringPos = 1
         $SubLineCount = 0
-        $FontC = if($Font -eq "Large"){"l"}elseif($Font -eq "Small"){"s"}
+        $FontC = if($Font -eq "Large"){"Large_"}elseif($Font -eq "Standard"){"Standard_"}
+        $FontH = (Get-Variable -Name $Font -ValueOnly)
         $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes["$($BuildType)"])["BorderLines"])) / 10)
         $Reg = $InputObject | Select-String -AllMatches -Pattern "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
         $CountTextGroups = $Reg.Matches.Count
@@ -46,16 +47,16 @@ function fnGetAscii {
             $LetterArray = [Char[]] $_
             foreach($Character in $LetterArray){
                 $Letter = 
-                if($Character -match [Regex]('[a-z]')){"l$($FontC)$($Character)"}
-                elseif($Character -match [Regex]('[A-Z]')){"u$($FontC)$($Character)"}
+                if($Character -match [Regex]('[a-z]')){"Lower_$($FontC)$($Character)"}
+                elseif($Character -match [Regex]('[A-Z]')){"Upper_$($FontC)$($Character)"}
                 elseif($Character -match [Regex]('\d+') -or $Character -match [Regex]('\p{P}') -or $Character -match [Regex]('\p{S}') -and $Character -ne "&" -and $Character -ne "¤"){"$($FontC)$($Character)"}
                 elseif($Character -eq " "){"¤"}
                 elseif($Character -eq "&"){"$($FontC)amp"}
-                if(($Letters.$Letter.Width -as [int]) -gt $TextGroups[$StringPos].MaxWidth){
-                    $TextGroups[$StringPos].MaxWidth = $Letters.$Letter.Width -as [Int]
+                if(($FontH.$Letter.Width -as [int]) -gt $TextGroups[$StringPos].MaxWidth){
+                    $TextGroups[$StringPos].MaxWidth = $FontH.$Letter.Width -as [Int]
                 }
-                if(($Letters.$Letter.Lines -as [int]) -gt $TextGroups[$StringPos].MaxLines){
-                    $TextGroups[$StringPos].MaxLines = $Letters.$Letter.Lines -as [int]
+                if(($FontH.$Letter.Lines -as [int]) -gt $TextGroups[$StringPos].MaxLines){
+                    $TextGroups[$StringPos].MaxLines = $FontH.$Letter.Lines -as [int]
                 }
                 $TextGroups[$StringPos].Text += $Letter
             }
@@ -83,8 +84,8 @@ function fnGetAscii {
             $EndLine = $StartLine + $Lineheight - 1
             $Textgroups[$GroupNum].Text | Foreach-Object{
                 $Letter = [String]$_
-                $LetterLines = [Int]$Letters.$Letter.Lines
-                $LetterWidth = [Int]$Letters.$Letter.Width
+                $LetterLines = [Int]$FontH.$Letter.Lines
+                $LetterWidth = [Int]$FontH.$Letter.Width
                 $CountPadding = 0
                 $LineIndex = 0
                 if($Letter -ne "¤"){
@@ -95,14 +96,14 @@ function fnGetAscii {
                             $CountPadding++
                         }
                         foreach($Num in ($StartLine + $CountPadding)..$EndLine){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$LineIndex]
+                            $LineFragment = [String](($FontH.$Letter.ASCII).Split("`n"))[$LineIndex]
                             $Lines[$Num] += $LineFragment
                             $LineIndex++
                         }
                     }
                     elseif($LetterLines -eq $LineHeight){
                         foreach($Num in $StartLine..$EndLine){
-                            $LineFragment = [String](($Letters.$Letter.ASCII).Split("`n"))[$LineIndex]
+                            $LineFragment = [String](($FontH.$Letter.ASCII).Split("`n"))[$LineIndex]
                             $Lines[$Num] += $LineFragment
                             $LineIndex++
                         }
