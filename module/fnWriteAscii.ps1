@@ -225,4 +225,11 @@ function fnWriteAscii{
             }
         }
     } #end Process
+    end{
+        Remove-Variable ManualFormatting -ErrorAction SilentlyContinue
+        Remove-Variable ColorFormatting -ErrorAction SilentlyContinue
+        Remove-Variable ASCII -ErrorAction SilentlyContinue
+        Remove-Variable ConstructedASCII -ErrorAction SilentlyContinue
+        Remove-Variable CharacterGrid -ErrorAction SilentlyContinue
+    }
 } # end function
