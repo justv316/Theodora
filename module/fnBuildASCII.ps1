@@ -5,16 +5,10 @@ function fnBuildASCII{
         [Array]$ASCII,
         [Parameter(Position=1)]
         [String]$BuildType,
-        [Parameter(Position=2)]
         [ValidateSet("Center","Left","Right","None")]
         [String] $Justification = "Center",
-        [Parameter(Position=3)]
-        [Switch] $Segmented,
-        [Parameter(Position=4)]
         [int]$EnforcedMaxLength = 160,
-        [Parameter(Position=5)]
         [int]$MinimumPaddingLength = 4,
-        [Parameter(Position=6)]
         [String] $Padding = ' '
     )
     <# USAGE
@@ -28,26 +22,17 @@ function fnBuildASCII{
         $MaxLines = $ASCII.Count
         $MaxLineWidth = 0
         #Create a Line Hashtable that is exactly the number of lines we need
-        #If we're sending a segmented hash, we need 3 lines for each Text Line. (Left Padding, Segment, Right Padding.)
-        if($Segmented){
-            foreach($Num in 1..(($MaxLines * 3) + $BuildLines)){
-                $Lines[$($Num)] = ("")
-            }
-        }
-        else{
-            foreach($Num in 1..($MaxLines + $BuildLines)){
-                $Lines[$($Num)] = ("")
-            }
+        foreach($Num in 1..($MaxLines + $BuildLines)){
+            $Lines[$($Num)] = ("")
         }
         #Find the Widest Line for both emergency padding purposes, and to properly align the border in None-type Justification
         foreach($Line in $ASCII){
             if($Line.Length -gt $MaxLineWidth){
                 $MaxLineWidth = $Line.Length
             }
-        }
+        } 
         #Create Border Lines
         if($Justification -eq "None"){
-            $EnforcedMaxLength = $MaxLineWidth + $OuterBuildLines
             $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterTopBorderRC"])
             $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterBottomBorderRC"])
             if($BuildLines -eq 4){
@@ -75,15 +60,8 @@ function fnBuildASCII{
         #Fill the Lines Array with Assembled Segments
         $Start = ($OuterBuildLines + 1)
         $End = (($Lines.Count) - $OuterBuildLines)
-        $Counter = 0
-        $Counter2 = 0
         Foreach($Num in $Start..$End){
-            if($Segmented){
-                $Segment = $ASCII[$Counter2]
-            }
-            else{
-                $Segment = $ASCII[$Num-$Start]
-            }
+            $Segment = $ASCII[$Num-$Start]
             #Determine Segment Padding Needed
             if($Justification -eq "Center"){
                 $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["LeftBorder"]).Length) - ($Segment.Length / 2)
@@ -114,30 +92,8 @@ function fnBuildASCII{
             }
             $RightPadding = (("$($Padding)") * ($RightPaddingRequired)) + ($Build["RightBorder"])
             $LeftPadding = ($Build["LeftBorder"]) + (("$($Padding)") * ($LeftPaddingRequired))
-            if($Segmented){
-                if($Counter -le 2){
-                    if($Counter2 -le $Maxlines){
-                        if($Counter -eq 0){
-                            $Lines[$Num] += $LeftPadding
-                            $Counter++
-                        }
-                        elseif($Counter -eq 1){
-                            $Lines[$Num] += $ASCII[$Counter2]
-                            $Counter++
-                        }
-                        elseif($Counter -eq 2){
-                            $Lines[$Num] += $RightPadding  
-                            $Counter = 0
-                            $Counter2++
-                        }
-                    }
-                }
-            }
-            else{
-                $AssembledSegment = $LeftPadding + $Segment + $RightPadding
-                $Lines[$Num] += $AssembledSegment
-            }
-
+            $AssembledSegment = $LeftPadding + $Segment + $RightPadding
+            $Lines[$Num] += $AssembledSegment
         }
         #Return the Output
         $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {

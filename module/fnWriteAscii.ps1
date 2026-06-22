@@ -71,9 +71,9 @@ function fnWriteAscii{
             $BorderBackgroundColor = if($Null -ne $BorderColors["BorderBackgroundColor"]){$BorderColors["BorderBackgroundColor"]}elseif($Null -ne $BackgroundColor){$BackgroundColor}else{"Black"}
         }
         # GetASCII
-        $ASCII = fnGetAscii $InputString $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
+        $ASCII = fnGetAscii $InputString $Font -BuildType $Buildtype -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
         if($BuildType -ne "Unspecified"){
-            $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification
+            $ConstructedASCII = fnBuildASCII $ASCII $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength 
             $LineCount = $ConstructedASCII.Length
             #Get the number of Borderlines - Will always be at least the first and last lines
             $BorderLines = @(1, $ConstructedASCII.Length)
