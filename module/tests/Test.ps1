@@ -64,6 +64,7 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
 
 <#Failed - Missing Segmented - Manual #>
 fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Magenta" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
+fngetascii "Mommy" "Small" -BuildType "SingleDoubleBox" -EnforcedMaxLength 160 -MinimumPaddingLength 4
 
 $Manualformatting = "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
 $ColorFormatting = "--TextForegroundColor Magenta --BorderBackgroundColor Red --IgnoreTextPadding --IgnoreBorderPadding"

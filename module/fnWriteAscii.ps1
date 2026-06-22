@@ -34,7 +34,7 @@ function fnWriteAscii{
         # Parse Color Formatting and set default colors
         $Colors = @('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan', 'DarkRed', 'DarkMagenta', 'DarkYellow',
             'Gray', 'DarkGray', 'Blue', 'Green', 'Cyan', 'Red', 'Magenta', 'Yellow', 'White')
-        $bColorFormatting = if($ColorFormatting -ne ''){$True}else{$False}
+        $bColorFormatting = if($ColorFormatting -ne '' -and $Null -ne $ColorFormatting){$True}else{$False}
         $ForegroundColor = "White"
         $BackgroundColor = "Black"
         $TextForegroundColor = "White"
@@ -74,19 +74,19 @@ function fnWriteAscii{
         $ASCII = fnGetAscii $InputString $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
         if($BuildType -ne "Unspecified"){
             $ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification
-            $LineCount = $GridInput.Length
+            $LineCount = $ConstructedASCII.Length
             #Get the number of Borderlines - Will always be at least the first and last lines
-            $BorderLines = @(1, $GridInput.Length)
-            $BorderColumns = @(1, $GridInput[0].Length) 
+            $BorderLines = @(1, $ConstructedASCII.Length)
+            $BorderColumns = @(1, $ConstructedASCII[0].Length) 
             #If there are more BorderLines, we add them to the array
             if(($Boxes[$($BuildType)])["OuterBorderLines"] -gt 1){
                 $BorderLines += ($Boxes[$($BuildType)])["OuterBorderLines"]
-                $BorderLines += $GridInput.Length - 1
+                $BorderLines += $ConstructedASCII.Length - 1
                 $BorderColumns += ($Boxes[$($BuildType)])["OuterBorderLines"]
-                $BorderColumns += $GridInput[0].Length - 1
+                $BorderColumns += $ConstructedASCII[0].Length - 1
             }
         }
-        $GridInput = if($Null -ne $ConstructedASCII){$ConstructedASCII}else{$ASCII}
+        $GridInput = if($ConstructedASCII -ne '' -and $Null -ne $ConstructedASCII){$ConstructedASCII}else{$ASCII}
         #Create a Character Grid
         $CharacterGrid = [System.Collections.SortedList]::new()
         foreach($LineNumber in 1..($LineCount)){
@@ -159,7 +159,7 @@ function fnWriteAscii{
             }
         }
         # Parse Manual Formatting
-        $bManualFormatting = if($ManualFormatting -ne ''){$True}else{$False}
+        $bManualFormatting = if($ManualFormatting -ne '' -and $Null -ne $ManualFormatting){$True}else{$False}
         if($bManualFormatting -eq $True){
             $ManualFormattingArr = $ManualFormatting -Split ' '
             $ManualParams = ConvertTo-Params $ManualFormattingArr -schema @{
