@@ -67,20 +67,17 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
     #$Tests | Export-Clixml -Path "E:\Documents\GitHub\PSGame\Theodora\module\xml\tests.xml" -Force
     #}
 
-<#Failed - Missing Segmented - Manual #>
-fnwriteascii "Mommy" "Small" -BuildType "SingleDoubleBox" -Justification "None" -ColorFormatting "--TextForegroundColor Magenta" -ManualFormatting "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
-fngetascii "Mommy" "Small" -BuildType "SingleDoubleBox" -EnforcedMaxLength 160 -MinimumPaddingLength 4
 
 $Manualformatting = "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
 $ColorFormatting = "--TextForegroundColor Magenta --BorderBackgroundColor Red --IgnoreTextPadding --IgnoreBorderPadding"
 $Buildtype = "SingleDoubleBox"
 $Justification = "None"
-$Font = "Small"
+$Font = "Graceful"
 $EnforcedMaxLength = 160
 $MinimumPaddingLength = 4
 $InputString = "I am Mommys good little baby doll"
 $ASCII = fnGetAscii $InputString $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
-$ConstructedASCII = fnBuildASCII $ASCII $BuildType $Justification 
+$ConstructedASCII = fnBuildObject $ASCII -BuildType $BuildType -Justification $Justification 
 
 Remove-Variable ManualFormatting -ErrorAction SilentlyContinue
 Remove-Variable ColorFormatting -ErrorAction SilentlyContinue

@@ -5,7 +5,6 @@ function fnWriteObject{
         [String] $InputString,
         [ValidateSet("ASCII","String")]
         [String] $ObjectType,
-        [ValidateSet("Large","Standard")]
         [String] $Font,
         [ValidateSet("Unspecified","SingleBox","DoubleBox","SingleDoubleBox")]
         [String] $BuildType = "Unspecified",

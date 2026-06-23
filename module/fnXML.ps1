@@ -5,7 +5,7 @@ function fnXML{
         [String] $XML
     )
     begin{
-        $Fonts = @("Large", "Standard")
+        $Fonts = @("Large", "Standard", "Graceful")
         if($Fonts -Contains $XML){
             if(-not(Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $XML)){
                 New-Variable -Name "$XML" -Scope Script -Value @{} -ErrorAction SilentlyContinue

@@ -1,0 +1,690 @@
+<chars>
+    <char>
+        <name>Graceful_A</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ / _\ 
+/    \
+\_/\_/</data>
+    </char>
+    <char>
+        <name>Graceful_B</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(  _ \
+ ) _ (
+(____/</data>
+    </char>
+    <char>
+        <name>Graceful_C</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ / __)
+( (__ 
+ \___)</data>
+    </char>
+    <char>
+        <name>Graceful_D</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(    \
+ ) D (
+(____/</data>
+    </char>
+    <char>
+        <name>Graceful_E</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(  __)
+ ) _) 
+(____)</data>
+    </char>
+    <char>
+        <name>Graceful_F</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(  __)
+ ) _) 
+(__)  </data>
+    </char>
+    <char>
+        <name>Graceful_G</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ / __)
+( (_ \
+ \___/</data>
+    </char>
+    <char>
+        <name>Graceful_H</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+/ )( \
+) __ (
+\_)(_/</data>
+    </char>
+    <char>
+        <name>Graceful_I</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ (  ) 
+  )(  
+ (__) </data>
+    </char>
+    <char>
+        <name>Graceful_J</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>   __ 
+ _(  )
+/ \) \
+\____/</data>
+    </char>
+    <char>
+        <name>Graceful_K</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> __ _ 
+(  / )
+ )  ( 
+(__\_)</data>
+    </char>
+    <char>
+        <name>Graceful_L</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> __   
+(  )  
+/ (_/\
+\____/</data>
+    </char>
+    <char>
+        <name>Graceful_M</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+( \/ )
+/ \/ \
+\_)(_/</data>
+    </char>
+    <char>
+        <name>Graceful_N</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> __ _ 
+(  ( \
+/    /
+\_)__)</data>
+    </char>
+    <char>
+        <name>Graceful_O</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ /  \ 
+(  O )
+ \__/ </data>
+    </char>
+    <char>
+        <name>Graceful_P</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(  _ \
+ ) __/
+(__)  </data>
+    </char>
+    <char>
+        <name>Graceful_Q</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ /  \ 
+(  Q )
+ \__\)</data>
+    </char>
+    <char>
+        <name>Graceful_R</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(  _ \
+ )   /
+(__\_)</data>
+    </char>
+    <char>
+        <name>Graceful_S</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+/ ___)
+\___ \
+(____/</data>
+    </char>
+    <char>
+        <name>Graceful_T</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(_  _)
+  )(  
+ (__) </data>
+    </char>
+    <char>
+        <name>Graceful_U</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+/ )( \
+) \/ (
+\____/</data>
+    </char>
+    <char>
+        <name>Graceful_V</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+/ )( \
+\ \/ /
+ \__/ </data>
+    </char>
+    <char>
+        <name>Graceful_W</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+/ )( \
+\ /\ /
+(_/\_)</data>
+    </char>
+    <char>
+        <name>Graceful_X</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+( \/ )
+ )  ( 
+(_/\_)</data>
+    </char>
+    <char>
+        <name>Graceful_Y</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+( \/ )
+ )  / 
+(__/  </data>
+    </char>
+    <char>
+        <name>Graceful_Z</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(__  )
+ / _/ 
+(____)</data>
+    </char>
+    <char>
+        <name>Graceful_1</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ /  \ 
+(_/ / 
+ (__) </data>
+    </char>
+    <char>
+        <name>Graceful_2</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(___ \
+ / __/
+(____)</data>
+    </char>
+    <char>
+        <name>Graceful_3</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+( __ \
+ (__ (
+(____/</data>
+    </char>
+    <char>
+        <name>Graceful_4</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ / _ \
+(__  (
+  (__/</data>
+    </char>
+    <char>
+        <name>Graceful_5</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ / __)
+(___ \
+(____/</data>
+    </char>
+    <char>
+        <name>Graceful_6</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ / __)
+(  _ \
+ \___/</data>
+    </char>
+    <char>
+        <name>Graceful_7</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(__  )
+  / / 
+ (_/  </data>
+    </char>
+    <char>
+        <name>Graceful_8</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+/ _  \
+) _  (
+\____/</data>
+    </char>
+    <char>
+        <name>Graceful_9</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ___  
+/ _ \ 
+\__  )
+(___/ </data>
+    </char>
+    <char>
+        <name>Graceful_0</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ /  \ 
+(  0 )
+ \__/ </data>
+    </char>
+    <char>
+        <name>Graceful_!</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  _   
+ / \  
+ \_/  
+ (_)  </data>
+    </char>
+    <char>
+        <name>Graceful_@</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ /   \
+( (__/
+ \___)</data>
+    </char>
+    <char>
+        <name>Graceful_#</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _  _ 
+/ )( \
+)    (
+\_)(_/</data>
+    </char>
+    <char>
+        <name>Graceful_$</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+/ (__)
+\__  \
+(__)_/</data>
+    </char>
+    <char>
+        <name>Graceful_%</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> _ _  
+(// ) 
+ / /_ 
+(_/(/ </data>
+    </char>
+    <char>
+        <name>Graceful_^</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ /  \ 
+(_/\_)
+      </data>
+    </char>
+    <char>
+        <name>Graceful_amp</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ ( _ \
+/ _  /
+\__\_)</data>
+    </char>
+    <char>
+        <name>Graceful_*</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>      
+(\/\/)
+ )  ( 
+(/\/\)</data>
+    </char>
+    <char>
+        <name>Graceful_(</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>   _  
+  / ) 
+ ( (  
+  \_) </data>
+    </char>
+    <char>
+        <name>Graceful_)</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  _   
+ ( \  
+  ) ) 
+ (_/  </data>
+    </char>
+    <char>
+        <name>Graceful_`</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  _   
+  \)  
+      
+      </data>
+    </char>
+    <char>
+        <name>Graceful_~</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> __   
+(_ \_ 
+  \__)
+      </data>
+    </char>
+    <char>
+        <name>Graceful__</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>      
+      
+ ____ 
+(____)</data>
+    </char>
+    <char>
+        <name>Graceful_-</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>      
+ ____ 
+(____)
+      </data>
+    </char>
+    <char>
+        <name>Graceful_+</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  __  
+ (  ) 
+(_  _)
+ (__) </data>
+    </char>
+    <char>
+        <name>Graceful_=</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+(____)
+ ____ 
+(____)</data>
+    </char>
+    <char>
+        <name>Graceful_{</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ (  _)
+(_ (_ 
+ (___)</data>
+    </char>
+    <char>
+        <name>Graceful_}</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ___  
+(_  ) 
+ _) _)
+(___) </data>
+    </char>
+    <char>
+        <name>Graceful_[</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> ____ 
+/   _)
+)  (_ 
+\____)</data>
+    </char>
+    <char>
+        <name>Graceful_]</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ (_   \
+  _)  (
+ (____/</data>
+    </char>
+    <char>
+        <name>Graceful_|</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  _   
+ ( \  
+ / /  
+ \_)  
+</data>
+    </char>
+    <char>
+        <name>Graceful_\</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  _   
+ ( \  
+  \ \ 
+   \_)</data>
+    </char>
+    <char>
+        <name>Graceful_:</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>   _  
+  (_) 
+   _  
+  (_) </data>
+    </char>
+    <char>
+        <name>Graceful_;</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>   _  
+  (_) 
+  ( ) 
+  (/  </data>
+    </char>
+    <char>
+        <name>Graceful_"</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  _ _ 
+ (/(/ 
+      
+      </data>
+    </char>
+    <char>
+        <name>Graceful_'</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>   _  
+  (/  
+      
+      </data>
+    </char>
+    <char>
+        <name>Graceful_&lt;</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>   __ 
+  / / 
+ ( (  
+  \_\ </data>
+    </char>
+    <char>
+        <name>Graceful_&gt;</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data> __   
+ \ \  
+  ) ) 
+ /_/  </data>
+    </char>
+    <char>
+        <name>Graceful_,</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>      
+   _  
+  ( ) 
+  (/  </data>
+    </char>
+    <char>
+        <name>Graceful_.</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>      
+      
+   _  
+  (_) </data>
+    </char>
+    <char>
+        <name>Graceful_?</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>  ___ 
+ (__ \
+  (__/
+  (_) </data>
+    </char>
+    <char>
+        <name>Graceful_/</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>    _ 
+   / )
+  / / 
+ (_/  </data>
+    </char>
+    <char>
+        <name>Graceful_template</name>
+        <lines>4</lines>
+        <width>6</width>
+        <font>Graceful</font>
+        <data>No_Case</data>
+    </char>
+</chars>

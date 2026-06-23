@@ -2,9 +2,8 @@ function fnGetAscii {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$True,Position=0)]
-        [String] $InputObject,
+        [String] $InputString,
         [Parameter(Mandatory=$True,Position=1)]
-        [ValidateSet("Large","Standard")]
         [String] $Font,
         [Parameter(Mandatory=$True,Position=2)]
         [String]$BuildType,
@@ -15,8 +14,8 @@ function fnGetAscii {
     )
     begin{
         # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Letters)){
-            fnXML "Letters"
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $Font)){
+            fnXML "$($Font)"
         }
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
             fnXML "Characters"
@@ -27,10 +26,16 @@ function fnGetAscii {
         # Variables
         $StringPos = 1
         $SubLineCount = 0
-        $FontC = if($Font -eq "Large"){"Large_"}elseif($Font -eq "Standard"){"Standard_"}
+        $NoCase = $False
+        $FontC = "$Font" + "_"
         $FontH = (Get-Variable -Name $Font -ValueOnly)
+        $FontTemplate = "$FontC" + "Template"
+        if($FontH.$FontTemplate.ASCII -eq "No_Case"){
+            $NoCase = $True
+        }
+        
         $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes["$($BuildType)"])["BorderLines"])) / 10)
-        $Reg = $InputObject | Select-String -AllMatches -Pattern "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
+        $Reg = $InputString | Select-String -AllMatches -Pattern "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
         $CountTextGroups = $Reg.Matches.Count
         # Create Text Groups
         $TextGroups = [System.Collections.SortedList]::new()
@@ -47,11 +52,16 @@ function fnGetAscii {
             $LetterArray = [Char[]] $_
             foreach($Character in $LetterArray){
                 $Letter = 
-                if($Character -match [Regex]('[a-z]')){"Lower_$($FontC)$($Character)"}
-                elseif($Character -match [Regex]('[A-Z]')){"Upper_$($FontC)$($Character)"}
-                elseif($Character -match [Regex]('\d+') -or $Character -match [Regex]('\p{P}') -or $Character -match [Regex]('\p{S}') -and $Character -ne "&" -and $Character -ne "¤"){"$($FontC)$($Character)"}
-                elseif($Character -eq " "){"¤"}
-                elseif($Character -eq "&"){"$($FontC)amp"}
+                    if($Character -match [Regex]('[a-zA-Z]')){
+                        if($NoCase -eq $True){"$($FontC)$($Character)"}
+                        elseif($NoCase -eq $False){
+                            if($Character -match [Regex]('[a-z]')){"Lower_$($FontC)$($Character)"}
+                            elseif($Character -match [Regex]('[A-Z]')){"Upper_$($FontC)$($Character)"}
+                        }
+                    }
+                    elseif($Character -match [Regex]('\d+') -or $Character -match [Regex]('\p{P}') -or $Character -match [Regex]('\p{S}') -and $Character -ne "&" -and $Character -ne "¤"){"$($FontC)$($Character)"}
+                    elseif($Character -eq " "){"¤"}
+                    elseif($Character -eq "&"){"$($FontC)amp"}
                 if(($FontH.$Letter.Width -as [int]) -gt $TextGroups[$StringPos].MaxWidth){
                     $TextGroups[$StringPos].MaxWidth = $FontH.$Letter.Width -as [Int]
                 }
