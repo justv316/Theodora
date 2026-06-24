@@ -12,7 +12,7 @@ function fnGetAscii {
         [Parameter(
             Mandatory=$True,
             Position=2)]
-            [String]$BuildType,
+            [String]$BorderType,
         [int] $EnforcedMaxLength = 160,
         [int] $MinimumPaddingLength = 4
     )
@@ -38,7 +38,7 @@ function fnGetAscii {
             $NoCase = $True
         }
         
-        $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes["$($BuildType)"])["BorderLines"])) / 10)
+        $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes["$($BorderType)"])["BorderLines"])) / 10)
         $Reg = $InputString | Select-String -AllMatches -Pattern "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
         $CountTextGroups = $Reg.Matches.Count
         # Create Text Groups

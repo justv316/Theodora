@@ -1,28 +1,70 @@
 function fnWriteObject{
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$True,Position=0)]
+        [Parameter(
+            Mandatory=$True,
+            Position=0
+        )]
         [String] $InputString,
-        [ValidateSet("ASCII","String")]
-        [String] $ObjectType,
-        [String] $Font,
-        [ValidateSet("Unspecified","SingleBox","DoubleBox","SingleDoubleBox")]
-        [String] $BuildType = "Unspecified",
-        [ValidateSet("Center","Left","Right","None")]
-        [String] $Justification = "Center",
         [String] $ManualFormatting = '',
         [String] $ColorFormatting = '',
-        [String] $MenuFormatting = '',
-        [int]$EnforcedMaxLength = 160,
-        [int]$MinimumPaddingLength = 4
+        [String] $BuildFormatting = '',
+        [String] $ObjectFormatting = ''
     )
     <#
-    ColorFormatting =  "--ForegroundColor --BackgroundColor --TextForegroundColor --BorderForegroundColor --TextBackgroundColor --BorderBackgroundColor" 
+    ColorFormatting =  "
+        --ForegroundColor
+        --BackgroundColor
+        --TextForegroundColor
+        --BorderForegroundColor
+        --TextBackgroundColor
+        --BorderBackgroundColor" 
+    ManualFormatting = "
+        --Character=5
+        --CharacterRange=5 10
+        --Line=2
+        --LineRange=1 2
+        --ForegroundColor=White
+        --BackgroundColor=Black
+        --Replace=' ','@'
+        --PaintPadding" 
+    BuildFormatting (Given to fnBuildObject) = "
+        --ObjectType=Boxed
+        --Justification=None
+        --IgnoreTop (Switch)
+        --MiddleBorder (Switch)
+        --Padding=' '" 
+    ObjectFormatting (Used Here)  = "
+        --InputType=ASCII
+        --ASCIIFont=Graceful
+        --BorderType=Single
+        --EnforcedMaxLength=160
+        --MinimumPaddingLength=4"
     #>
     begin{
+        #Parse ObjectFormatting
+        $ObjectFormattingArr = $ObjectFormatting -Split ' '
+        $ObjectParams = ConvertTo-Params $ObjectFormattingArr -schema @{
+            InputType = [String], ''
+            ASCIIFont = [String], ''
+            BorderType = [String], ''
+            EnforcedMaxLength = [Int],160
+            MinimumPaddingLength = [Int],4
+        }
+        $ObjectParamsHash = @{}
+        $ObjectParamsKeys = $ObjectParams.Keys
+        Foreach($Key in $ObjectParamsKeys){
+            $ObjectParamsHash["$Key"] = $ObjectParams[$Key].Value
+        }
+        $InputType = if($Null -ne $ObjectParamsHash["InputType"]){$ObjectParamsHash["InputType"]}elseif($Null -eq $BuildParamHash["InputType"]){throw "InputType is Required."}
+        $ASCIIFont = if($Null -ne $ObjectParamsHash["ASCIIFont"]){$ObjectParamsHash["ASCIIFont"]}
+        $BorderType = if($Null -ne $ObjectParamsHash["BorderType"]){$ObjectParamsHash["BorderType"]}else{"None"}
+        $EnforcedMaxLength = if($Null -ne $ObjectParamsHash["EnforcedMaxLength"]){$ObjectParamsHash["EnforcedMaxLength"]}else{160}
+        $MinimumPaddingLength = if($Null -ne $ObjectParamsHash["MinimumPaddingLength"]){$ObjectParamsHash["MinimumPaddingLength"]}else{4}
+        #End Parse ObjectFormatting
         # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $Font)){
-            fnXML "$($Font)"
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $ASCIIFont)){
+            fnXML "$($ASCIIFont)"
         }
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
             fnXML "Characters"
@@ -70,29 +112,29 @@ function fnWriteObject{
             $BorderBackgroundColor = if($Null -ne $BorderColors["BorderBackgroundColor"]){$BorderColors["BorderBackgroundColor"]}elseif($Null -ne $BackgroundColor){$BackgroundColor}else{"Black"}
         }
         # Build Object
-        if($ObjectType -eq "ASCII"){
-            $ASCII = fnGetAscii $InputString $Font -BuildType $Buildtype -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
-            if($BuildType -ne "Unspecified"){
-                $ConstructedASCII = fnBuildObject -InputObject $ASCII -BuildType -ObjectType "Boxed" $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+        if($InputType -eq "ASCII"){
+            $ASCII = fnGetAscii -InputString $InputString -Font $ASCIIFont -BorderType $BorderType -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+            if($BorderType -ne "Unspecified"){
+                $ConstructedASCII = fnBuildObject -InputObject $ASCII -BorderType $BorderType -BuildFormatting $BuildFormatting -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
             }
             $GridInput = if($ConstructedASCII -ne '' -and $Null -ne $ConstructedASCII){$ConstructedASCII}else{$ASCII}
         }
-        elseif($ObjectType -eq "String"){
-            if($BuildType -ne "Unspecified"){
-                $ConstructedString = fnBuildObject -InputObject $InputString -BuildType $BuildType -ObjectType "Boxed" -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+        elseif($InputType -eq "String"){
+            if($BorderType -ne "Unspecified"){
+                $ConstructedString = fnBuildObject -InputObject $InputString -BorderType $BorderType -BuildFormatting $BuildFormatting -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
             }
             $GridInput = if($ConstructedString -ne '' -and $Null -ne $ConstructedString){$ConstructedString}else{$InputString}
         }
         $LineCount = $GridInput.Length
-        if($BuildType -ne "Unspecified"){
+        if($BorderType -ne "Unspecified"){
             #Get the number of Borderlines - Will always be at least the first and last lines
             $BorderLines = @(1, $GridInput.Length)
             $BorderColumns = @(1, $GridInput[0].Length) 
             #If there are more BorderLines, we add them to the array
-            if(($Boxes[$($BuildType)])["OuterBorderLines"] -gt 1){
-                $BorderLines += ($Boxes[$($BuildType)])["OuterBorderLines"]
+            if(($Boxes[$($BorderType)])["OuterBorderLines"] -gt 1){
+                $BorderLines += ($Boxes[$($BorderType)])["OuterBorderLines"]
                 $BorderLines += $GridInput.Length - 1
-                $BorderColumns += ($Boxes[$($BuildType)])["OuterBorderLines"]
+                $BorderColumns += ($Boxes[$($BorderType)])["OuterBorderLines"]
                 $BorderColumns += $GridInput[0].Length - 1
             }
         }

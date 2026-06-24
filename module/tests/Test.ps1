@@ -2,7 +2,7 @@ $Script:Tests = @()
 $Script:BuiltTests = @()
 $Fonts = @("Large")
 $ObjectTypes = @("ASCII","String")
-$BuildTypes = @("SingleBox")
+$BorderTypes = @("SingleBox")
 $Texts = @("I am Mommy's good little baby doll")
 $Justifications = @("None", "Center")
 $ColorFormats = @("--ForegroundColor Red", "--ForegroundColor Rainbow", "--BackgroundColor Red", "--BackgroundColor Rainbow")
@@ -10,21 +10,21 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
 
 
     foreach($Font in $Fonts){
-        foreach($BuildType in $BuildTypes){
+        foreach($BorderType in $BorderTypes){
             foreach($Justification in $Justifications){
                 foreach($ObjectType in $ObjectTypes){
                     #foreach($ColorFormat in $ColorFormats){
                         #foreach($ManualFormat in $ManualFormats){
                             Foreach($Text in $Texts){
-                                $TestIdentifier = "Test: " + "$Text" + " - " + "$Font"  + " - " + "$ObjectType" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ColorFormat" + " - " + "$ManualFormat"
+                                $TestIdentifier = "Test: " + "$Text" + " - " + "$Font"  + " - " + "$ObjectType" + " - " + "$BorderType" + " - " + "$Justification" + " - " + "$ColorFormat" + " - " + "$ManualFormat"
                                 if($BuiltTests -notcontains $TestIdentifier){
                                     $BuiltTests += $TestIdentifier
                                     $TestVar = [PSCustomObject] @{
-                                        'TestIdentifier' = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BuildType" + " - " + "$Justification" + " - " + "$ManualFormat"
+                                        'TestIdentifier' = "Test: " + "$Text" + " - " + "$Font" + " - " + "$BorderType" + " - " + "$Justification" + " - " + "$ManualFormat"
                                         'Attempted_Text' = $Text
                                         'Font' = $Font
                                         'ObjectType' = $ObjectType
-                                        'BuildType' = $BuildType
+                                        'BorderType' = $BorderType
                                         'Justification' = $Justification
                                         'ColorFormatting' = $ColorFormat
                                         'ManualFormatting' = $ManualFormat
@@ -49,11 +49,11 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
             $Text = $_.Attempted_Text
             $Font = $_.Font
             $ObjectType = $_.ObjectType
-            $BuildType = $_.BuildType
+            $BorderType = $_.BorderType
             $Justification = $_.Justification
             $ColorFormatting = $_.ColorFormatting
             $ManualFormatting = $_.ManualFormatting
-            fnwriteobject "$($Text)" -Font "$($Font)" -ObjectType "$($ObjectType)" -BuildType "$($BuildType)" -Justification "$($Justification)"
+            fnwriteobject "$($Text)" -Font "$($Font)" -ObjectType "$($ObjectType)" -BorderType "$($BorderType)" -Justification "$($Justification)"
             $Confirmation = Read-Host "Pass?"
             if($Confirmation -eq "Y"){
                 $_.Result = "Pass"
@@ -70,22 +70,31 @@ $ManualFormats = @("--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --Fo
 
 $Manualformatting = "--IndexRange=8 12 --LineRange=2 4 --BackgroundColor=Red --ForegroundColor=Red --Replace ' ','@'"
 $ColorFormatting = "--TextForegroundColor Magenta --BorderBackgroundColor Red --IgnoreTextPadding --IgnoreBorderPadding"
-$Buildtype = "SingleDoubleBox"
+$BorderType = "Single"
 $Justification = "None"
 $Font = "Graceful"
 $EnforcedMaxLength = 160
 $MinimumPaddingLength = 4
 $InputString = "I am Mommys good little baby doll"
-$ASCII = fnGetAscii -InputString $InputString -Font $Font -BuildType $Buildtype
-$ConstructedASCII = fnBuildObject -InputObject $ASCII -ObjectType "Boxed" -BuildType $BuildType -Justification $Justification
-$DoubleBox = fnBuildObject -InputObject $ConstructedASCII -ObjectType "Boxed" -BuildType "DoubleBox" -Justification "Center"
+$ASCII = fnGetAscii -InputString $InputString -Font $Font -BorderType $BorderType
+$ConstructedASCII = fnBuildObject -InputObject $ASCII -ObjectType "Boxed" -BorderType $BorderType -Justification $Justification
+$DoubleBox = fnBuildObject -InputObject $ConstructedASCII -ObjectType "Boxed" -BorderType "DoubleBox" -Justification "Center"
 $ButtonString = "New Game" 
 $Button = {
-    $Object = fnGetAscii -InputString $ButtonString -Font $Font -BuildType $Buildtype
-    fnBuildObject -InputObject $Object -BuildType $BuildType -Justification "None"
+    $Object = fnGetAscii -InputString $ButtonString -Font $Font -BorderType $BorderType
+    fnBuildObject -InputObject $Object -BorderType $BorderType -Justification "None"
 }
 
 Remove-Variable ManualFormatting -ErrorAction SilentlyContinue
 Remove-Variable ColorFormatting -ErrorAction SilentlyContinue
 Remove-Variable ASCII -ErrorAction SilentlyContinue
 Remove-Variable ConstructedASCII -ErrorAction SilentlyContinue
+<#
+The ObjectType specifies what IgnoreTop will be crteated 
+BorderType will describe which border is used in the ObjectType
+If IgnoreTop is true, following the first element, the top border will be converted into horizontal border space 
+If Middle Border is true, the BottomBorder becomes a middle border line. 
+#>
+$MenuBannerASCII = fnGetASCII -InputString "Theodora" -Font "Graceful" -BorderType "Double" 
+$MenuBanner = fnBuildObject -InputObject $MenuBannerASCII -BuildFormatting "--ObjectType=Boxed --BorderType=Single --MiddleBorder"
+$MenuBanner

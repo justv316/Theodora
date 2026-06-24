@@ -47,7 +47,7 @@ function fnXML{
         }
         elseif($XML -eq "Boxes"){
             $BoxTypes = @("Single", "Double")
-            $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "MiddleLeft", "MiddleRight")
+            $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "BottomRightCorner", "MiddleLeft", "MiddleRight")
             $BoxTypes | Foreach-Object {
                 $Type = [String]$_
                 $Boxes[$Type] = @{}
