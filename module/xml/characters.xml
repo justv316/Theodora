@@ -8,6 +8,35 @@
         <BottomRightCorner value="╝"/>
         <MiddleLeft value="╠"/>
         <MiddleRight value="╣"/>
+        <MiddleTop value="╦"/>
+        <MiddleBottom value="╩"/>
+        <CenterJunction value="╬"/>
+    </type>
+    <type name="DoubleSingle">
+        <Vertical value="║"/>
+        <Horizontal value="─"/>
+        <TopLeftCorner value="╓"/>
+        <TopRightCorner value="╖"/>
+        <BottomLeftCorner value="╙"/>
+        <BottomRightCorner value="╜"/>
+        <MiddleLeft value="╟"/>
+        <MiddleRight value="╢"/>
+        <MiddleTop value="╥"/>
+        <MiddleBottom value="╨"/>
+        <CenterJunction value="╫"/>
+    </type>
+    <type name="DoubleSingle">
+        <Vertical value="│"/>
+        <Horizontal value="═"/>
+        <TopLeftCorner value="╒"/>
+        <TopRightCorner value="╕"/>
+        <BottomLeftCorner value="╘"/>
+        <BottomRightCorner value="╛"/>
+        <MiddleLeft value="╞"/>
+        <MiddleRight value="╡"/>
+        <MiddleTop value="╤"/>
+        <MiddleBottom value="╧"/>
+        <CenterJunction value="╪"/>
     </type>
     <type name="Single">
         <Vertical value="│"/>
@@ -18,6 +47,84 @@
         <BottomRightCorner value="┘"/>
         <MiddleLeft value="├"/>
         <MiddleRight value="┤"/>
+        <MiddleTop value="┬"/>
+        <MiddleBottom value="┴"/>
+        <CenterJunction value="┼"/>
+    </type>
+    <type name="SingleBold">
+        <Vertical value="┃"/>
+        <Horizontal value="━"/>
+        <TopLeftCorner value="┏"/>
+        <TopRightCorner value="┓"/>
+        <BottomLeftCorner value="┗"/>
+        <BottomRightCorner value="┛"/>
+        <MiddleLeft value="┣"/>
+        <MiddleRight value="┫"/>
+        <MiddleTop value="┳"/>
+        <MiddleBottom value="┻"/>
+        <CenterJunction value="╋"/>
+    </type>
+    <type name="SingleHorizontalBold">
+        <Vertical value="│"/>
+        <Horizontal value="━"/>
+        <TopLeftCorner value="┍"/>
+        <TopRightCorner value="┑"/>
+        <BottomLeftCorner value="┕"/>
+        <BottomRightCorner value="┙"/>
+        <MiddleLeft value="┝"/>
+        <MiddleRight value="┥"/>
+        <MiddleTop value="┯"/>
+        <MiddleBottom value="┷"/>
+        <CenterJunction value="┿"/>
+    </type>
+    <type name="SingleVerticalBold">
+        <Vertical value="┃"/>
+        <Horizontal value="─"/>
+        <TopLeftCorner value="┎"/>
+        <TopRightCorner value="┒"/>
+        <BottomLeftCorner value="┖"/>
+        <BottomRightCorner value="┚"/>
+        <MiddleLeft value="┠"/>
+        <MiddleRight value="┨"/>
+        <MiddleTop value="┰"/>
+        <MiddleBottom value="┸"/>
+        <CenterJunction value="╂"/>
+    </type>
+    <type name ="Dash">
+        <SingleHorizontalLeft value="╴"/>
+        <SingleHorizontalRight value="╶"/>
+        <SingleVerticalTop value="╵"/>
+        <SingleVerticalBottom value="╷"/>
+        <DoubleVertical value="╎"/>
+        <DoubleHorizontal value="╌"/>
+        <DoubleVertical value="╎"/>
+        <TripleHorizontal value="┄"/>
+        <TripleVertical value="┆"/>
+        <QuadHorizontal value="┈"/>
+        <QuadVertical value="┊"/>
+    </type>
+    <type name ="DashBold">
+        <SingleHorizontalLeft value="╸"/>
+        <SingleHorizontalRight value="╺"/>
+        <SingleVerticalTop value="╹"/>
+        <SingleVerticalBottom value="╻"/>
+        <DoubleHorizontal value="╍"/>
+        <DoubleVertical value="╏"/>
+        <TripleHorizontal value="┅"/>
+        <TripleVertical value="┇"/>
+        <QuadHorizontal value="┉"/>
+        <QuadVertical value="┋"/>
+    </type>
+    
+    <type name ="Curve">
+        <TopLeftCorner value="╭"/>
+        <TopRightCorner value="╮"/>
+        <BottomLeftCorner value="╰"/>
+        <BottomRightCorner value="╯"/>
+    </type>
+    <type name ="Slash">
+        <Left value="╱"/>
+        <Right value="╲"/>
+        <Cross value="╳"/>
     </type>
 </types>
-

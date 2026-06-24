@@ -63,7 +63,7 @@ function fnWriteObject{
         $MinimumPaddingLength = if($Null -ne $ObjectParamsHash["MinimumPaddingLength"]){$ObjectParamsHash["MinimumPaddingLength"]}else{4}
         #End Parse ObjectFormatting
         # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $ASCIIFont)){
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $ASCIIFont) -and ($Null -ne $ObjectParamsHash["ASCIIFont"])){
             fnXML "$($ASCIIFont)"
         }
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
