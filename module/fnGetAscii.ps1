@@ -1,15 +1,19 @@
 function fnGetAscii {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$True,Position=0)]
-        [String] $InputString,
-        [Parameter(Mandatory=$True,Position=1)]
-        [String] $Font,
-        [Parameter(Mandatory=$True,Position=2)]
-        [String]$BuildType,
-        [Parameter(Position=3)]
+        [Parameter(
+            Mandatory=$True,
+            Position=0)]
+            [String] $InputString,
+        [Parameter(
+            Mandatory=$True,
+            Position=1)]
+            [String] $Font,
+        [Parameter(
+            Mandatory=$True,
+            Position=2)]
+            [String]$BuildType,
         [int] $EnforcedMaxLength = 160,
-        [Parameter(Position=4)]
         [int] $MinimumPaddingLength = 4
     )
     begin{

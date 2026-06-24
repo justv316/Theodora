@@ -12,6 +12,7 @@ function fnWriteObject{
         [String] $Justification = "Center",
         [String] $ManualFormatting = '',
         [String] $ColorFormatting = '',
+        [String] $MenuFormatting = '',
         [int]$EnforcedMaxLength = 160,
         [int]$MinimumPaddingLength = 4
     )
@@ -72,13 +73,13 @@ function fnWriteObject{
         if($ObjectType -eq "ASCII"){
             $ASCII = fnGetAscii $InputString $Font -BuildType $Buildtype -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
             if($BuildType -ne "Unspecified"){
-                $ConstructedASCII = fnBuildObject $ASCII $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                $ConstructedASCII = fnBuildObject -InputObject $ASCII -BuildType -ObjectType "Boxed" $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
             }
             $GridInput = if($ConstructedASCII -ne '' -and $Null -ne $ConstructedASCII){$ConstructedASCII}else{$ASCII}
         }
         elseif($ObjectType -eq "String"){
             if($BuildType -ne "Unspecified"){
-                $ConstructedString = fnBuildObject $InputString $BuildType -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength 
+                $ConstructedString = fnBuildObject -InputObject $InputString -BuildType $BuildType -ObjectType "Boxed" -Justification $Justification -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
             }
             $GridInput = if($ConstructedString -ne '' -and $Null -ne $ConstructedString){$ConstructedString}else{$InputString}
         }

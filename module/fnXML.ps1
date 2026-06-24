@@ -15,59 +15,11 @@ function fnXML{
             $Script:Characters = @{}
         }
         if($XML -eq 'Boxes' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes))){
-            $Script:Boxes = @{
-                "Unspecified" = @{
-                    "BorderLines" = 0
-                    "OuterBorderLines" = 0
-                }
-                "SingleBox" = @{
-                    "BorderLines" = 2
-                    "OuterBorderLines" = 1
-                    "OuterBorder" = $Characters.SingleVertical
-                    "OuterHorizontalBorder" = $Characters.SingleHorizontal
-                    "OuterTopBorderLC" = $Characters.SingleTopLeftCorner
-                    "OuterTopBorderRC" = $Characters.SingleTopRightCorner
-                    "OuterBottomBorderLC" = $Characters.SingleBottomLeftCorner
-                    "OuterBottomBorderRC" = $Characters.SingleBottomRightCorner
-                    "LeftBorder" = $Characters.SingleVertical
-                    "RightBorder" = $Characters.SingleVertical
-                }
-                "DoubleBox" = @{
-                    "BorderLines" = 2
-                    "OuterBorderLines" = 1
-                    "OuterBorder" = $Characters.DoubleVertical
-                    "OuterHorizontalBorder" = $Characters.DoubleHorizontal
-                    "OuterTopBorderLC" = $Characters.DoubleTopLeftCorner
-                    "OuterTopBorderRC" = $Characters.DoubleTopRightCorner
-                    "OuterBottomBorderLC" = $Characters.DoubleBottomLeftCorner
-                    "OuterBottomBorderRC" = $Characters.DoubleBottomRightCorner
-                    "LeftBorder" = $Characters.DoubleVertical
-                    "RightBorder" = $Characters.DoubleVertical
-                }
-                "SingleDoubleBox" = @{
-                    "BorderLines" = 4
-                    "OuterBorderLines" = 2
-                    "OuterBorder" = $Characters.DoubleVertical
-                    "OuterHorizontalBorder" = $Characters.DoubleHorizontal
-                    "OuterTopBorderLC" = $Characters.DoubleTopLeftCorner
-                    "OuterTopBorderRC" = $Characters.DoubleTopRightCorner
-                    "OuterBottomBorderLC" = $Characters.DoubleBottomLeftCorner
-                    "OuterBottomBorderRC" = $Characters.DoubleBottomRightCorner
-                    "InnerBorder" = $Characters.SingleVertical
-                    "InnerHorizontalBorder" = $Characters.SingleHorizontal
-                    "InnerTopBorderLC" = $Characters.SingleTopLeftCorner
-                    "InnerTopBorderRC" = $Characters.SingleTopRightCorner
-                    "InnerBottomBorderLC" = $Characters.SingleBottomLeftCorner
-                    "InnerBottomBorderRC" = $Characters.SingleBottomRightCorner
-                    "LeftBorder" = $Characters.DoubleVertical + $Characters.SingleVertical
-                    "RightBorder" = $Characters.SingleVertical + $Characters.DoubleVertical
-                }
-            }
+            $Script:Boxes = @{}
         }
-        if($XML -ne "Boxes"){
-            $File = "E:\Documents\GitHub\PSGame\Theodora\module\xml\$($XML).xml"
-            $FileXML = [XML] (Get-Content $File)
-        }
+        
+        $File = "E:\Documents\GitHub\PSGame\Theodora\module\xml\$($XML).xml"
+        $FileXML = [XML] (Get-Content $File -ErrorAction SilentlyContinue)
     }
     process{
         if($Fonts -Contains $XML){
@@ -83,12 +35,29 @@ function fnXML{
             }
         }
         elseif($XML -eq "Characters"){
-            $FileXML.Chars.Char | ForEach-Object {
-                $Characters[$($_.Name)] = $_.Data
+            $FileXML.types.type | ForEach-Object {
+                [String]$BName = $_.Name
+                $Characters[$BName] = @{}
+                $_.ChildNodes | Foreach-Object{
+                    [String]$Name = $_.Name
+                    [String]$Value = $_.Value
+                    $Characters[$BName][$Name] = $Value
+                }
+            }
+        }
+        elseif($XML -eq "Boxes"){
+            $BoxTypes = @("Single", "Double")
+            $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "MiddleLeft", "MiddleRight")
+            $BoxTypes | Foreach-Object {
+                $Type = [String]$_
+                $Boxes[$Type] = @{}
+                Foreach($Border in $BorderTypes){
+                    $Boxes[$Type][$Border] = $Characters[$Type][$Border]
+                }
             }
         }
     }
 }
 
- 
+
        

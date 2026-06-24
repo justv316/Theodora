@@ -1,70 +1,23 @@
-﻿<chars>
-    <char>
-        <name>DoubleVertical</name>
-        <data>║</data>
-    </char>
-    <char>
-        <name>SingleVertical</name>
-        <data>│</data>
-    </char>
-    <char>
-        <name>DoubleTopLeftCorner</name>
-        <data>╔</data>
-    </char>
-    <char>
-        <name>DoubleTopRightCorner</name>
-        <data>╗</data>
-    </char>
-    <char>
-        <name>DoubleBottomLeftCorner</name>
-        <data>╚</data>
-    </char>
-    <char>
-        <name>DoubleBottomRightCorner</name>
-        <data>╝</data>
-    </char>
-    <char>
-        <name>DoubleLeftMiddle</name>
-        <data>╠</data>
-    </char>
-    <char>
-        <name>DoubleRightMiddle</name>
-        <data>╣</data>
-    </char>
-    <char>
-        <name>Tilde</name>
-        <data>~</data>
-    </char>
-    <char>
-        <name>DoubleHorizontal</name>
-        <data>═</data>
-    </char>
-    <char>
-        <name>SingleHorizontal</name>
-        <data>─</data>
-    </char>
-    <char>
-        <name>SingleTopLeftCorner</name>
-        <data>┌</data>
-    </char>
-    <char>
-        <name>SingleTopRightCorner</name>
-        <data>┐</data>
-    </char>
-    <char>
-        <name>SingleBottomLeftCorner</name>
-        <data>└</data>
-    </char>
-    <char>
-        <name>SingleBottomRightCorner</name>
-        <data>┘</data>
-    </char>
-    <char>
-        <name>SingleLeftMiddle</name>
-        <data>├</data>
-    </char>
-    <char>
-        <name>SingleRightMiddle</name>
-        <data>┤</data>
-    </char>
-</chars>
+﻿<types>
+    <type name="Double">
+        <Vertical value="║"/>
+        <Horizontal value="═"/>
+        <TopLeftCorner value="╔"/>
+        <TopRightCorner value="╗"/>
+        <BottomLeftCorner value="╚"/>
+        <BottomRightCorner value="╝"/>
+        <MiddleLeft value="╠"/>
+        <MiddleRight value="╣"/>
+    </type>
+    <type name="Single">
+        <Vertical value="│"/>
+        <Horizontal value="─"/>
+        <TopLeftCorner value="┌"/>
+        <TopRightCorner value="┐"/>
+        <BottomLeftCorner value="└"/>
+        <BottomRightCorner value="┘"/>
+        <MiddleLeft value="├"/>
+        <MiddleRight value="┤"/>
+    </type>
+</types>
+

@@ -76,8 +76,14 @@ $Font = "Graceful"
 $EnforcedMaxLength = 160
 $MinimumPaddingLength = 4
 $InputString = "I am Mommys good little baby doll"
-$ASCII = fnGetAscii $InputString $Font $Buildtype $EnforcedMaxLength $MinimumPaddingLength
-$ConstructedASCII = fnBuildObject $ASCII -BuildType $BuildType -Justification $Justification 
+$ASCII = fnGetAscii -InputString $InputString -Font $Font -BuildType $Buildtype
+$ConstructedASCII = fnBuildObject -InputObject $ASCII -ObjectType "Boxed" -BuildType $BuildType -Justification $Justification
+$DoubleBox = fnBuildObject -InputObject $ConstructedASCII -ObjectType "Boxed" -BuildType "DoubleBox" -Justification "Center"
+$ButtonString = "New Game" 
+$Button = {
+    $Object = fnGetAscii -InputString $ButtonString -Font $Font -BuildType $Buildtype
+    fnBuildObject -InputObject $Object -BuildType $BuildType -Justification "None"
+}
 
 Remove-Variable ManualFormatting -ErrorAction SilentlyContinue
 Remove-Variable ColorFormatting -ErrorAction SilentlyContinue

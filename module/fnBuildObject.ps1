@@ -1,100 +1,108 @@
 function fnBuildObject{
     [CmdletBinding()]
     param(
-        [Parameter(Position=0)]
-        [Array]$InputObject,
-        [Parameter(Position=1)]
-        [String]$BuildType,
-        [ValidateSet("Center","Left","Right","None")]
-        [String] $Justification = "Center",
+        [Parameter(
+            Position=0)]
+            [Array]$InputObject,
+        [Parameter()]
+            [String]$BuildType,
+         [Parameter()]
+            [ValidateSet("Center","Left","Right","None")]
+            [String] $Justification = "Center",
+        [Parameter()]
+            [String] $ObjectType,
         [int]$EnforcedMaxLength = 160,
         [int]$MinimumPaddingLength = 4,
         [String] $Padding = ' '
     )
     <# USAGE
-        fnBuildBoxed $InputObject $BuildType $Justification -Segmented $EnforcedMaxLength $MinimumPaddingLength $Padding 
+        fnBuildObject -InputObject $ConstructedASCII -ObjectType "Boxed" -BuildType "DoubleBox" -Justification "Center"
     #>
     begin{
-        $Build = ($Boxes[$($BuildType)])
-        $BuildLines = ($Boxes[$($BuildType)])["BorderLines"]
-        $OuterBuildLines = ($Boxes[$($BuildType)])["OuterBorderLines"]
-        $Lines = [System.Collections.SortedList]::new()
-        $MaxLines = $InputObject.Count
-        $MaxLineWidth = 0
-        #Create a Line Hashtable that is exactly the number of lines we need
-        foreach($Num in 1..($MaxLines + $BuildLines)){
-            $Lines[$($Num)] = ("")
-        }
-        #Find the Widest Line for both emergency padding purposes, and to properly align the border in None-type Justification
-        foreach($Line in $InputObject){
-            if($Line.Length -gt $MaxLineWidth){
-                $MaxLineWidth = $Line.Length
+        if($ObjectType -eq "Boxed"){
+            $Build = ($Boxes[$($BuildType)])
+            $BuildLines = ($Boxes[$($BuildType)])["BorderLines"]
+            $OuterBuildLines = ($Boxes[$($BuildType)])["OuterBorderLines"]
+            $Lines = [System.Collections.SortedList]::new()
+            $MaxLines = $InputObject.Count
+            $MaxLineWidth = 0
+            #Create a Line Hashtable that is exactly the number of lines we need
+            foreach($Num in 1..($MaxLines + $BuildLines)){
+                $Lines[$($Num)] = ("")
             }
-        } 
-        #Create Border Lines
-        if($Justification -eq "None"){
-            $EnforcedMaxLength = $MaxLineWidth + $OuterBuildLines
-            $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterTopBorderRC"])
-            $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterBottomBorderRC"])
+            #Find the Widest Line for both emergency padding purposes, and to properly align the border in None-type Justification
+            foreach($Line in $InputObject){
+                if($Line.Length -gt $MaxLineWidth){
+                    $MaxLineWidth = $Line.Length
+                }
+            } 
+            #Create Border Lines
+            if($Justification -eq "None"){
+                $EnforcedMaxLength = $MaxLineWidth + $OuterBuildLines
+                $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterTopBorderRC"])
+                $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength)) + ($Build["OuterBottomBorderRC"])
+                if($BuildLines -eq 4){
+                    $InnerTopBorder = ($Build["OuterBorder"]) + ($Build["InnerTopBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength - $OuterBuildLines)) + ($Build["InnerTopBorderRC"]) + ($Build["OuterBorder"])
+                    $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength - $OuterBuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
+                }
+            }
+            else{
+                $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterTopBorderRC"])
+                $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterBottomBorderRC"])
+                if($BuildLines -eq 4){
+                    $InnerTopBorder = ($Build["OuterBorder"]) + ($Build["InnerTopBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerTopBorderRC"]) + ($Build["OuterBorder"])
+                    $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
+                }
+            }
+            #Adding the BorderLines is the same if segmented or not
+            $Lines[1] += $TopBorder
+            $Lines[($Lines.Count)] += $BottomBorder
             if($BuildLines -eq 4){
-                $InnerTopBorder = ($Build["OuterBorder"]) + ($Build["InnerTopBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength - $OuterBuildLines)) + ($Build["InnerTopBorderRC"]) + ($Build["OuterBorder"])
-                $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength - $OuterBuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
+                $Lines[2] += $InnerTopBorder
+                $Lines[($Lines.Count - 1)] += $InnerBottomBorder
             }
-        }
-        else{
-            $TopBorder = ($Build["OuterTopBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterTopBorderRC"])
-            $BottomBorder = ($Build["OuterBottomBorderLC"]) + (($Build["OuterHorizontalBorder"])*($EnforcedMaxLength-$OuterBuildLines)) + ($Build["OuterBottomBorderRC"])
-            if($BuildLines -eq 4){
-                $InnerTopBorder = ($Build["OuterBorder"]) + ($Build["InnerTopBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerTopBorderRC"]) + ($Build["OuterBorder"])
-                $InnerBottomBorder = ($Build["OuterBorder"]) + ($Build["InnerBottomBorderLC"]) + (($Build["InnerHorizontalBorder"])*($EnforcedMaxLength-$BuildLines)) + ($Build["InnerBottomBorderRC"]) + ($Build["OuterBorder"])
-            }
-        }
-        #Adding the BorderLines is the same if segmented or not
-        $Lines[1] += $TopBorder
-        $Lines[($Lines.Count)] += $BottomBorder
-        if($BuildLines -eq 4){
-            $Lines[2] += $InnerTopBorder
-            $Lines[($Lines.Count - 1)] += $InnerBottomBorder
         }
     }
     process{
-        #Fill the Lines Array with Assembled Segments
-        $Start = ($OuterBuildLines + 1)
-        $End = (($Lines.Count) - $OuterBuildLines)
-        Foreach($Num in $Start..$End){
-            $Segment = $InputObject[$Num-$Start]
-            #Determine Segment Padding Needed
-            if($Justification -eq "Center"){
-                $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["LeftBorder"]).Length) - ($Segment.Length / 2)
-                $RightPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["RightBorder"]).Length) - ($Segment.Length / 2)
-                $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
-                $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
-            }
-            elseif($Justification -eq "Left"){
-                $LeftPaddingRequired = $MinimumPaddingLength
-                $RightPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $LeftPaddingRequired
-            }
-            elseif($Justification -eq "Right"){
-                $RightPaddingRequired = $MinimumPaddingLength
-                $LeftPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $RightPaddingRequired
-            }
-            elseif($Justification -eq "None"){
-                if($Segment.Length -lt $MaxLineWidth){
-                    $RightPaddingRequired = [Math]::floor(($MaxLineWidth - $Segment.Length) / 2)
-                    $LeftPaddingRequired = [Math]::ceiling(($MaxLineWidth - $Segment.Length) / 2)
+        if($ObjectType -eq "Boxed"){
+            #Fill the Lines Array with Assembled Segments
+            $Start = ($OuterBuildLines + 1)
+            $End = (($Lines.Count) - $OuterBuildLines)
+            Foreach($Num in $Start..$End){
+                $Segment = $InputObject[$Num-$Start]
+                #Determine Segment Padding Needed
+                if($Justification -eq "Center"){
+                    $LeftPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["LeftBorder"]).Length) - ($Segment.Length / 2)
+                    $RightPaddingRequired = (($EnforcedMaxLength / 2) - ($Build["RightBorder"]).Length) - ($Segment.Length / 2)
+                    $RightPaddingRequired = [Math]::floor($RightPaddingRequired)
+                    $LeftPaddingRequired = [Math]::ceiling($LeftPaddingRequired)
                 }
-                else{
-                    $RightPaddingRequired = $MaxLineWidth - $Segment.Length
-                    $LeftPaddingRequired = 0
+                elseif($Justification -eq "Left"){
+                    $LeftPaddingRequired = $MinimumPaddingLength
+                    $RightPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $LeftPaddingRequired
                 }
+                elseif($Justification -eq "Right"){
+                    $RightPaddingRequired = $MinimumPaddingLength
+                    $LeftPaddingRequired = ($EnforcedMaxLength - $Segment.Length - (($Build["RightBorder"]).Length + ($Build["LeftBorder"]).Length)) - $RightPaddingRequired
+                }
+                elseif($Justification -eq "None"){
+                    if($Segment.Length -lt $MaxLineWidth){
+                        $RightPaddingRequired = [Math]::floor(($MaxLineWidth - $Segment.Length) / 2)
+                        $LeftPaddingRequired = [Math]::ceiling(($MaxLineWidth - $Segment.Length) / 2)
+                    }
+                    else{
+                        $RightPaddingRequired = $MaxLineWidth - $Segment.Length
+                        $LeftPaddingRequired = 0
+                    }
+                }
+                if($OuterBuildLines -eq 1){
+                    $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired) + 1
+                }
+                $RightPadding = (("$($Padding)") * ($RightPaddingRequired)) + ($Build["RightBorder"])
+                $LeftPadding = ($Build["LeftBorder"]) + (("$($Padding)") * ($LeftPaddingRequired))
+                $AssembledSegment = $LeftPadding + $Segment + $RightPadding
+                $Lines[$Num] += $AssembledSegment
             }
-            if($OuterBuildLines -eq 1){
-                $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired) + 1
-            }
-            $RightPadding = (("$($Padding)") * ($RightPaddingRequired)) + ($Build["RightBorder"])
-            $LeftPadding = ($Build["LeftBorder"]) + (("$($Padding)") * ($LeftPaddingRequired))
-            $AssembledSegment = $LeftPadding + $Segment + $RightPadding
-            $Lines[$Num] += $AssembledSegment
         }
         #Return the Output
         $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
