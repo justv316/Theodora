@@ -1,15 +1,12 @@
 function fnWriteObject{
     [CmdletBinding()]
     param(
-        [Parameter(
-            Mandatory=$True,
-            Position=0
-        )]
         [String] $InputString,
         [String] $ManualFormatting = '',
         [String] $ColorFormatting = '',
         [String] $BuildFormatting = '',
-        [String] $ObjectFormatting = ''
+        [String] $ObjectFormatting = '',
+        [String] $GridFormatting = ''
     )
     <#
     ColorFormatting =  "
@@ -33,7 +30,23 @@ function fnWriteObject{
         --Justification=None
         --IgnoreTop (Switch)
         --MiddleBorder (Switch)
-        --Padding=' '" 
+        --Padding=' '"
+    GridFormatting (Given to fnBuildObject) = "
+        --GridRange=@(Rows,Columns)
+        --GridBorder=Double
+        --GridJustification=Center
+        --Headers=@(String,String)
+        --HeadersFont=@(Graceful,None)
+        --HeadersBorder=@(Single,Double)
+        --HeadersObjectBorder=@(Double,Single)
+        --HeadersJustification=@(Center,Left)
+        --HeadersIgnoreTop=@(False, True)
+        --HeadersMiddleBorder=@(True,True)
+        --Buttons=@(String,String)
+        --ButtonsFont=@(Graceful,None)
+        --ButtonsBorder=@(Double,Single)
+        --ButtonsObjectBorder=@(Double,Single)
+        --ButtonsJustification=@(Center,Left)
     ObjectFormatting (Used Here)  = "
         --InputType=ASCII
         --ASCIIFont=Graceful
@@ -58,14 +71,11 @@ function fnWriteObject{
         }
         $InputType = if($Null -ne $ObjectParamsHash["InputType"]){$ObjectParamsHash["InputType"]}elseif($Null -eq $BuildParamHash["InputType"]){throw "InputType is Required."}
         $ASCIIFont = if($Null -ne $ObjectParamsHash["ASCIIFont"]){$ObjectParamsHash["ASCIIFont"]}
-        $BorderType = if($Null -ne $ObjectParamsHash["BorderType"]){$ObjectParamsHash["BorderType"]}else{"None"}
+        $BorderType = if($Null -ne $ObjectParamsHash["BorderType"]){$ObjectParamsHash["BorderType"]}
         $EnforcedMaxLength = if($Null -ne $ObjectParamsHash["EnforcedMaxLength"]){$ObjectParamsHash["EnforcedMaxLength"]}else{160}
         $MinimumPaddingLength = if($Null -ne $ObjectParamsHash["MinimumPaddingLength"]){$ObjectParamsHash["MinimumPaddingLength"]}else{4}
         #End Parse ObjectFormatting
         # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $ASCIIFont) -and ($Null -ne $ObjectParamsHash["ASCIIFont"])){
-            fnXML "$($ASCIIFont)"
-        }
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
             fnXML "Characters"
         }
@@ -125,8 +135,11 @@ function fnWriteObject{
             }
             $GridInput = if($ConstructedString -ne '' -and $Null -ne $ConstructedString){$ConstructedString}else{$InputString}
         }
+        elseif($InputType -eq "Menu"){
+            $GridInput = fnBuildObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+        }
         $LineCount = $GridInput.Length
-        if($BorderType -ne "Unspecified"){
+        if($BorderType -ne "Unspecified" -and $Null -ne $BorderType){
             #Get the number of Borderlines - Will always be at least the first and last lines
             $BorderLines = @(1, $GridInput.Length)
             $BorderColumns = @(1, $GridInput[0].Length) 

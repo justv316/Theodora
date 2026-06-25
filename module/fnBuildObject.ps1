@@ -4,21 +4,26 @@ function fnBuildObject{
         [Parameter()]
         [Array]$InputObject,
         [String]$BuildFormatting,
+        [String]$GridFormatting,
         [String]$BorderType,
         [int] $EnforcedMaxLength = 160,
         [int] $MinimumPaddingLength = 4
     )
     begin{
+        # Build Reference Hashes
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
+            fnXML "Characters"
+        }
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes)){
+            fnXML "Boxes"
+        }
         # Argument Parsing
         $BuildParamArr = $BuildFormatting -Split ' '
         $BuildParam = ConvertTo-Params $BuildParamArr -schema @{
             ObjectType = [String],''
-            BorderType = [String],'Single'
             Justification = [String], 'None'
-            IgnoreTop = [Switch], $false
-            MiddleBorder = [Switch], $false
-            EnforcedMaxLength = [Int],160
-            MinimumPaddingLength = [Int],4
+            IgnoreTop = [String], 'false'
+            MiddleBorder = [String], 'false'
             Padding = [String],' '
         }
         $BuildParamHash = @{}
@@ -27,14 +32,111 @@ function fnBuildObject{
             $BuildParamHash["$Key"] = $BuildParam[$Key].Value
         }
         $ObjectType = If($Null -ne $BuildParamHash["ObjectType"]){$BuildParamHash["ObjectType"]}elseif($Null -eq $BuildParamHash["ObjectType"]){throw "ObjectType is Required."}
-        $BorderType = if($Null -ne $BuildParamHash["BorderType"]){$BuildParamHash["BorderType"]}else{"Single"}
         $Justification = if($Null -ne $BuildParamHash["Justification"]){$BuildParamHash["Justification"]}else{"None"}
-        $IgnoreTop = If($Null -ne $BuildParamHash["IgnoreTop"]){$True}else{$False}
-        $MiddleBorder = If($Null -ne $BuildParamHash["MiddleBorder"]){$True}else{$False}
-        $EnforcedMaxLength = if($BuildParamHash["EnforcedMaxLength"] -ne 160 -and $Null -ne $BuildParamHash["EnforcedMaxLength"]){$BuildParamHash["EnforcedMaxLength"]}else{160}
-        $MinimumPaddingLength = if($BuildParamHash["MinimumPaddingLength"] -ne 4 -and $Null -ne $BuildParamHash["MinimumPaddingLength"]){$BuildParamHash["MinimumPaddingLength"]}else{4}
+        $IgnoreTop = If($BuildParamHash["IgnoreTop"] -eq "True"){$True}else{$False}
+        $MiddleBorder = If($BuildParamHash["MiddleBorder"] -eq "True"){$True}else{$False}
         $Padding = if($BuildParamHash["Padding"]){$BuildParamHash["Padding"]}else{" "}
-    # End Argument Parsing
+        # End Argument Parsing
+        if($ObjectType -eq "Grid"){
+            $GridParamArr = $GridFormatting -Split ' '
+            $GridParam = ConvertTo-Params $GridParamArr -schema @{
+                GridRange = [int[]],@()
+                GridBorder = [String],''
+                GridJustification = [String],''
+                Headers = [String[]],@()
+                HeadersFont = [String[]],@()
+                HeadersBorder = [String[]],@()
+                HeadersObjectBorder = [String[]],@()
+                HeadersJustification = [String[]],@()
+                HeadersIgnoreTop = [String[]],@()
+                HeadersMiddleBorder = [String[]],@()
+                Buttons = [String[]],@()
+                ButtonsFont = [String[]],@()
+                ButtonsBorder = [String[]],@()
+                ButtonsObjectBorder = [String[]],@()
+                ButtonsJustification = [String[]],@()
+            }
+            $GridParamHash = @{}
+            $GridParamKeys = $GridParam.Keys
+            Foreach($Key in $GridParamKeys){
+                $GridParamHash["$Key"] = $GridParam[$Key].Value
+            }
+            $GridRange = if($Null -ne $GridParamHash["GridRange"]){$GridParamHash["GridRange"]}elseif($Null -eq $GridParamHash["GridRange"]){Throw "A grid range is required when Grid is specified"}
+            $GridBorder = if($Null -ne $GridParamHash["GridBorder"]){$GridParamHash["GridBorder"]}
+            $GridJustification = if($Null -ne $GridParamHash["GridJustification"]){$GridParamHash["GridJustification"]}
+            $Headers = if($Null -ne $GridParamHash["Headers"]){$GridParamHash["Headers"]}else{$False}
+            $Buttons = if($Null -ne $GridParamHash["Buttons"]){$GridParamHash["Buttons"]}else{$False}
+            $ButtonsFont = if($Null -ne $GridParamHash["ButtonsFont"]){$GridParamHash["ButtonsFont"]}
+            $ButtonsBorder = if($Null -ne $GridParamHash["ButtonsBorder"]){$GridParamHash["ButtonsBorder"]}
+            $ButtonsObjectBorder = if($Null -ne $GridParamHash["ButtonsObjectBorder"]){$GridParamHash["ButtonsObjectBorder"]}
+            $ButtonsJustification = if($Null -ne $GridParamHash["ButtonsJustification"]){$GridParamHash["ButtonsJustification"]}
+            $HeadersFont = if($Null -ne $GridParamHash["HeadersFont"]){$GridParamHash["HeadersFont"]}
+            $HeadersBorder = if($Null -ne $GridParamHash["HeadersBorder"]){$GridParamHash["HeadersBorder"]}
+            $HeadersObjectBorder = if($Null -ne $GridParamHash["HeadersObjectBorder"]){$GridParamHash["HeadersObjectBorder"]}
+            $HeadersJustification = if($Null -ne $GridParamHash["HeadersJustification"]){$GridParamHash["HeadersJustification"]}
+            $HeadersIgnoreTop = if($Null -ne $GridParamHash["HeadersIgnoreTop"]){$GridParamHash["HeadersIgnoreTop"]}
+            $HeadersMiddleBorder = if($Null -ne $GridParamHash["HeadersMiddleBorder"]){$GridParamHash["HeadersMiddleBorder"]}
+            $HeadersArray = @()
+            foreach($num in 0..($Headers.Count - 1)){
+                $Header = [PSCustomObject]@{
+                    Header = $Headers[$num].Replace('_', ' ')
+                    Font = $HeadersFont[$num]
+                    Border = $HeadersBorder[$num]
+                    ObjectBorder = $HeadersObjectBorder[$num]
+                    Justification = $HeadersJustification[$num]
+                    IgnoreTop = $HeadersIgnoreTop[$Num]
+                    MiddleBorder = $HeadersMiddleBorder[$num]
+                }
+                $HeadersArray += $Header
+            }
+            $BuiltObjects = @()
+            $HeadersArray | Foreach-Object {
+                $SubObject = 
+                    if($_.Font -ne "None"){
+                        $ASCII = fnGetAscii -InputString $_.Header -Font $_.Font -BorderType $_.ObjectBorder -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                        fnBuildObject -InputObject $ASCII -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                    }
+                    else{
+                        fnBuildObject -InputObject $_.Header -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                    }
+                $BuiltHeader = fnBuildObject -InputObject $SubObject -BorderType $_.Border -BuildFormatting "--ObjectType=Boxed --Justification=$($_.Justification) --MiddleBorder=$($_.MiddleBorder) --IgnoreTop=$($_.IgnoreTop)" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                $BuiltObjects += $BuiltHeader
+            }
+            $ButtonsArray = @()
+            foreach($num in 0..($Buttons.Count - 1)){
+                $Button = [PSCustomObject]@{
+                    Button = $Buttons[$num].Replace('_', ' ')
+                    Font = $ButtonsFont[$num]
+                    Border = $ButtonsBorder[$num]
+                    ObjectBorder = $ButtonsObjectBorder[$num]
+                    Justification = $ButtonsJustification[$num]
+                }
+                $ButtonsArray += $Button
+            }
+            foreach($num in 0..($ButtonsArray.Count - 1)){
+                if($num -le ($ButtonsArray.Count - 1)){
+                    $Button = $ButtonsArray[$num]
+                    $SubObject = 
+                        if($Button.Font -ne "None"){
+                            $ASCII = fnGetAscii -InputString $Button.Button -Font $Button.Font -BorderType $Button.ObjectBorder -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                            fnBuildObject -InputObject $ASCII -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                        }
+                        else{
+                            fnBuildObject -InputObject $Button.Button -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                        }
+                    $ConstructedButton = fnBuildObject -InputObject $SubObject -BorderType $GridBorder -BuildFormatting "--ObjectType=Boxed --Justification=$GridJustification --IgnoreTop=True --MiddleBorder=True" 
+                    $BuiltObjects += $ConstructedButton
+                }
+                if($num -eq ($ButtonsArray.Count - 1)){
+                    $Build = ($Boxes[$($GridBorder)])
+                    $OuterBuildLines = $Build.Vertical.Length
+                    $PaddingMultiplier = 
+                        if($Justification -eq "None"){$MaxLineWidth + $BorderLineCount}
+                        else{$EnforcedMaxLength - $OuterBuildLines}
+                    $BuiltObjects += (($Build["BottomLeftCorner"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["BottomRightCorner"]))
+                }
+            }
+        }
         if($ObjectType -eq "Boxed"){
             $Build = ($Boxes[$($BorderType)])
             $BorderLineCount = $Build.Vertical.Length * 2
@@ -55,7 +157,7 @@ function fnBuildObject{
                 if($Justification -eq "None"){$MaxLineWidth + $BorderLineCount}
                 else{$EnforcedMaxLength - $OuterBuildLines}
             $Lines[1] = 
-                if($IgnoreTop -eq $True){($Build["Vertical"]) + (($Padding) * $PaddingMultiplier) + ($Build["Vertical"])}
+                if($IgnoreTop -eq $True){}
                 elseif($IgnoreTop -eq $False){($Build["TopLeftCorner"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["TopRightCorner"])}
             $Lines[($Lines.Count)] = 
                 if($MiddleBorder -eq $True){($Build["MiddleLeft"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["MiddleRight"])}
@@ -100,6 +202,9 @@ function fnBuildObject{
                             1
                         }
                     }
+                if($OuterBuildLines -eq 1 -and $Justification -ne "None"){
+                    $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired + 1)
+                }
                 $RightPadding = (("$($Padding)") * ($RightPaddingRequired)) + ($Build["Vertical"])
                 $LeftPadding = ($Build["Vertical"]) + (("$($Padding)") * ($LeftPaddingRequired))
                 $AssembledSegment = $LeftPadding + $Segment + $RightPadding
@@ -109,8 +214,13 @@ function fnBuildObject{
     } # End Begin
     Process {
         #Return the Output
-        $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
-            $_
+        if($ObjectType -eq "Boxed"){
+            $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
+                $_
+            }
+        }
+        elseif($ObjectType -eq "Grid"){
+            $BuiltObjects
         }
     }
 } # End Function

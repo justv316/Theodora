@@ -25,7 +25,20 @@
         <MiddleBottom value="╨"/>
         <CenterJunction value="╫"/>
     </type>
-    <type name="DoubleSingle">
+    <type name="DoubleSingleDashed">
+        <Vertical value="║"/>
+        <Horizontal value="╌"/>
+        <TopLeftCorner value="╓"/>
+        <TopRightCorner value="╖"/>
+        <BottomLeftCorner value="╙"/>
+        <BottomRightCorner value="╜"/>
+        <MiddleLeft value="╟"/>
+        <MiddleRight value="╢"/>
+        <MiddleTop value="╥"/>
+        <MiddleBottom value="╨"/>
+        <CenterJunction value="╫"/>
+    </type>
+    <type name="SingleDouble">
         <Vertical value="│"/>
         <Horizontal value="═"/>
         <TopLeftCorner value="╒"/>

@@ -21,12 +21,6 @@ function fnGetAscii {
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name $Font)){
             fnXML "$($Font)"
         }
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
-            fnXML "Characters"
-        }
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes)){
-            fnXML "Boxes"
-        }
         # Variables
         $StringPos = 1
         $SubLineCount = 0

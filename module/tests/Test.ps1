@@ -95,6 +95,6 @@ BorderType will describe which border is used in the ObjectType
 If IgnoreTop is true, following the first element, the top border will be converted into horizontal border space 
 If Middle Border is true, the BottomBorder becomes a middle border line. 
 #>
-$MenuBannerASCII = fnGetASCII -InputString "Theodora" -Font "Graceful" -BorderType "Double" 
-$MenuBanner = fnBuildObject -InputObject $MenuBannerASCII -BuildFormatting "--ObjectType=Boxed --BorderType=Single --MiddleBorder"
-$MenuBanner
+
+
+$GridFormatting = "--GridRange=4 1 --GridBorder=Double --GridJustification=Left --Headers=Theodora Main_Menu --HeadersFont=Graceful None --HeadersBorder=DoubleSingle Double --HeadersObjectBorder=Double DoubleSingle --HeadersJustification=Center Center --HeadersMiddleBorder=True True --HeadersIgnoreTop=False True --Buttons=Button_1 Button_2 Button_3 Button_4 --ButtonsFont=Graceful Graceful Graceful Graceful --ButtonsBorder=Double Single DoubleSingle Double --ButtonsObjectBorder=Double Single DoubleSingle Double --ButtonsJustification=None None None None"
