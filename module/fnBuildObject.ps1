@@ -17,6 +17,9 @@ function fnBuildObject{
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes)){
             fnXML "Boxes"
         }
+        if(-not(Get-Variable -ErrorAction SilentlyContinue -Scope Script -name BorderCharacters)){
+            $Script:BorderCharacters = @()
+        }
         # Argument Parsing
         $BuildParamArr = $BuildFormatting -Split ' '
         $BuildParam = ConvertTo-Params $BuildParamArr -schema @{
@@ -139,6 +142,10 @@ function fnBuildObject{
         }
         if($ObjectType -eq "Boxed"){
             $Build = ($Boxes[$($BorderType)])
+            $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "BottomRightCorner", "MiddleLeft", "MiddleRight", "CenterJunction")
+            $BorderTypes | Foreach-Object{
+                $BorderCharacters += $Build["$($_)"]
+            }
             $BorderLineCount = $Build.Vertical.Length * 2
             $OuterBuildLines = $Build.Vertical.Length
             $Lines = [System.Collections.SortedList]::new()

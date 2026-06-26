@@ -160,7 +160,7 @@ function fnWriteObject{
             foreach($Char in $LineArray){
                 $CharacterType = 
                     if($Char -eq ' '){"Padding"}
-                    elseif($Borderlines -contains $LineNumber -or $BorderColumns -Contains $CharNumber){"Border"}
+                    elseif($BorderCharacters -contains $Char){"Border"}
                     else{"Character"}
                 if($CharacterType -eq "Border"){
                     if($BorderForegroundColor -eq 'Rainbow' -or $ForegroundColor -eq 'Rainbow'){
@@ -289,11 +289,4 @@ function fnWriteObject{
             }
         }
     } #end Process
-    end{
-        Remove-Variable ManualFormatting -ErrorAction SilentlyContinue
-        Remove-Variable ColorFormatting -ErrorAction SilentlyContinue
-        Remove-Variable ASCII -ErrorAction SilentlyContinue
-        Remove-Variable ConstructedASCII -ErrorAction SilentlyContinue
-        Remove-Variable CharacterGrid -ErrorAction SilentlyContinue
-    }
 } # end function
