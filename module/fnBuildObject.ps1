@@ -108,6 +108,7 @@ function fnBuildObject{
             $ButtonsArray = @()
             foreach($num in 0..($Buttons.Count - 1)){
                 $Button = [PSCustomObject]@{
+                    Index = $Num -as [Int]
                     Button = $Buttons[$num].Replace('_', ' ')
                     Font = $ButtonsFont[$num]
                     Border = $ButtonsBorder[$num]
@@ -116,9 +117,38 @@ function fnBuildObject{
                 }
                 $ButtonsArray += $Button
             }
-            foreach($num in 0..($ButtonsArray.Count - 1)){
-                if($num -le ($ButtonsArray.Count - 1)){
-                    $Button = $ButtonsArray[$num]
+            #Put Button 1 and 2 on the same lines
+            $RowsReq = [Math]::Ceiling($Buttons.Count / $GridColumns)
+            $Rows = @{}
+            $StartIndex = 0
+            $EndIndex = ($RowsReq - 1)
+            foreach($Num in 0..($RowsReq - 1)){
+                $Rows[$($Num)] = [PSCustomObject]@{
+                    Index = $num -as [Int]
+                    Range = @()
+                    Contents = @()
+                    Buttons = [System.Collections.SortedList]::new()
+                }
+                $Rows[$($Num)].Range = $StartIndex..$EndIndex
+                $StartIndex = $EndIndex + 1
+                $EndIndex = $EndIndex + $RowsReq
+            }
+            $RowInd = 0
+            while($RowInd -le ($Rows.Count - 1)){
+                $ButtonsArray | Foreach-Object{
+                    $Button = $_
+                    if($Rows[$RowInd].Range -Contains $Button.Index){
+                        $Rows[$RowInd].Contents += $Button
+                    }
+                }
+                $RowInd++
+            }
+            # Build Rows and add to built object
+            Foreach($RowNum in 0..($Rows.Count - 1)){
+                $ButtonsCount = $Rows[$RowNum].Contents.Count
+                $ButtonNumber = 1
+                $Rows[$RowNum].Contents | Foreach-Object {
+                    $Button = $_
                     $SubObject = 
                         if($Button.Font -ne "None"){
                             $ASCII = fnGetAscii -InputString $Button.Button -Font $Button.Font -BorderType $Button.ObjectBorder -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
@@ -127,17 +157,26 @@ function fnBuildObject{
                         else{
                             fnBuildObject -InputObject $Button.Button -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
                         }
-                    $ConstructedButton = fnBuildObject -InputObject $SubObject -BorderType $GridBorder -BuildFormatting "--ObjectType=Boxed --Justification=$GridJustification --IgnoreTop=True --MiddleBorder=True" 
-                    $BuiltObjects += $ConstructedButton
+                    $LineArr = $SubObject.Split("`n")
+                    foreach($num in 1..$LineArr.Count){
+                        $Rows[$RowNum].Buttons[$($num)] += $LineArr[$num-1]
+                        if($Null -ne $GridBorder -and $ButtonNumber -ne $ButtonsCount){
+                            $Rows[$RowNum].Buttons[$($num)] += " "+" "+" "
+                        }
+                    }
+                        $ButtonNumber++
                 }
-                if($num -eq ($ButtonsArray.Count - 1)){
-                    $Build = ($Boxes[$($GridBorder)])
-                    $OuterBuildLines = $Build.Vertical.Length
-                    $PaddingMultiplier = 
-                        if($Justification -eq "None"){$MaxLineWidth + $BorderLineCount}
-                        else{$EnforcedMaxLength - $OuterBuildLines}
-                    $BuiltObjects += (($Build["BottomLeftCorner"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["BottomRightCorner"]))
-                }
+                $EnumeratedButtons = ($Rows[$RowNum].Buttons).GetEnumerator() | Select-Object -ExpandProperty Value
+                $ConstructedGridRow = fnBuildObject -InputObject $EnumeratedButtons -BorderType $GridBorder -BuildFormatting "--ObjectType=Boxed --Justification=$($GridJustification) --IgnoreTop=True --MiddleBorder=True" 
+                $BuiltObjects += $ConstructedGridRow
+            }
+            if($RowNum -eq ($Rows.Count - 1)){
+                $Build = ($Boxes[$($GridBorder)])
+                $OuterBuildLines = $Build.Vertical.Length
+                $PaddingMultiplier = 
+                    if($Justification -eq "None"){$MaxLineWidth + $BorderLineCount}
+                    else{$EnforcedMaxLength - $OuterBuildLines}
+                $BuiltObjects += (($Build["BottomLeftCorner"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["BottomRightCorner"]))
             }
         }
         if($ObjectType -eq "Boxed"){
