@@ -11,14 +11,11 @@ function fnBuildObject{
     )
     begin{
         # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
-            fnXML "Characters"
+        if(-not(Get-Variable -ErrorAction SilentlyContinue -Scope Global -name BorderCharacters)){
+            $Global:BorderCharacters = @()
         }
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes)){
+        if($Null -eq $Boxes){
             fnXML "Boxes"
-        }
-        if(-not(Get-Variable -ErrorAction SilentlyContinue -Scope Script -name BorderCharacters)){
-            $Script:BorderCharacters = @()
         }
         # Argument Parsing
         $BuildParamArr = $BuildFormatting -Split ' '
@@ -27,7 +24,7 @@ function fnBuildObject{
             Justification = [String], 'None'
             IgnoreTop = [String], 'false'
             MiddleBorder = [String], 'false'
-            Padding = [String],' '
+            Padding = [String],''
         }
         $BuildParamHash = @{}
         $BuildParamKeys = $BuildParam.Keys
@@ -118,7 +115,7 @@ function fnBuildObject{
                 $ButtonsArray += $Button
             }
             #Put Button 1 and 2 on the same lines
-            $RowsReq = [Math]::Ceiling($Buttons.Count / $GridColumns)
+            $RowsReq = [Math]::Ceiling($Buttons.Count / $GridRange[1])
             $Rows = @{}
             $StartIndex = 0
             $EndIndex = ($RowsReq - 1)
@@ -180,13 +177,12 @@ function fnBuildObject{
             }
         }
         if($ObjectType -eq "Boxed"){
-            $Build = ($Boxes[$($BorderType)])
             $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "BottomRightCorner", "MiddleLeft", "MiddleRight", "CenterJunction")
             $BorderTypes | Foreach-Object{
-                $BorderCharacters += $Build["$($_)"]
+                $BorderCharacters += $Boxes[$($BorderType)]["$($_)"]
             }
-            $BorderLineCount = $Build.Vertical.Length * 2
-            $OuterBuildLines = $Build.Vertical.Length
+            $BorderLineCount = ($Boxes[$($BorderType)]).Vertical.Length * 2
+            $OuterBuildLines = ($Boxes[$($BorderType)]).Vertical.Length
             $Lines = [System.Collections.SortedList]::new()
             $MaxLines = $InputObject.Count
             $MaxLineWidth = 0
@@ -198,16 +194,15 @@ function fnBuildObject{
                     $MaxLineWidth = $Line.Length
                 }
             }
-
             $PaddingMultiplier = 
                 if($Justification -eq "None"){$MaxLineWidth + $BorderLineCount}
                 else{$EnforcedMaxLength - $OuterBuildLines}
             $Lines[1] = 
                 if($IgnoreTop -eq $True){}
-                elseif($IgnoreTop -eq $False){($Build["TopLeftCorner"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["TopRightCorner"])}
+                elseif($IgnoreTop -eq $False){(($Boxes[$($BorderType)])["TopLeftCorner"]) + ((($Boxes[$($BorderType)])["Horizontal"]) * $PaddingMultiplier) + (($Boxes[$($BorderType)])["TopRightCorner"])}
             $Lines[($Lines.Count)] = 
-                if($MiddleBorder -eq $True){($Build["MiddleLeft"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["MiddleRight"])}
-                elseif($MiddleBorder -eq $False){($Build["BottomLeftCorner"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["BottomRightCorner"])}
+                if($MiddleBorder -eq $True){(($Boxes[$($BorderType)])["MiddleLeft"]) + ((($Boxes[$($BorderType)])["Horizontal"]) * $PaddingMultiplier) + (($Boxes[$($BorderType)])["MiddleRight"])}
+                elseif($MiddleBorder -eq $False){(($Boxes[$($BorderType)])["BottomLeftCorner"]) + ((($Boxes[$($BorderType)])["Horizontal"]) * $PaddingMultiplier) + (($Boxes[$($BorderType)])["BottomRightCorner"])}
             # Fill the Lines Array
             $Start = ($OuterBuildLines + 1)
             $End = (($Lines.Count) - $OuterBuildLines)
@@ -216,13 +211,13 @@ function fnBuildObject{
                 #Determine Segment Padding Needed
                 $LeftPaddingRequired = 
                     if($Justification -eq "Center"){
-                        [Math]::floor((($EnforcedMaxLength / 2) - ($Build["Vertical"]).Length) - ($Segment.Length / 2))
+                        [Math]::floor((($EnforcedMaxLength / 2) - (($Boxes[$($BorderType)])["Vertical"]).Length) - ($Segment.Length / 2))
                     }
                     elseif($Justification -eq "Left"){
                         $MinimumPaddingLength
                     }
                     elseif($Justification -eq "Right"){
-                        ($EnforcedMaxLength - $Segment.Length - (($Build["Vertical"]).Length + ($Build["Vertical"]).Length)) - $RightPaddingRequired
+                        ($EnforcedMaxLength - $Segment.Length - ((($Boxes[$($BorderType)])["Vertical"]).Length + (($Boxes[$($BorderType)])["Vertical"]).Length)) - $RightPaddingRequired
                     }
                     elseif($Justification -eq "None"){
                         if($Segment.Length -lt $MaxLineWidth){
@@ -232,10 +227,10 @@ function fnBuildObject{
                     }
                 $RightPaddingRequired = 
                     if($Justification -eq "Center"){
-                        [Math]::ceiling((($EnforcedMaxLength / 2) - ($Build["Vertical"]).Length) - ($Segment.Length / 2))
+                        [Math]::ceiling((($EnforcedMaxLength / 2) - (($Boxes[$($BorderType)])["Vertical"]).Length) - ($Segment.Length / 2))
                     }
                     elseif($Justification -eq "Left"){
-                        ($EnforcedMaxLength - $Segment.Length - (($Build["Vertical"]).Length + ($Build["Vertical"]).Length)) - $LeftPaddingRequired
+                        ($EnforcedMaxLength - $Segment.Length - ((($Boxes[$($BorderType)])["Vertical"]).Length + (($Boxes[$($BorderType)])["Vertical"]).Length)) - $LeftPaddingRequired
                     }
                     elseif($Justification -eq "Right"){
                         $MinimumPaddingLength
@@ -251,9 +246,11 @@ function fnBuildObject{
                 if($OuterBuildLines -eq 1 -and $Justification -ne "None"){
                     $RightPaddingRequired = [Math]::ceiling($RightPaddingRequired + 1)
                 }
-                $RightPadding = (("$($Padding)") * ($RightPaddingRequired)) + ($Build["Vertical"])
-                $LeftPadding = ($Build["Vertical"]) + (("$($Padding)") * ($LeftPaddingRequired))
-                $AssembledSegment = $LeftPadding + $Segment + $RightPadding
+                $LeftBorder = (($Boxes[$($BorderType)])["Vertical"])
+                $LeftPadding = ("$($Padding)" * ($LeftPaddingRequired))
+                $RightPadding = ("$($Padding)" * ($RightPaddingRequired))
+                $RightBorder = (($Boxes[$($BorderType)])["Vertical"])
+                $AssembledSegment = $LeftBorder + $LeftPadding + $Segment + $RightPadding + $RightBorder
                 $Lines[$Num] += $AssembledSegment
             }
         } # End If Boxed

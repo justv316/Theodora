@@ -69,18 +69,15 @@ function fnWriteObject{
         Foreach($Key in $ObjectParamsKeys){
             $ObjectParamsHash["$Key"] = $ObjectParams[$Key].Value
         }
-        $InputType = if($Null -ne $ObjectParamsHash["InputType"]){$ObjectParamsHash["InputType"]}elseif($Null -eq $BuildParamHash["InputType"]){throw "InputType is Required."}
+        $InputType = if($Null -ne $ObjectParamsHash["InputType"]){$ObjectParamsHash["InputType"]}elseif($Null -eq $BuildParamsHash["InputType"]){throw "InputType is Required."}
         $ASCIIFont = if($Null -ne $ObjectParamsHash["ASCIIFont"]){$ObjectParamsHash["ASCIIFont"]}
         $BorderType = if($Null -ne $ObjectParamsHash["BorderType"]){$ObjectParamsHash["BorderType"]}
         $EnforcedMaxLength = if($Null -ne $ObjectParamsHash["EnforcedMaxLength"]){$ObjectParamsHash["EnforcedMaxLength"]}else{160}
         $MinimumPaddingLength = if($Null -ne $ObjectParamsHash["MinimumPaddingLength"]){$ObjectParamsHash["MinimumPaddingLength"]}else{4}
         #End Parse ObjectFormatting
         # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters)){
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Global -Name Characters)){
             fnXML "Characters"
-        }
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes)){
-            fnXML "Boxes"
         }
         # Parse Color Formatting and set default colors
         $Colors = @('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan', 'DarkRed', 'DarkMagenta', 'DarkYellow',
@@ -104,18 +101,18 @@ function fnWriteObject{
                 IgnoreBorderPadding = [Switch]
                 IgnoreTextPadding = [Switch]
             }
-            $ColorParamHash = @{}
+            $ColorParamsHash = @{}
             $ColorParamKeys = $ColorParams.Keys
             Foreach($Key in $ColorParamKeys){
-                $ColorParamHash["$Key"] = $ColorParams[$Key].Value
+                $ColorParamsHash["$Key"] = $ColorParams[$Key].Value
             }
             # Define Colors
-            $IgnoreBorderPadding = if($Null -ne $ColorParamHash["IgnoreBorderPadding"]){$True}else{$False}
-            $IgnoreTextPadding = if($Null -ne $ColorParamHash["IgnoreTextPadding"]){$True}else{$False}
-            $ForegroundColor = if($Null -ne $ColorParamHash["ForegroundColor"]){$ColorParamHash["ForegroundColor"]}else{"White"}
-            $BackgroundColor = if($Null -ne $ColorParamHash["BackgroundColor"]){$ColorParamHash["BackgroundColor"]}else{"Black"}
-            $BorderColors = @{"BorderForegroundColor" = $ColorParamHash["BorderForegroundColor"]; "BorderBackgroundColor" = $ColorParamHash["BorderBackgroundColor"]}
-            $TextColors = @{"TextForegroundColor" = $ColorParamHash["TextForegroundColor"];"TextBackgroundColor" = $ColorParamHash["TextBackgroundColor"]}
+            $IgnoreBorderPadding = if($Null -ne $ColorParamsHash["IgnoreBorderPadding"]){$True}else{$False}
+            $IgnoreTextPadding = if($Null -ne $ColorParamsHash["IgnoreTextPadding"]){$True}else{$False}
+            $ForegroundColor = if($Null -ne $ColorParamsHash["ForegroundColor"]){$ColorParamsHash["ForegroundColor"]}else{"White"}
+            $BackgroundColor = if($Null -ne $ColorParamsHash["BackgroundColor"]){$ColorParamsHash["BackgroundColor"]}else{"Black"}
+            $BorderColors = @{"BorderForegroundColor" = $ColorParamsHash["BorderForegroundColor"]; "BorderBackgroundColor" = $ColorParamsHash["BorderBackgroundColor"]}
+            $TextColors = @{"TextForegroundColor" = $ColorParamsHash["TextForegroundColor"];"TextBackgroundColor" = $ColorParamsHash["TextBackgroundColor"]}
             $TextForegroundColor = if($Null -ne $TextColors["TextForegroundColor"]){$TextColors["TextForegroundColor"]}elseif($Null -ne $ForegroundColor){$ForegroundColor}else{"White"}
             $TextBackgroundColor = if($Null -ne $TextColors["TextBackgroundColor"]){$TextColors["TextBackgroundColor"]}elseif($Null -ne $BackgroundColor){$BackgroundColor}else{"Black"}
             $BorderForegroundColor = if($Null -ne $BorderColors["BorderForegroundColor"]){$BorderColors["BorderForegroundColor"]}elseif($Null -ne $ForegroundColor){$ForegroundColor}else{"White"}
@@ -141,6 +138,9 @@ function fnWriteObject{
         $LineCount = $GridInput.Length
         if($BorderType -ne "Unspecified" -and $Null -ne $BorderType){
             #Get the number of Borderlines - Will always be at least the first and last lines
+            if($Null -eq $Boxes){
+                fnXML "Boxes"
+            }
             $BorderLines = @(1, $GridInput.Length)
             $BorderColumns = @(1, $GridInput[0].Length) 
             #If there are more BorderLines, we add them to the array
@@ -237,39 +237,39 @@ function fnWriteObject{
                 Replace = [String], @()
                 PaintPadding = [Switch]
             }
-            $ManualParamHash = @{}
+            $ManualParamsHash = @{}
             $LineRange = @()
             $IndexRange = @()
             $ManualParamKeys = $ManualParams.Keys
             Foreach($Key in $ManualParamKeys){
-                $ManualParamHash["$Key"] = $ManualParams[$Key].Value
+                $ManualParamsHash["$Key"] = $ManualParams[$Key].Value
             }
-            if($Null -ne $ManualParamHash["LineRange"]){
-                $LineRange += $ManualParamHash["LineRange"][0]..$ManualParamHash["LineRange"][1]
+            if($Null -ne $ManualParamsHash["LineRange"]){
+                $LineRange += $ManualParamsHash["LineRange"][0]..$ManualParamsHash["LineRange"][1]
             }
-            if($Null -ne $ManualParamHash["Line"]){
-                $LineRange += $ManualParamHash["Line"]
+            if($Null -ne $ManualParamsHash["Line"]){
+                $LineRange += $ManualParamsHash["Line"]
             }
-            if($Null -ne $ManualParamHash["IndexRange"]){
-                $IndexRange += $ManualParamHash["IndexRange"][0]..$ManualParamHash["IndexRange"][1]
+            if($Null -ne $ManualParamsHash["IndexRange"]){
+                $IndexRange += $ManualParamsHash["IndexRange"][0]..$ManualParamsHash["IndexRange"][1]
             }
-            if($Null -ne $ManualParamHash["Character"]){
-                $IndexRange += $ManualParamHash["Character"]
+            if($Null -ne $ManualParamsHash["Character"]){
+                $IndexRange += $ManualParamsHash["Character"]
             }
-            if($Null -ne $ManualParamHash["Replace"]){
-                $Replace = ($ManualParamHash["Replace"] -Split ',' -replace "'","")[0]
-                $ReplaceWith = ($ManualParamHash["Replace"] -Split ',' -replace "'","")[1]
+            if($Null -ne $ManualParamsHash["Replace"]){
+                $Replace = ($ManualParamsHash["Replace"] -Split ',' -replace "'","")[0]
+                $ReplaceWith = ($ManualParamsHash["Replace"] -Split ',' -replace "'","")[1]
             }
             # Modify the Character Grid with the Parameters
             foreach($LineNum in $LineRange){
                 Foreach($Index in $IndexRange){
-                    if($Null -ne $ParamHash["ForegroundColor"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $ParamHash["ForegroundColor"]
+                    if($Null -ne $ParamsHash["ForegroundColor"]){
+                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $ParamsHash["ForegroundColor"]
                     }
-                    if($Null -ne $ParamHash["BackgroundColor"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $ParamHash["BackgroundColor"]
+                    if($Null -ne $ParamsHash["BackgroundColor"]){
+                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $ParamsHash["BackgroundColor"]
                     }
-                    if($Null -ne $ParamHash["Replace"]){
+                    if($Null -ne $ParamsHash["Replace"]){
                         ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
                     }
                 }
