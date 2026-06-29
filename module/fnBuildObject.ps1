@@ -146,6 +146,7 @@ function fnBuildObject{
             Foreach($RowNum in 0..($Rows.Count - 1)){
                 $ButtonsCount = $Rows[$RowNum].Contents.Count
                 $ButtonNumber = 1
+                $MaxLineCount = 0
                 $Rows[$RowNum].Contents | Foreach-Object {
                     $Button = $_
                     $SubObject = 
@@ -156,15 +157,31 @@ function fnBuildObject{
                         else{
                             fnBuildObject -InputObject $Button.Button -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
                         }
-                    $LineArr = $SubObject.Split("`n")
-                    foreach($num in 1..$LineArr.Count){
-                        $Rows[$RowNum].Buttons[$($num)] += $LineArr[$num-1]
+                    if($Null -ne $Button.Border){
+                        $BoxedButton = fnBuildObject -InputObject $SubObject -BorderType $Button.Border -BuildFormatting "--ObjectType=Boxed"
+                        $LineArr = $BoxedButton.Split("`n")
+                        $LineArrList = New-Object System.Collections.ArrayList(,$LineArr)
+                        if($LineArrList.Count -gt $MaxLineCount){$MaxLineCount = $LineArrList.Count}
+                    }
+                    else{
+                        $LineArr = $SubObject.Split("`n")
+                        $LineArrList = New-Object System.Collections.ArrayList(,$LineArr)
+                        if($LineArrList.Count -gt $MaxLineCount){$MaxLineCount = $LineArrList.Count}
+                    }
+                    if($LineArrList.Count -lt $MaxLineCount){
+                        foreach($num in 0..(($MaxLineCount - $LineArrList.Count)-1)){
+                            $Padding = ' ' * ($LineArrList[$num].Length) -as [String]
+                            $LineArrList.Insert($num,$Padding)
+                        }
+                    }
+                    foreach($num in 1..$LineArrList.Count){
+                        $Rows[$RowNum].Buttons[$($num)] += $LineArrList[$num-1]
                         if($Null -ne $GridBorder -and $ButtonNumber -ne $ButtonsCount){
                             $Pad = " " * $MinimumPaddingLength
                             $Rows[$RowNum].Buttons[$($num)] += "$Pad"+"$($Boxes[$($GridBorder)]["Vertical"])"+"$Pad"
                         }
                     }
-                        $ButtonNumber++
+                    $ButtonNumber++
                 }
                 $EnumeratedButtons = ($Rows[$RowNum].Buttons).GetEnumerator() | Select-Object -ExpandProperty Value
                 $ConstructedGridRow = fnBuildObject -InputObject $EnumeratedButtons -BorderType $GridBorder -BuildFormatting "--ObjectType=Boxed --Justification=$($GridJustification) --IgnoreTop=True --MiddleBorder=True" 
