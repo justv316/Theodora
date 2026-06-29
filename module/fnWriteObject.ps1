@@ -72,8 +72,8 @@ function fnWriteObject{
         $InputType = if($Null -ne $ObjectParamsHash["InputType"]){$ObjectParamsHash["InputType"]}elseif($Null -eq $BuildParamsHash["InputType"]){throw "InputType is Required."}
         $ASCIIFont = if($Null -ne $ObjectParamsHash["ASCIIFont"]){$ObjectParamsHash["ASCIIFont"]}
         $BorderType = if($Null -ne $ObjectParamsHash["BorderType"]){$ObjectParamsHash["BorderType"]}
-        $EnforcedMaxLength = if($Null -ne $ObjectParamsHash["EnforcedMaxLength"]){$ObjectParamsHash["EnforcedMaxLength"]}else{160}
-        $MinimumPaddingLength = if($Null -ne $ObjectParamsHash["MinimumPaddingLength"]){$ObjectParamsHash["MinimumPaddingLength"]}else{4}
+        $Script:EnforcedMaxLength = if($Null -ne $ObjectParamsHash["EnforcedMaxLength"]){$ObjectParamsHash["EnforcedMaxLength"]}else{160}
+        $Script:MinimumPaddingLength = if($Null -ne $ObjectParamsHash["MinimumPaddingLength"]){$ObjectParamsHash["MinimumPaddingLength"]}else{4}
         #End Parse ObjectFormatting
         # Build Reference Hashes
         if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Global -Name Characters)){
@@ -120,20 +120,20 @@ function fnWriteObject{
         }
         # Build Object
         if($InputType -eq "ASCII"){
-            $ASCII = fnGetAscii -InputString $InputString -Font $ASCIIFont -BorderType $BorderType -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+            $ASCII = fnGetAscii -InputString $InputString -Font $ASCIIFont -BorderType $BorderType
             if($BorderType -ne "Unspecified"){
-                $ConstructedASCII = fnBuildObject -InputObject $ASCII -BorderType $BorderType -BuildFormatting $BuildFormatting -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                $ConstructedASCII = fnBuildObject -InputObject $ASCII -BorderType $BorderType -BuildFormatting $BuildFormatting 
             }
             $GridInput = if($ConstructedASCII -ne '' -and $Null -ne $ConstructedASCII){$ConstructedASCII}else{$ASCII}
         }
         elseif($InputType -eq "String"){
             if($BorderType -ne "Unspecified"){
-                $ConstructedString = fnBuildObject -InputObject $InputString -BorderType $BorderType -BuildFormatting $BuildFormatting -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                $ConstructedString = fnBuildObject -InputObject $InputString -BorderType $BorderType -BuildFormatting $BuildFormatting
             }
             $GridInput = if($ConstructedString -ne '' -and $Null -ne $ConstructedString){$ConstructedString}else{$InputString}
         }
         elseif($InputType -eq "Menu"){
-            $GridInput = fnBuildObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+            $GridInput = fnBuildObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting
         }
         $LineCount = $GridInput.Length
         if($BorderType -ne "Unspecified" -and $Null -ne $BorderType){

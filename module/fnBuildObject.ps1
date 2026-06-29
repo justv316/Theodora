@@ -5,9 +5,7 @@ function fnBuildObject{
         [Array]$InputObject,
         [String]$BuildFormatting,
         [String]$GridFormatting,
-        [String]$BorderType,
-        [int] $EnforcedMaxLength = 160,
-        [int] $MinimumPaddingLength = 4
+        [String]$BorderType
     )
     begin{
         # Build Reference Hashes
@@ -93,13 +91,13 @@ function fnBuildObject{
             $HeadersArray | Foreach-Object {
                 $SubObject = 
                     if($_.Font -ne "None"){
-                        $ASCII = fnGetAscii -InputString $_.Header -Font $_.Font -BorderType $_.ObjectBorder -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
-                        fnBuildObject -InputObject $ASCII -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                        $ASCII = fnGetAscii -InputString $_.Header -Font $_.Font -BorderType $_.ObjectBorder
+                        fnBuildObject -InputObject $ASCII -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
                     }
                     else{
-                        fnBuildObject -InputObject $_.Header -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                        fnBuildObject -InputObject $_.Header -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
                     }
-                $BuiltHeader = fnBuildObject -InputObject $SubObject -BorderType $_.Border -BuildFormatting "--ObjectType=Boxed --Justification=$($_.Justification) --MiddleBorder=$($_.MiddleBorder) --IgnoreTop=$($_.IgnoreTop)" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                $BuiltHeader = fnBuildObject -InputObject $SubObject -BorderType $_.Border -BuildFormatting "--ObjectType=Boxed --Justification=$($_.Justification) --MiddleBorder=$($_.MiddleBorder) --IgnoreTop=$($_.IgnoreTop)"
                 $BuiltObjects += $BuiltHeader
             }
             $ButtonsArray = @()
@@ -148,17 +146,26 @@ function fnBuildObject{
                     $Button = $_
                     $SubObject = 
                         if($Button.Font -ne "None"){
-                            $ASCII = fnGetAscii -InputString $Button.Button -Font $Button.Font -BorderType $Button.ObjectBorder -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
-                            fnBuildObject -InputObject $ASCII -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                            $ASCII = fnGetAscii -InputString $Button.Button -Font $Button.Font -BorderType $Button.ObjectBorder
+                            fnBuildObject -InputObject $ASCII -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
                         }
                         else{
-                            fnBuildObject -InputObject $Button.Button -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed" -EnforcedMaxLength $EnforcedMaxLength -MinimumPaddingLength $MinimumPaddingLength
+                            fnBuildObject -InputObject $Button.Button -BorderType $Button.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
                         }
                     $LineArr = $SubObject.Split("`n")
                     foreach($num in 1..$LineArr.Count){
+                        if($ButtonNumber -eq 1){
+                            $Pad = " " * $MinimumPaddingLength
+                            $Rows[$RowNum].Buttons[$($num)] += "$($Boxes[$($GridBorder)]["Vertical"])"+"$Pad"
+                        }
                         $Rows[$RowNum].Buttons[$($num)] += $LineArr[$num-1]
                         if($Null -ne $GridBorder -and $ButtonNumber -ne $ButtonsCount){
-                            $Rows[$RowNum].Buttons[$($num)] += " "+"$($Boxes[$($GridBorder)]["Vertical"])"+" "
+                            $Pad = " " * $MinimumPaddingLength
+                            $Rows[$RowNum].Buttons[$($num)] += "$Pad"+"$($Boxes[$($GridBorder)]["Vertical"])"+"$Pad"
+                        }
+                        if($ButtonNumber -ne 1){
+                            $Pad = " " * $MinimumPaddingLength
+                            $Rows[$RowNum].Buttons[$($num)] += "$Pad"+"$($Boxes[$($GridBorder)]["Vertical"])"
                         }
                     }
                         $ButtonNumber++

@@ -12,9 +12,7 @@ function fnGetAscii {
         [Parameter(
             Mandatory=$True,
             Position=2)]
-            [String]$BorderType,
-        [int] $EnforcedMaxLength = 160,
-        [int] $MinimumPaddingLength = 4
+            [String]$BorderType
     )
     begin{
         # Build Reference Hashes
