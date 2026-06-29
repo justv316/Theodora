@@ -32,7 +32,8 @@ function fnWriteObject{
         --MiddleBorder (Switch)
         --Padding=' '"
     GridFormatting (Given to fnBuildObject) = "
-        --GridRange=@(Rows,Columns)
+        --GridRows=Int
+        --GridColumns=int
         --GridBorder=Double
         --GridJustification=Center
         --Headers=@(String,String)

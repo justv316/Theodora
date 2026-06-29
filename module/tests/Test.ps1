@@ -100,4 +100,25 @@ If Middle Border is true, the BottomBorder becomes a middle border line.
 $GridFormatting = "--GridRange=4 1 --GridBorder=Double --GridJustification=Left --Headers=Theodora Main_Menu --HeadersFont=Graceful None --HeadersBorder=DoubleSingle Double --HeadersObjectBorder=Double DoubleSingle --HeadersJustification=Center Center --HeadersMiddleBorder=True True --HeadersIgnoreTop=False True --Buttons=Button_1 Button_2 Button_3 Button_4 --ButtonsFont=Graceful Graceful Graceful Graceful --ButtonsBorder=Double Single DoubleSingle Double --ButtonsObjectBorder=Double Single DoubleSingle Double --ButtonsJustification=None None None None"
 
 fnwriteobject -ObjectFormatting "--InputType=Menu --EnforcedMaxLength=160 --MinimumPaddingLength=4" -BuildFormatting "--ObjectType=Grid --Justification=Center" -GridFormatting "--GridRange=4 2 --GridBorder=Double --GridJustification=Left --Headers=Theodora Main_Menu --HeadersFont=Graceful None --HeadersBorder=DoubleSingle Double --HeadersObjectBorder=Double DoubleSingle --HeadersJustification=Center Center --HeadersMiddleBorder=True True --HeadersIgnoreTop=False True --Buttons=Button_1 Button_2 Button_3 Button_4 --ButtonsFont=Graceful Graceful Graceful Graceful --ButtonsBorder=Double Single DoubleSingle Double --ButtonsObjectBorder=Double Single DoubleSingle Double --ButtonsJustification=None None None None"
-fnwriteobject -ObjectFormatting "--InputType=Menu --EnforcedMaxLength=160 --MinimumPaddingLength=4" -BuildFormatting "--ObjectType=Grid --Justification=Center" -GridFormatting "--GridRange=4 3 --GridBorder=Double --GridJustification=Center --Headers=Theodora Main_Menu --HeadersFont=Graceful None --HeadersBorder=DoubleSingle Double --HeadersObjectBorder=Double DoubleSingle --HeadersJustification=Center Center --HeadersMiddleBorder=True True --HeadersIgnoreTop=False True --Buttons=Button_1 Button_2 Button_3 Button_4 --ButtonsFont=Graceful Graceful Graceful Graceful --ButtonsBorder=Double Single DoubleSingle Double --ButtonsObjectBorder=Double Single DoubleSingle Double --ButtonsJustification=None None None None" -ColorFormatting "--BorderForegroundColor Red"
+fnwriteobject -ObjectFormatting "--InputType=Menu --EnforcedMaxLength=160 --MinimumPaddingLength=4" -BuildFormatting "--ObjectType=Grid --Justification=Center" -GridFormatting "--GridColumns=2 --GridBorder=Double --GridJustification=Center --Headers=Theodora Main_Menu --HeadersFont=Graceful None --HeadersBorder=DoubleSingle Double --HeadersObjectBorder=Double DoubleSingle --HeadersJustification=Center Center --HeadersMiddleBorder=True True --HeadersIgnoreTop=False True --Buttons=Button_1 Button_2 Button_3 Button_4 --ButtonsFont=Graceful Graceful Graceful Graceful --ButtonsBorder=Double Single DoubleSingle Double --ButtonsObjectBorder=Double Single DoubleSingle Double --ButtonsJustification=None None None None" -ColorFormatting "--BorderForegroundColor Red"
+
+6 / 3
+Row Req = 2
+Start index = 0
+End index = 2
+6 / 2
+Row req = 3
+Start index = 0
+End index = 1
+
+Buttons = 4
+GridColumns = 2
+Rows req = 2
+Start index = 0 + 2 = 2
+End index = 1 + 2 = 3
+
+Buttons = 4
+GridColumns = 1
+Rows Req = 4
+Start index = 0 + GridColumns
+end index = 0 + GridColumns

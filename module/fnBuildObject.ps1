@@ -38,7 +38,8 @@ function fnBuildObject{
         if($ObjectType -eq "Grid"){
             $GridParamArr = $GridFormatting -Split ' '
             $GridParam = ConvertTo-Params $GridParamArr -schema @{
-                GridRange = [int[]],@()
+                GridRows = [int],1
+                GridColumns = [Int],1
                 GridBorder = [String],''
                 GridJustification = [String],''
                 Headers = [String[]],@()
@@ -59,7 +60,8 @@ function fnBuildObject{
             Foreach($Key in $GridParamKeys){
                 $GridParamHash["$Key"] = $GridParam[$Key].Value
             }
-            $GridRange = if($Null -ne $GridParamHash["GridRange"]){$GridParamHash["GridRange"]}elseif($Null -eq $GridParamHash["GridRange"]){Throw "A grid range is required when Grid is specified"}
+            $GridRows = if($Null -ne $GridParamHash["GridRows"]){$GridParamHash["GridRows"]}else{"ToFit"}
+            $GridColumns = if($Null -ne $GridParamHash["GridColumns"]){$GridParamHash["GridColumns"]}else{1}
             $GridBorder = if($Null -ne $GridParamHash["GridBorder"]){$GridParamHash["GridBorder"]}
             $GridJustification = if($Null -ne $GridParamHash["GridJustification"]){$GridParamHash["GridJustification"]}
             $Headers = if($Null -ne $GridParamHash["Headers"]){$GridParamHash["Headers"]}else{$False}
@@ -113,10 +115,12 @@ function fnBuildObject{
                 $ButtonsArray += $Button
             }
             #Put Button 1 and 2 on the same lines
-            $RowsReq = [Math]::Ceiling($Buttons.Count / $GridRange[1])
+            if($GridRows -eq "ToFit"){
+                $RowsReq = [Math]::Ceiling($Buttons.Count / $GridColumns)
+            }
             $Rows = @{}
             $StartIndex = 0
-            $EndIndex = ($RowsReq - 1)
+            $EndIndex = $GridColumns - 1
             foreach($Num in 0..($RowsReq - 1)){
                 $Rows[$($Num)] = [PSCustomObject]@{
                     Index = $num -as [Int]
@@ -125,8 +129,8 @@ function fnBuildObject{
                     Buttons = [System.Collections.SortedList]::new()
                 }
                 $Rows[$($Num)].Range = $StartIndex..$EndIndex
-                $StartIndex = $EndIndex + 1
-                $EndIndex = $EndIndex + $RowsReq
+                $StartIndex = $StartIndex + $GridColumns
+                $EndIndex = $EndIndex + $GridColumns
             }
             $RowInd = 0
             while($RowInd -le ($Rows.Count - 1)){
@@ -154,18 +158,10 @@ function fnBuildObject{
                         }
                     $LineArr = $SubObject.Split("`n")
                     foreach($num in 1..$LineArr.Count){
-                        if($ButtonNumber -eq 1){
-                            $Pad = " " * $MinimumPaddingLength
-                            $Rows[$RowNum].Buttons[$($num)] += "$($Boxes[$($GridBorder)]["Vertical"])"+"$Pad"
-                        }
                         $Rows[$RowNum].Buttons[$($num)] += $LineArr[$num-1]
                         if($Null -ne $GridBorder -and $ButtonNumber -ne $ButtonsCount){
                             $Pad = " " * $MinimumPaddingLength
                             $Rows[$RowNum].Buttons[$($num)] += "$Pad"+"$($Boxes[$($GridBorder)]["Vertical"])"+"$Pad"
-                        }
-                        if($ButtonNumber -ne 1){
-                            $Pad = " " * $MinimumPaddingLength
-                            $Rows[$RowNum].Buttons[$($num)] += "$Pad"+"$($Boxes[$($GridBorder)]["Vertical"])"
                         }
                     }
                         $ButtonNumber++
