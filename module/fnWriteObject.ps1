@@ -220,6 +220,25 @@ function fnWriteObject{
                         }
                     }
                 }
+                # If Horizontal is above or below a Vertical, replace with appropriate junction
+                if($CharacterSets["Horizontal"] -contains $Character.Character){
+                    $BorderPos = [array]::indexof($CharacterSets["Horizontal"],$Character.Character)
+                    if($LineNumber -ne $LineCount){
+                        $AboveCharacter = $CharacterGrid[$LineNumber + 1][$Character.Index - 1]
+                    }
+                    if($LineNumber -ne 1){
+                        $BelowCharacter = $CharacterGrid[$LineNumber - 1][$Character.Index - 1]
+                    }
+                    if($CharacterSets["Vertical"] -contains $AboveCharacter.Character -and $CharacterSets["Vertical"] -contains $BelowCharacter.Character){
+                        $Character.Character = $CharacterSets["CenterJunction"][$BorderPos]
+                    }
+                    if($CharacterSets["Vertical"] -contains $AboveCharacter.Character -and -not ($CharacterSets["Vertical"] -contains $BelowCharacter.Character)){
+                        $Character.Character = $CharacterSets["MiddleTop"][$BorderPos]
+                    }
+                    if($CharacterSets["Vertical"] -contains $BelowCharacter.Character -and -not ($CharacterSets["Vertical"] -contains $AboveCharacter.Character)){
+                        $Character.Character = $CharacterSets["MiddleBottom"][$BorderPos]
+                    }
+                }
             }
         }
         # Parse Manual Formatting

@@ -158,7 +158,7 @@ function fnBuildObject{
                     foreach($num in 1..$LineArr.Count){
                         $Rows[$RowNum].Buttons[$($num)] += $LineArr[$num-1]
                         if($Null -ne $GridBorder -and $ButtonNumber -ne $ButtonsCount){
-                            $Rows[$RowNum].Buttons[$($num)] += " "+" "+" "
+                            $Rows[$RowNum].Buttons[$($num)] += " "+"$($Boxes[$($GridBorder)]["Vertical"])"+" "
                         }
                     }
                         $ButtonNumber++

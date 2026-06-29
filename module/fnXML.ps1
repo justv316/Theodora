@@ -13,6 +13,19 @@ function fnXML{
         }
         if($XML -eq 'Characters' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Characters))){
             $Script:Characters = @{}
+            $Script:CharacterSets = @{
+                "Vertical" = @()
+                "Horizontal" = @()
+                "TopLeftCorner" = @()
+                "TopRightCorner" = @()
+                "BottomLeftCorner" = @()
+                "BottomRightCorner" = @()
+                "MiddleLeft" = @()
+                "MiddleRight" = @()
+                "MiddleTop" = @()
+                "MiddleBottom" = @()
+                "CenterJunction" = @()
+            }
         }
         if($XML -eq 'Boxes' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes))){
             $Script:Boxes = @{}
@@ -36,12 +49,13 @@ function fnXML{
         }
         elseif($XML -eq "Characters"){
             $FileXML.types.type | ForEach-Object {
-                [String]$BName = $_.Name
-                $Characters[$BName] = @{}
+                [String]$TypeName = $_.Name
+                $Characters[$TypeName] = @{}
                 $_.ChildNodes | Foreach-Object{
                     [String]$Name = $_.Name
                     [String]$Value = $_.Value
-                    $Characters[$BName][$Name] = $Value
+                    $CharacterSets[$Name] += $Value
+                    $Characters[$TypeName][$Name] = $Value
                 }
             }
         }
