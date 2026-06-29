@@ -111,8 +111,13 @@ function fnWriteObject{
             $IgnoreTextPadding = if($Null -ne $ColorParamsHash["IgnoreTextPadding"]){$True}else{$False}
             $ForegroundColor = if($Null -ne $ColorParamsHash["ForegroundColor"]){$ColorParamsHash["ForegroundColor"]}else{"White"}
             $BackgroundColor = if($Null -ne $ColorParamsHash["BackgroundColor"]){$ColorParamsHash["BackgroundColor"]}else{"Black"}
-            $BorderColors = @{"BorderForegroundColor" = $ColorParamsHash["BorderForegroundColor"]; "BorderBackgroundColor" = $ColorParamsHash["BorderBackgroundColor"]}
-            $TextColors = @{"TextForegroundColor" = $ColorParamsHash["TextForegroundColor"];"TextBackgroundColor" = $ColorParamsHash["TextBackgroundColor"]}
+            $BorderColors = @{
+                "BorderForegroundColor" = $ColorParamsHash["BorderForegroundColor"]
+                "BorderBackgroundColor" = $ColorParamsHash["BorderBackgroundColor"]
+            }
+            $TextColors = @{
+                "TextForegroundColor" = $ColorParamsHash["TextForegroundColor"]
+                "TextBackgroundColor" = $ColorParamsHash["TextBackgroundColor"]}
             $TextForegroundColor = if($Null -ne $TextColors["TextForegroundColor"]){$TextColors["TextForegroundColor"]}elseif($Null -ne $ForegroundColor){$ForegroundColor}else{"White"}
             $TextBackgroundColor = if($Null -ne $TextColors["TextBackgroundColor"]){$TextColors["TextBackgroundColor"]}elseif($Null -ne $BackgroundColor){$BackgroundColor}else{"Black"}
             $BorderForegroundColor = if($Null -ne $BorderColors["BorderForegroundColor"]){$BorderColors["BorderForegroundColor"]}elseif($Null -ne $ForegroundColor){$ForegroundColor}else{"White"}

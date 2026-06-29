@@ -186,7 +186,7 @@ function fnBuildObject{
         if($ObjectType -eq "Boxed"){
             $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "BottomRightCorner", "MiddleLeft", "MiddleRight", "CenterJunction")
             $BorderTypes | Foreach-Object{
-                $BorderCharacters += $Boxes[$($BorderType)]["$($_)"]
+                $Global:BorderCharacters += $Boxes[$($BorderType)].$($_)
             }
             $BorderLineCount = ($Boxes[$($BorderType)]).Vertical.Length * 2
             $OuterBuildLines = ($Boxes[$($BorderType)]).Vertical.Length
