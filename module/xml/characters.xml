@@ -140,4 +140,17 @@
         <Right value="╲"/>
         <Cross value="╳"/>
     </type>
+    <type name ="None">
+        <Vertical value=" "/>
+        <Horizontal value=" "/>
+        <TopLeftCorner value=" "/>
+        <TopRightCorner value=" "/>
+        <BottomLeftCorner value=" "/>
+        <BottomRightCorner value=" "/>
+        <MiddleLeft value=" "/>
+        <MiddleRight value=" "/>
+        <MiddleTop value=" "/>
+        <MiddleBottom value=" "/>
+        <CenterJunction value=" "/>
+    </type>
 </types>

@@ -169,9 +169,14 @@ function fnBuildObject{
                         if($LineArrList.Count -gt $MaxLineCount){$MaxLineCount = $LineArrList.Count}
                     }
                     if($LineArrList.Count -lt $MaxLineCount){
-                        foreach($num in 0..(($MaxLineCount - $LineArrList.Count)-1)){
+                        foreach($num in 0..(($MaxLineCount - $LineArrList.Count) - 1)){
                             $Padding = ' ' * ($LineArrList[$num].Length) -as [String]
-                            $LineArrList.Insert($num,$Padding)
+                            if($Num % 2 -eq 0){
+                                $LineArrList.Insert($num,$Padding)
+                            }
+                            else{
+                                $LineArrList.Add($Padding)
+                            }
                         }
                     }
                     foreach($num in 1..$LineArrList.Count){

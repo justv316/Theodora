@@ -54,13 +54,15 @@ function fnXML{
                 $_.ChildNodes | Foreach-Object{
                     [String]$Name = $_.Name
                     [String]$Value = $_.Value
-                    $CharacterSets[$Name] += $Value
+                    If($TypeName -ne "None"){
+                        $CharacterSets[$Name] += $Value
+                    }
                     $Characters[$TypeName][$Name] = $Value
                 }
             }
         }
         elseif($XML -eq "Boxes"){
-            $BoxTypes = @("Single", "Double", "DoubleSingle", "SingleDouble", "SingleBold", "SingleHorizontalBold", "SingleVerticalBold", "DoubleSingleDashed")
+            $BoxTypes = @("Single", "Double", "DoubleSingle", "SingleDouble", "SingleBold", "SingleHorizontalBold", "SingleVerticalBold", "DoubleSingleDashed","None")
             $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "BottomRightCorner", "MiddleLeft", "MiddleRight", "CenterJunction")
             $BoxTypes | Foreach-Object {
                 $Type = [String]$_
