@@ -1,5 +1,5 @@
 ﻿function Start-Theodora{
     [CmdletBinding()]
     param()
-    fnGameLoop 0
+    fnInputState -State 0
 }

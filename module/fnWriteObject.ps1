@@ -217,12 +217,20 @@ function fnWriteObject{
                             $Character.ForegroundColor = "White"
                             $Character.BackgroundColor = "Black"
                         }
+                        else{
+                            $Character.ForegroundColor = $TextForegroundColor
+                            $Character.BackgroundColor = $TextBackgroundColor
+                        }
                     }
                     elseif($CharacterGrid[$LineNumber][$Character.Index-1].Type -eq "Border" -or $CharacterGrid[$LineNumber][$Character.Index+1].Type -eq "Border" -or $CharacterGrid[$LineNumber][$Character.Index-1].Type -eq "Padding" -or $CharacterGrid[$LineNumber][$Character.Index+1].Type -eq "Padding"){
                         $Character.Type = "Border Padding"
                         if($IgnoreBorderPadding -eq $True){
                             $Character.ForegroundColor = "White"
                             $Character.BackgroundColor = "Black"
+                        }
+                        else{
+                            $Character.ForegroundColor = $BorderForegroundColor
+                            $Character.BackgroundColor = $BorderBackgroundColor
                         }
                     }
                 }
@@ -302,10 +310,16 @@ function fnWriteObject{
         } # End Manual Formatting
     } # End Begin
     process{
+        fnSetConsoleWinSize -Height ($CharacterGrid.Count+1) -Width $CharacterGrid[1].Length
         Foreach($GridLine in 1..($CharacterGrid.Count)){
             $CharacterGrid[$GridLine] | Foreach-Object {
                 if($_.Index -lt $CharacterGrid[$GridLine].Count){
-                    Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline
+                    if($_.Type -ne "Padding"){
+                        Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline
+                    }
+                    else{
+                        Write-Host "&#xa0;" -NoNewline -ForegroundColor White
+                    }
                 }
                 elseif($_.Index -eq $CharacterGrid[$GridLine].Count){
                     Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline

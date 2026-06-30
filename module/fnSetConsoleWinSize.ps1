@@ -25,6 +25,7 @@ function fnSetConsoleWinSize{
     If ($ConBuffer.Height -gt $Height ) {
         $currHeight = $Height
     }
+    Clear-Host
     $host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($currWidth,$currHeight)
     $host.UI.RawUI.BufferSize = New-Object System.Management.Automation.Host.size($Width,2000)
     $host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($Width,$Height)

@@ -26,5 +26,5 @@ foreach($Directory in @('Module')){
 #Requires -Version 7.5
 #Requires -Modules argparser
 Clear-Host
-Write-Host "Setup Complete - Run 'Start-Theodora' to launch." -BackgroundColor DarkGreen -ForegroundColor White
+fnwriteobject -InputString "Setup Complete! Run 'Start-Theodora' to launch." -ObjectFormatting "--InputType=String --EnforcedMaxLength=120 --MinimumPaddingLength=4 --BorderType=Double" -BuildFormatting "--ObjectType=Boxed --Justification=Center" -ColorFormatting "--BorderForegroundColor=Magenta --BorderBackgroundColor=DarkBlue --TextForegroundColor=Red --IgnoreBorderPadding"
 
