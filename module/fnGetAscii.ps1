@@ -31,7 +31,7 @@ function fnGetAscii {
         }
         $ASCIIMax = [Math]::Ceiling((($EnforcedMaxLength) - ($MinimumPaddingLength * 2) - (($Boxes["$($BorderType)"])["Vertical"]).count) / 10)
         $Reg = $InputString | Select-String -AllMatches -Pattern "(\S{$($ASCIIMax),}|.{1,$($ASCIIMax)})(?:\s|$)"
-        $CountTextGroups = $Reg.Matches.Count
+        $CountTextGroups = if($InputString -notcontains "`n"){$Reg.Matches.Count}else{1}
         # Create Text Groups
         $TextGroups = [System.Collections.SortedList]::new()
         foreach($Num in 1..$CountTextGroups){

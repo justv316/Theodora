@@ -77,17 +77,31 @@ function fnBuildObject{
             $HeadersIgnoreTop = if($Null -ne $GridParamHash["HeadersIgnoreTop"]){$GridParamHash["HeadersIgnoreTop"]}
             $HeadersMiddleBorder = if($Null -ne $GridParamHash["HeadersMiddleBorder"]){$GridParamHash["HeadersMiddleBorder"]}
             $HeadersArray = @()
-            foreach($num in 0..($Headers.Count - 1)){
+            if($Headers.Count -eq 1){
                 $Header = [PSCustomObject]@{
-                    Header = $Headers[$num].Replace('_', ' ')
-                    Font = $HeadersFont[$num]
-                    Border = $HeadersBorder[$num]
-                    ObjectBorder = $HeadersObjectBorder[$num]
-                    Justification = $HeadersJustification[$num]
-                    IgnoreTop = $HeadersIgnoreTop[$Num]
-                    MiddleBorder = $HeadersMiddleBorder[$num]
+                    Header = $Headers.Replace('_', ' ')
+                    Font = $HeadersFont
+                    Border = $HeadersBorder
+                    ObjectBorder = $HeadersObjectBorder
+                    Justification = $HeadersJustification
+                    IgnoreTop = $HeadersIgnoreTop
+                    MiddleBorder = $HeadersMiddleBorder
                 }
                 $HeadersArray += $Header
+            }
+            else{
+                foreach($num in 0..($Headers.Count - 1)){
+                    $Header = [PSCustomObject]@{
+                        Header = $Headers[$num].Replace('_', ' ')
+                        Font = $HeadersFont[$num]
+                        Border = $HeadersBorder[$num]
+                        ObjectBorder = $HeadersObjectBorder[$num]
+                        Justification = $HeadersJustification[$num]
+                        IgnoreTop = $HeadersIgnoreTop[$Num]
+                        MiddleBorder = $HeadersMiddleBorder[$num]
+                    }
+                    $HeadersArray += $Header
+                }
             }
             $BuiltObjects = @()
             $HeadersArray | Foreach-Object {
@@ -103,16 +117,29 @@ function fnBuildObject{
                 $BuiltObjects += $BuiltHeader
             }
             $ButtonsArray = @()
-            foreach($num in 0..($Buttons.Count - 1)){
+            if($Buttons.Count -eq 1){
                 $Button = [PSCustomObject]@{
-                    Index = $Num -as [Int]
-                    Button = $Buttons[$num].Replace('_', ' ')
-                    Font = $ButtonsFont[$num]
-                    Border = $ButtonsBorder[$num]
-                    ObjectBorder = $ButtonsObjectBorder[$num]
-                    Justification = $ButtonsJustification[$num]
+                    Index = 1 -as [Int]
+                    Button = $Buttons = $Buttons -Replace "_", " " -replace "/nl", "`n"
+                    Font = $ButtonsFont
+                    Border = $ButtonsBorder
+                    ObjectBorder = $ButtonsObjectBorder
+                    Justification = $ButtonsJustification
                 }
                 $ButtonsArray += $Button
+            }
+            else{
+                foreach($num in 0..($Buttons.Count - 1)){
+                    $Button = [PSCustomObject]@{
+                        Index = $Num -as [Int]
+                        Button = $Buttons[$num] = $Buttons[$num] -Replace "_", " " -replace "/nl", "`n"
+                        Font = $ButtonsFont[$num]
+                        Border = $ButtonsBorder[$num]
+                        ObjectBorder = $ButtonsObjectBorder[$num]
+                        Justification = $ButtonsJustification[$num]
+                    }
+                    $ButtonsArray += $Button
+                }
             }
             #Put Button 1 and 2 on the same lines
             if($GridRows -eq "ToFit"){
@@ -134,11 +161,16 @@ function fnBuildObject{
             }
             $RowInd = 0
             while($RowInd -le ($Rows.Count - 1)){
-                $ButtonsArray | Foreach-Object{
-                    $Button = $_
-                    if($Rows[$RowInd].Range -Contains $Button.Index){
-                        $Rows[$RowInd].Contents += $Button
+                if($ButtonsArray.Count -gt 1){
+                    $ButtonsArray | Foreach-Object{
+                        $Button = $_
+                        if($Rows[$RowInd].Range -Contains $Button.Index){
+                            $Rows[$RowInd].Contents += $Button
+                        }
                     }
+                }
+                else{
+                    $Rows[$RowInd].Contents += $ButtonsArray
                 }
                 $RowInd++
             }
@@ -246,7 +278,7 @@ function fnBuildObject{
                     }
                     elseif($Justification -eq "None"){
                         if($Segment.Length -lt $MaxLineWidth){
-                            [Math]::ceiling(($MaxLineWidth - $Segment.Length) / 2)
+                            [Math]::ceiling(($MaxLineWidth - $Segment.Length) / 2) + 1
                         }
                         else{1}
                     }
@@ -262,7 +294,7 @@ function fnBuildObject{
                     }
                     elseif($Justification -eq "None"){
                         if($Segment.Length -lt $MaxLineWidth){
-                            [Math]::floor(($MaxLineWidth - $Segment.Length) / 2)
+                            [Math]::floor(($MaxLineWidth - $Segment.Length) / 2) + 1
                         }
                         else{
                             1
