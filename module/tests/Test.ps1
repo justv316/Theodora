@@ -107,23 +107,12 @@ fnwriteobject -ObjectFormatting "--InputType=Menu --EnforcedMaxLength=120 --Mini
 
 fnwriteobject -ObjectFormatting "--InputType=Menu --EnforcedMaxLength=120 --MinimumPaddingLength=4" -BuildFormatting "--ObjectType=Grid --Justification=Center" -GridFormatting "--GridColumns=1 --GridBorder=Double --GridJustification=Center --Headers=Main_Menu --HeadersFont=Large --HeadersBorder=DoubleSingle --HeadersObjectBorder=DoubleSingle --HeadersJustification=Center --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=1.New_Game --ButtonsFont=Graceful --ButtonsBorder=None --ButtonsObjectBorder=Single --ButtonsJustification=None" -ColorFormatting "--BorderForegroundColor Magenta"
 
-6 / 3
-Row Req = 2
-Start index = 0
-End index = 2
-6 / 2
-Row req = 3
-Start index = 0
-End index = 1
 
-Buttons = 4
-GridColumns = 2
-Rows req = 2
-Start index = 0 + 2 = 2
-End index = 1 + 2 = 3
+$ObjectFormatting = "--InputType=Menu --EnforcedMaxLength=120 --MinimumPaddingLength=4" 
+$BuildFormatting = "--ObjectType=Grid --Justification=Center" 
+$GridFormatting = "--GridColumns=1 --GridBorder=Double --GridJustification=Center --Headers=Main_Menu --HeadersFont=Large --HeadersBorder=DoubleSingle --HeadersObjectBorder=DoubleSingle --HeadersJustification=Center --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=1.New_Game_2.Load_Game_3.Options_4.Credits --ButtonsFont=Graceful --ButtonsBorder=None --ButtonsObjectBorder=Single --ButtonsJustification=None" 
+$ColorFormatting = "--BorderForegroundColor Magenta"
+$ManualFormatting = "--IndexRange=33 88 --LineRange=2 7 --ForegroundColor=blue"
 
-Buttons = 4
-GridColumns = 1
-Rows Req = 4
-Start index = 0 + GridColumns
-end index = 0 + GridColumns
+
+$ManualFormatting = "--IndexRange=33,88 33,88 --LineRange=2,7 10,15 --ForegroundColor=blue green"

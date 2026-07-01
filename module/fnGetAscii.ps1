@@ -1,18 +1,12 @@
 function fnGetAscii {
     [CmdletBinding()]
     param(
-        [Parameter(
-            Mandatory=$True,
-            Position=0)]
-            [String] $InputString,
-        [Parameter(
-            Mandatory=$True,
-            Position=1)]
-            [String] $Font,
-        [Parameter(
-            Mandatory=$True,
-            Position=2)]
-            [String]$BorderType
+        [Parameter(Mandatory=$True,Position=0)]
+        [String]$InputString,
+        [Parameter(Mandatory=$True,Position=1)]
+        [String]$Font,
+        [Parameter(Mandatory=$True, Position=2)]
+        [String]$BorderType
     )
     begin{
         # Build Reference Hashes

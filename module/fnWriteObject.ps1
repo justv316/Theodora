@@ -56,6 +56,10 @@ function fnWriteObject{
         --MinimumPaddingLength=4"
     #>
     begin{
+        # Build Reference Hashes
+        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Global -Name Characters)){
+            fnXML "Characters"
+        }
         #Parse ObjectFormatting
         $ObjectFormattingArr = $ObjectFormatting -Split ' '
         $ObjectParams = ConvertTo-Params $ObjectFormattingArr -schema @{
@@ -76,10 +80,6 @@ function fnWriteObject{
         $Script:EnforcedMaxLength = if($Null -ne $ObjectParamsHash["EnforcedMaxLength"]){$ObjectParamsHash["EnforcedMaxLength"]}else{160}
         $Script:MinimumPaddingLength = if($Null -ne $ObjectParamsHash["MinimumPaddingLength"]){$ObjectParamsHash["MinimumPaddingLength"]}else{4}
         #End Parse ObjectFormatting
-        # Build Reference Hashes
-        if(-not (Get-Variable -ErrorAction SilentlyContinue -Scope Global -Name Characters)){
-            fnXML "Characters"
-        }
         # Parse Color Formatting and set default colors
         $Colors = @('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan', 'DarkRed', 'DarkMagenta', 'DarkYellow',
             'Gray', 'DarkGray', 'Blue', 'Green', 'Cyan', 'Red', 'Magenta', 'Yellow', 'White')
@@ -260,50 +260,57 @@ function fnWriteObject{
         if($bManualFormatting -eq $True){
             $ManualFormattingArr = $ManualFormatting -Split ' '
             $ManualParams = ConvertTo-Params $ManualFormattingArr -schema @{
-                Character = [int], 0
-                IndexRange = [int[]], @()
-                Line = [int], 0
-                LineRange = [int[]], @()
-                ForegroundColor = [String], 'White'
-                BackgroundColor = [String], 'Black'
-                SelectionType = [String], 'Unspecified'
-                Replace = [String], @()
-                PaintPadding = [Switch]
+                Index = [int[]],@()
+                IndexRange = [String[]],@()
+                Line = [int[]],@()
+                LineRange = [String[]],@()
+                ForegroundColor = [String[]],@()
+                BackgroundColor = [String[]],@()
+                Replace = [String[]],@()
             }
             $ManualParamsHash = @{}
-            $LineRange = @()
-            $IndexRange = @()
             $ManualParamKeys = $ManualParams.Keys
             Foreach($Key in $ManualParamKeys){
                 $ManualParamsHash["$Key"] = $ManualParams[$Key].Value
             }
-            if($Null -ne $ManualParamsHash["LineRange"]){
-                $LineRange += $ManualParamsHash["LineRange"][0]..$ManualParamsHash["LineRange"][1]
-            }
-            if($Null -ne $ManualParamsHash["Line"]){
-                $LineRange += $ManualParamsHash["Line"]
-            }
-            if($Null -ne $ManualParamsHash["IndexRange"]){
-                $IndexRange += $ManualParamsHash["IndexRange"][0]..$ManualParamsHash["IndexRange"][1]
-            }
-            if($Null -ne $ManualParamsHash["Character"]){
-                $IndexRange += $ManualParamsHash["Character"]
-            }
-            if($Null -ne $ManualParamsHash["Replace"]){
-                $Replace = ($ManualParamsHash["Replace"] -Split ',' -replace "'","")[0]
-                $ReplaceWith = ($ManualParamsHash["Replace"] -Split ',' -replace "'","")[1]
+
+            if(($Null -eq $ManualParamsHash["LineRange"] -and ($Null -ne $ManualParamsHash["IndexRange"] -or $Null -ne $ManualParamsHash["Index"])) -or ($Null -eq $ManualParamsHash["IndexRange"] -and ($Null -ne $ManualParamsHash["LineRange"] -or $Null -ne $ManualParamsHash["Line"]))){Throw "Both a Line Range and an Index Range are required"}
+
+            if($ManualParamsHash["LineRange"].Count -ne $ManualParamsHash["IndexRange"].Count){Throw "The Line Range must be the same length as the Index Range"}
+
+            if($Null -ne $ManualParamsHash["LineRange"] -or $Null -ne $ManualParamsHash["Line"] -or $Null -ne $ManualParamsHash["IndexRange"] -or $Null -ne $ManualParamsHash["Index"]){
+                $SpecifiedTerms = if($Null -ne $ManualParamsHash["LineRange"]){$ManualParamsHash["LineRange"].Count}elseif($Null -ne $ManualParamsHash["Line"]){$ManualParamsHash["Line"].Count}
+                $LineArr = if($Null -ne $ManualParamsHash["LineRange"]){$ManualParamsHash["LineRange"]}elseif($Null -ne $ManualParamsHash["Line"]){$ManualParamsHash["Line"]}
+                $IndexArr = if($Null -ne $ManualParamsHash["IndexRange"]){$ManualParamsHash["IndexRange"]}elseif($Null -ne $ManualParamsHash["Index"]){$ManualParamsHash["Index"]}
+                if($Null -ne $ManualParamsHash["ForegroundColor"]){$ForegroundColorArr = $ManualParamsHash["ForegroundColor"]}
+                if($Null -ne $ManualParamsHash["BackgroundColor"]){$BackgroundColorArr = $ManualParamsHash["BackgroundColor"]}
+                if($Null -ne $ManualParamsHash["Replace"]){$ReplaceArr = $ManualParamsHash["Replace"]}
+                $TermHash = @{}
+                for($n = 1; $n -le $SpecifiedTerms; $n++){
+                    $TermHash["$($n)"] = [PSCustomObject]@{
+                        LineRange = ($LineArr[$n-1] -Split ',')[0]..($LineArr[$n-1] -Split ',')[1]
+                        IndexRange = ($IndexArr[$n-1] -Split ',')[0]..($IndexArr[$n-1] -Split ',')[1]
+                        ForegroundColor = if($Null -ne $ForegroundColorArr){$ForegroundColorArr[$n-1]}
+                        BackgroundColor = if($Null -ne $BackgroundColorArr){$BackgroundColorArr[$n-1]}
+                        Replace = if($Null -ne $ReplaceArr){($LineArr[$n-1] -Split ',')[0]}
+                        ReplaceWith = if($Null -ne $ReplaceArr){($LineArr[$n-1] -Split ',')[1]}
+                    }
+                }
             }
             # Modify the Character Grid with the Parameters
-            foreach($LineNum in $LineRange){
-                Foreach($Index in $IndexRange){
-                    if($Null -ne $ParamsHash["ForegroundColor"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $ParamsHash["ForegroundColor"]
-                    }
-                    if($Null -ne $ParamsHash["BackgroundColor"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $ParamsHash["BackgroundColor"]
-                    }
-                    if($Null -ne $ParamsHash["Replace"]){
-                        ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
+            for($n = 1; $n -le $SpecifiedTerms; $n++){
+                foreach($LineNum in $TermHash["$($n)"].LineRange){
+                    foreach($Index in $TermHash["$($n)"].IndexRange){
+                        if($TermHash["$($n)"].ForegroundColor -ne '' -and $Null -ne $TermHash["$($n)"].ForegroundColor){
+                            ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $TermHash["$($n)"].ForegroundColor
+                        }
+                        if($TermHash["$($n)"].BackgroundColor -ne '' -and $Null -ne $TermHash["$($n)"].BackgroundColor){
+                            Read-Host $TermHash["$($n)"].BackgroundColor
+                            ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $TermHash["$($n)"].BackgroundColor
+                        }
+                        if($TermHash["$($n)"].Replace -ne '' -and $Null -ne $TermHash["$($n)"].Replace){
+                            ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
+                        }
                     }
                 }
             }
