@@ -77,7 +77,7 @@ function fnBuildObject{
             $HeadersIgnoreTop = if($Null -ne $GridParamHash["HeadersIgnoreTop"]){$GridParamHash["HeadersIgnoreTop"]}
             $HeadersMiddleBorder = if($Null -ne $GridParamHash["HeadersMiddleBorder"]){$GridParamHash["HeadersMiddleBorder"]}
             $HeadersArray = @()
-            if($Headers.Count -eq 1){
+            if($Headers -and $Headers.Count -eq 1){
                 $Header = [PSCustomObject]@{
                     Header = $Headers.Replace('_', ' ')
                     Font = $HeadersFont
@@ -89,7 +89,7 @@ function fnBuildObject{
                 }
                 $HeadersArray += $Header
             }
-            else{
+            elseif($Headers -and $Headers.Count -gt 1){
                 foreach($num in 0..($Headers.Count - 1)){
                     $Header = [PSCustomObject]@{
                         Header = $Headers[$num].Replace('_', ' ')
@@ -221,7 +221,12 @@ function fnBuildObject{
                     $ButtonNumber++
                 }
                 $EnumeratedButtons = ($Rows[$RowNum].Buttons).GetEnumerator() | Select-Object -ExpandProperty Value
-                $ConstructedGridRow = fnBuildObject -InputObject $EnumeratedButtons -BorderType $GridBorder -BuildFormatting "--ObjectType=Boxed --Justification=$($GridJustification) --IgnoreTop=True --MiddleBorder=True" 
+                if($Headers -ne $False -or $RowNum -gt 0){
+                    $ConstructedGridRow = fnBuildObject -InputObject $EnumeratedButtons -BorderType $GridBorder -BuildFormatting "--ObjectType=Boxed --Justification=$($GridJustification) --IgnoreTop=True --MiddleBorder=True"
+                }
+                elseif($Headers -eq $False){
+                    $ConstructedGridRow = fnBuildObject -InputObject $EnumeratedButtons -BorderType $GridBorder -BuildFormatting "--ObjectType=Boxed --Justification=$($GridJustification) --MiddleBorder=True"
+                }
                 $BuiltObjects += $ConstructedGridRow
             }
             if($RowNum -eq ($Rows.Count - 1)){

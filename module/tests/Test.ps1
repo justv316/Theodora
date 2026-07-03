@@ -116,3 +116,5 @@ $ManualFormatting = "--IndexRange=33 88 --LineRange=2 7 --ForegroundColor=blue"
 
 
 $ManualFormatting = "--IndexRange=33,88 33,88 --LineRange=2,7 10,15 --ForegroundColor=blue green"
+
+$BoxedButton = fnBuildObject -InputObject $SubObject -BorderType $Button.Border -BuildFormatting "--ObjectType=Boxed --Justification=$($Button.Justification)"

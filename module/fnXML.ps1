@@ -30,7 +30,9 @@ function fnXML{
         if($XML -eq 'Boxes' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes))){
             $Script:Boxes = @{}
         }
-        
+        if($XML -eq 'Strings' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Strings))){
+            $Script:Strings = @{}
+        }
         $File = "E:\Documents\GitHub\PSGame\Theodora\module\xml\$($XML).xml"
         $FileXML = [XML] (Get-Content $File -ErrorAction SilentlyContinue)
     }
@@ -69,6 +71,17 @@ function fnXML{
                 $Boxes[$Type] = @{}
                 Foreach($Border in $BorderTypes){
                     $Boxes[$Type][$Border] = $Characters[$Type][$Border]
+                }
+            }
+        }
+        elseif($XML -eq "Strings"){
+            $FileXML.Strings.StringGroup | Foreach-Object {
+                [String]$GroupName = $_.Name
+                $Strings[$GroupName] = @{}
+                $_.ChildNodes | Foreach-Object{
+                    [String]$Name = $_.Name
+                    [String]$Value = $_.Value
+                    $Strings[$GroupName][$Name] = $Value
                 }
             }
         }

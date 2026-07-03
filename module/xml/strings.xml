@@ -1,0 +1,10 @@
+<Strings>
+    <StringGroup name="MainMenu_Headers">
+        <String value="Main_Menu"/>
+        <Font value="Large"/>
+    </StringGroup>
+    <StringGroup name="MainMenu_Buttons">
+        <String value="1.New_Game_2.Load_Game_3.Options_4.Credits"/>
+        <Font value="Graceful"/>
+    </StringGroup>
+</Strings>
