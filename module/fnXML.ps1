@@ -30,8 +30,8 @@ function fnXML{
         if($XML -eq 'Boxes' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes))){
             $Script:Boxes = @{}
         }
-        if($XML -eq 'Strings' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Strings))){
-            $Script:Strings = @{}
+        if($XML -eq 'States' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name States))){
+            $Script:States = @{}
         }
         $File = "E:\Documents\GitHub\PSGame\Theodora\module\xml\$($XML).xml"
         $FileXML = [XML] (Get-Content $File -ErrorAction SilentlyContinue)
@@ -74,15 +74,50 @@ function fnXML{
                 }
             }
         }
-        elseif($XML -eq "Strings"){
-            $FileXML.Strings.StringGroup | Foreach-Object {
+        elseif($XML -eq "States"){
+            $Script:States = @{}
+            $FileXML.States.StateGroup | Foreach-Object {
                 [String]$GroupName = $_.Name
-                $Strings[$GroupName] = @{}
+                $States[$GroupName] = [PSCustomObject]@{}
                 $_.ChildNodes | Foreach-Object{
-                    [String]$Name = $_.Name
-                    [String]$Value = $_.Value
-                    $Strings[$GroupName][$Name] = $Value
+                    if($_.Name -ne "SubState"){
+                        [String]$Name = $_.Name
+                        [String]$Value = $_.Value
+                        $States[$GroupName] | Add-Member NoteProperty -Name $Name -Value $Value -Force
+                    }
+                    else{
+                        [String]$SubState = $_.Name
+                        [String]$Index = $_.Value
+                        $SubStateName = ("$($SubState)" + "-" + "$($Index)")
+                        $States[$GroupName] | Add-Member NoteProperty -Name $SubStateName -Value 0 -Force
+                        $States[$GroupName].$SubStateName = [PSCustomObject]@{}
+                        $_.ChildNodes | Foreach-Object{
+                            [String]$Name = $_.Name
+                            [String]$Value = $_.Value
+                            $States[$GroupName].$SubStateName | Add-Member NoteProperty -Name $Name -Value $Value -Force
+                        }
+                    }
                 }
+            }
+            foreach($State in 0..($States.Count - 1)){
+                $State = $State -as [String]
+                $SubStates = $States[$State].PSObject.Properties | Where-Object {$_.Name -like "SubState*"}
+                Foreach($Num in 0..($SubStates.Count - 1)){
+                    if($SubStates[$Num].Value.BuildFormatting -ne ""){
+                    $BuildFormatting = $SubStates[$Num].Value.BuildFormatting
+                    $GridFormatting = $SubStates[$Num].Value.GridFormatting
+                    $ColorFormatting = $SubStates[$Num].ColorFormatting
+                    $ManualFormatting = $SubStates[$Num].ManualFormatting
+                    $ConstructedSubState = fnBuildObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
+                    $SubStates[$Num].Value | Add-Member NoteProperty -Name "SubstateGrid" -Value $ConstructedSubState -Force
+                    }
+                }
+                $BuildFormatting = $States[$State].BuildFormatting
+                $GridFormatting = $States[$State].GridFormatting
+                $ColorFormatting = $States[$State].ColorFormatting
+                $ManualFormatting = $States[$State].ManualFormatting
+                $StateGrid = fnBuildObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
+                $States[$GroupName] | Add-Member NoteProperty -Name "StateGrid" -Value $StateGrid -Force
             }
         }
     }

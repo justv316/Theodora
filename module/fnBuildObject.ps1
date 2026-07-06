@@ -5,12 +5,59 @@ function fnBuildObject{
         [Array]$InputObject,
         [String]$BuildFormatting,
         [String]$GridFormatting,
+        [String]$ColorFormatting,
+        [String]$ManualFormatting,
         [String]$BorderType
     )
     begin{
+        
+    <#
+    ColorFormatting =  "
+        --ForegroundColor
+        --BackgroundColor
+        --TextForegroundColor
+        --BorderForegroundColor
+        --TextBackgroundColor
+        --BorderBackgroundColor" 
+    ManualFormatting = "
+        --Character=5
+        --CharacterRange=5 10
+        --Line=2
+        --LineRange=1 2
+        --ForegroundColor=White
+        --BackgroundColor=Black
+        --Replace=' ','@'
+        --PaintPadding" 
+    BuildFormatting = "
+        --ObjectType=Boxed
+        --Justification=None
+        --IgnoreTop (Switch)
+        --MiddleBorder (Switch)
+        --Padding=' '"
+    GridFormatting = "
+        --GridRows=Int
+        --GridColumns=int
+        --GridBorder=Double
+        --GridJustification=Center
+        --Headers=@(String,String)
+        --HeadersFont=@(Graceful,None)
+        --HeadersBorder=@(Single,Double)
+        --HeadersObjectBorder=@(Double,Single)
+        --HeadersJustification=@(Center,Left)
+        --HeadersIgnoreTop=@(False, True)
+        --HeadersMiddleBorder=@(True,True)
+        --Buttons=@(String,String)
+        --ButtonsFont=@(Graceful,None)
+        --ButtonsBorder=@(Double,Single)
+        --ButtonsObjectBorder=@(Double,Single)
+        --ButtonsJustification=@(Center,Left)
+    #>
         # Build Reference Hashes
         if(-not(Get-Variable -ErrorAction SilentlyContinue -Scope Global -name BorderCharacters)){
             $Global:BorderCharacters = @()
+        }
+        if($Null -eq $Characters){
+            fnXML "Characters"
         }
         if($Null -eq $Boxes){
             fnXML "Boxes"
@@ -34,7 +81,50 @@ function fnBuildObject{
         $IgnoreTop = If($BuildParamHash["IgnoreTop"] -eq "True"){$True}else{$False}
         $MiddleBorder = If($BuildParamHash["MiddleBorder"] -eq "True"){$True}else{$False}
         $Padding = if($BuildParamHash["Padding"]){$BuildParamHash["Padding"]}else{" "}
-        # End Argument Parsing
+        # End BuildFormatting Parsing
+        # Parse Color Formatting and set default colors
+        $Colors = @('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan', 'DarkRed', 'DarkMagenta', 'DarkYellow',
+            'Gray', 'DarkGray', 'Blue', 'Green', 'Cyan', 'Red', 'Magenta', 'Yellow', 'White')
+        $ForegroundColor = "White"
+        $BackgroundColor = "Black"
+        $TextForegroundColor = "White"
+        $TextBackgroundColor = "Black"
+        $BorderForegroundColor = "White"
+        $BorderBackgroundColor = "Black"
+        if($ColorFormatting -ne '' -and $Null -ne $ColorFormatting){
+            $ColorFormattingArr = $ColorFormatting -Split ' '
+            $ColorParams = ConvertTo-Params $ColorFormattingArr -schema @{
+                ForegroundColor = [String], 'White'
+                BackgroundColor = [String], 'Black'
+                TextForegroundColor = [String], 'White'
+                TextBackgroundColor = [String], 'Black'
+                BorderForegroundColor = [String], 'White'
+                BorderBackgroundColor = [String], 'Black'
+                IgnoreBorderPadding = [Switch]
+                IgnoreTextPadding = [Switch]
+            }
+            $ColorParamsHash = @{}
+            $ColorParamKeys = $ColorParams.Keys
+            Foreach($Key in $ColorParamKeys){
+                $ColorParamsHash["$Key"] = $ColorParams[$Key].Value
+            }
+            # Define Colors
+            $IgnoreBorderPadding = if($Null -ne $ColorParamsHash["IgnoreBorderPadding"]){$False}else{$True}
+            $IgnoreTextPadding = if($Null -ne $ColorParamsHash["IgnoreTextPadding"]){$False}else{$True}
+            $ForegroundColor = if($Null -ne $ColorParamsHash["ForegroundColor"]){$ColorParamsHash["ForegroundColor"]}else{"White"}
+            $BackgroundColor = if($Null -ne $ColorParamsHash["BackgroundColor"]){$ColorParamsHash["BackgroundColor"]}else{"Black"}
+            $BorderColors = @{
+                "BorderForegroundColor" = $ColorParamsHash["BorderForegroundColor"]
+                "BorderBackgroundColor" = $ColorParamsHash["BorderBackgroundColor"]
+            }
+            $TextColors = @{
+                "TextForegroundColor" = $ColorParamsHash["TextForegroundColor"]
+                "TextBackgroundColor" = $ColorParamsHash["TextBackgroundColor"]}
+            $TextForegroundColor = if($Null -ne $TextColors["TextForegroundColor"]){$TextColors["TextForegroundColor"]}elseif($Null -ne $ForegroundColor){$ForegroundColor}else{"White"}
+            $TextBackgroundColor = if($Null -ne $TextColors["TextBackgroundColor"]){$TextColors["TextBackgroundColor"]}elseif($Null -ne $BackgroundColor){$BackgroundColor}else{"Black"}
+            $BorderForegroundColor = if($Null -ne $BorderColors["BorderForegroundColor"]){$BorderColors["BorderForegroundColor"]}elseif($Null -ne $ForegroundColor){$ForegroundColor}else{"White"}
+            $BorderBackgroundColor = if($Null -ne $BorderColors["BorderBackgroundColor"]){$BorderColors["BorderBackgroundColor"]}elseif($Null -ne $BackgroundColor){$BackgroundColor}else{"Black"}
+        } #End ColorFormatting Parsing
         if($ObjectType -eq "Grid"){
             $GridParamArr = $GridFormatting -Split ' '
             $GridParam = ConvertTo-Params $GridParamArr -schema @{
@@ -76,45 +166,47 @@ function fnBuildObject{
             $HeadersJustification = if($Null -ne $GridParamHash["HeadersJustification"]){$GridParamHash["HeadersJustification"]}
             $HeadersIgnoreTop = if($Null -ne $GridParamHash["HeadersIgnoreTop"]){$GridParamHash["HeadersIgnoreTop"]}
             $HeadersMiddleBorder = if($Null -ne $GridParamHash["HeadersMiddleBorder"]){$GridParamHash["HeadersMiddleBorder"]}
-            $HeadersArray = @()
-            if($Headers -and $Headers.Count -eq 1){
-                $Header = [PSCustomObject]@{
-                    Header = $Headers.Replace('_', ' ')
-                    Font = $HeadersFont
-                    Border = $HeadersBorder
-                    ObjectBorder = $HeadersObjectBorder
-                    Justification = $HeadersJustification
-                    IgnoreTop = $HeadersIgnoreTop
-                    MiddleBorder = $HeadersMiddleBorder
-                }
-                $HeadersArray += $Header
-            }
-            elseif($Headers -and $Headers.Count -gt 1){
-                foreach($num in 0..($Headers.Count - 1)){
+            $BuiltObjects = @()
+            if($Headers -and $Headers.Count -ge 1){
+                $HeadersArray = @()
+                if($Headers -and $Headers.Count -eq 1){
                     $Header = [PSCustomObject]@{
-                        Header = $Headers[$num].Replace('_', ' ')
-                        Font = $HeadersFont[$num]
-                        Border = $HeadersBorder[$num]
-                        ObjectBorder = $HeadersObjectBorder[$num]
-                        Justification = $HeadersJustification[$num]
-                        IgnoreTop = $HeadersIgnoreTop[$Num]
-                        MiddleBorder = $HeadersMiddleBorder[$num]
+                        Header = $Headers.Replace('_', ' ')
+                        Font = $HeadersFont
+                        Border = $HeadersBorder
+                        ObjectBorder = $HeadersObjectBorder
+                        Justification = $HeadersJustification
+                        IgnoreTop = $HeadersIgnoreTop
+                        MiddleBorder = $HeadersMiddleBorder
                     }
                     $HeadersArray += $Header
                 }
-            }
-            $BuiltObjects = @()
-            $HeadersArray | Foreach-Object {
-                $SubObject = 
-                    if($_.Font -ne "None"){
-                        $ASCII = fnGetAscii -InputString $_.Header -Font $_.Font -BorderType $_.ObjectBorder
-                        fnBuildObject -InputObject $ASCII -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
+                elseif($Headers -and $Headers.Count -gt 1){
+                    foreach($num in 0..($Headers.Count - 1)){
+                        $Header = [PSCustomObject]@{
+                            Header = $Headers[$num].Replace('_', ' ')
+                            Font = $HeadersFont[$num]
+                            Border = $HeadersBorder[$num]
+                            ObjectBorder = $HeadersObjectBorder[$num]
+                            Justification = $HeadersJustification[$num]
+                            IgnoreTop = $HeadersIgnoreTop[$Num]
+                            MiddleBorder = $HeadersMiddleBorder[$num]
+                        }
+                        $HeadersArray += $Header
                     }
-                    else{
-                        fnBuildObject -InputObject $_.Header -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
-                    }
-                $BuiltHeader = fnBuildObject -InputObject $SubObject -BorderType $_.Border -BuildFormatting "--ObjectType=Boxed --Justification=$($_.Justification) --MiddleBorder=$($_.MiddleBorder) --IgnoreTop=$($_.IgnoreTop)"
-                $BuiltObjects += $BuiltHeader
+                }
+                $HeadersArray | Foreach-Object {
+                    $SubObject = 
+                        if($_.Font -ne "None"){
+                            $ASCII = fnGetAscii -InputString $_.Header -Font $_.Font -BorderType $_.ObjectBorder
+                            fnBuildObject -InputObject $ASCII -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
+                        }
+                        else{
+                            fnBuildObject -InputObject $_.Header -BorderType $_.ObjectBorder -BuildFormatting "--ObjectType=Boxed"
+                        }
+                    $BuiltHeader = fnBuildObject -InputObject $SubObject -BorderType $_.Border -BuildFormatting "--ObjectType=Boxed --Justification=$($_.Justification) --MiddleBorder=$($_.MiddleBorder) --IgnoreTop=$($_.IgnoreTop)"
+                    $BuiltObjects += $BuiltHeader
+                }
             }
             $ButtonsArray = @()
             if($Buttons.Count -eq 1){
@@ -237,7 +329,7 @@ function fnBuildObject{
                     else{$EnforcedMaxLength - $OuterBuildLines}
                 $BuiltObjects += (($Build["BottomLeftCorner"]) + (($Build["Horizontal"]) * $PaddingMultiplier) + ($Build["BottomRightCorner"]))
             }
-        }
+        } # End if Grid
         if($ObjectType -eq "Boxed"){
             $BorderTypes = @("Vertical", "Horizontal", "TopLeftCorner", "BottomLeftCorner", "TopRightCorner", "BottomLeftCorner", "BottomRightCorner", "MiddleLeft", "MiddleRight", "CenterJunction")
             $BorderTypes | Foreach-Object{
@@ -318,14 +410,171 @@ function fnBuildObject{
         } # End If Boxed
     } # End Begin
     Process {
-        #Return the Output
+        if($ObjectType -eq "Grid"){
+            #Create a Character Grid
+            $LineCount = $BuiltObjects.Count
+            $CharacterGrid = [System.Collections.SortedList]::new()
+            foreach($LineNumber in 1..($LineCount)){
+                $CharacterGrid[$LineNumber] = @()
+                $LineArray = [Char[]]$BuiltObjects[$LineNumber-1]
+                $CharNumber = 1
+                foreach($Char in $LineArray){
+                    $CharacterType = 
+                        if($Char -eq ' '){"Padding"}
+                        elseif($BorderCharacters -contains $Char){"Border"}
+                        else{"Character"}
+                    if($CharacterType -eq "Border"){
+                        if($BorderForegroundColor -eq 'Rainbow' -or $ForegroundColor -eq 'Rainbow'){
+                            $ForegroundColor = $Colors[(Get-Random -Min 0 -Max 15)]
+                        }
+                        else{
+                            $ForegroundColor = $BorderForegroundColor
+                        }
+                        if($BorderBackgroundColor -eq 'Rainbow' -or $BackgroundColor -eq 'Rainbow'){
+                            $BackgroundColor = $Colors[(Get-Random -Min 0 -Max 15)]
+                        }
+                        else{
+                            $BackgroundColor = $BorderBackgroundColor
+                        }
+                    }
+                    elseif($CharacterType -eq "Character"){
+                        if($TextForegroundColor -eq 'Rainbow' -or $ForegroundColor -eq 'Rainbow'){
+                            $ForegroundColor = $Colors[(Get-Random -Min 0 -Max 15)]
+                        }
+                        else{
+                            $ForegroundColor = $TextForegroundColor
+                        }
+                        if($BorderBackgroundColor -eq 'Rainbow' -or $BackgroundColor -eq 'Rainbow'){
+                            $BackgroundColor = $Colors[(Get-Random -Min 0 -Max 15)]
+                        }
+                        else{
+                            $BackgroundColor = $TextBackgroundColor
+                        }
+                    }
+                    $Chars = [PSCustomObject] @{
+                        'Index' = $CharNumber
+                        'Line' = $LineNumber
+                        'Character' = "$Char"
+                        'ForegroundColor' = "$ForegroundColor"
+                        'BackgroundColor' = "$BackgroundColor"
+                        'Type' = "$CharacterType"
+                    }
+                    $CharNumber++
+                    $CharacterGrid[$LineNumber] += $Chars
+                }
+            }
+            foreach($LineNumber in 1..($LineCount)){
+                foreach($Character in $CharacterGrid[$LineNumber]){
+                    if($Character.Type -eq "Padding"){
+                        if($CharacterGrid[$LineNumber][$Character.Index-1].Type -eq "Character" -or $CharacterGrid[$LineNumber][$Character.Index+1].Type -eq "Character"){
+                            $Character.Type = "Character Padding"
+                            if($IgnoreTextPadding -eq $True){
+                                $Character.ForegroundColor = "White"
+                                $Character.BackgroundColor = "Black"
+                            }
+                            else{
+                                $Character.ForegroundColor = $TextForegroundColor
+                                $Character.BackgroundColor = $TextBackgroundColor
+                            }
+                        }
+                        elseif($CharacterGrid[$LineNumber][$Character.Index-1].Type -eq "Border" -or $CharacterGrid[$LineNumber][$Character.Index+1].Type -eq "Border" -or $CharacterGrid[$LineNumber][$Character.Index-1].Type -eq "Padding" -or $CharacterGrid[$LineNumber][$Character.Index+1].Type -eq "Padding"){
+                            $Character.Type = "Border Padding"
+                            if($IgnoreBorderPadding -eq $True){
+                                $Character.ForegroundColor = "White"
+                                $Character.BackgroundColor = "Black"
+                            }
+                            else{
+                                $Character.ForegroundColor = $BorderForegroundColor
+                                $Character.BackgroundColor = $BorderBackgroundColor
+                            }
+                        }
+                    }
+                    # If Horizontal is above or below a Vertical, replace with appropriate junction
+                    if($CharacterSets["Horizontal"] -contains $Character.Character){
+                        $BorderPos = [array]::indexof($CharacterSets["Horizontal"],$Character.Character)
+                        if($LineNumber -ne $LineCount){
+                            $AboveCharacter = $CharacterGrid[$LineNumber + 1][$Character.Index - 1]
+                        }
+                        if($LineNumber -ne 1){
+                            $BelowCharacter = $CharacterGrid[$LineNumber - 1][$Character.Index - 1]
+                        }
+                        if($CharacterSets["Vertical"] -contains $AboveCharacter.Character -and $CharacterSets["Vertical"] -contains $BelowCharacter.Character){
+                            $Character.Character = $CharacterSets["CenterJunction"][$BorderPos]
+                        }
+                        if($CharacterSets["Vertical"] -contains $AboveCharacter.Character -and -not ($CharacterSets["Vertical"] -contains $BelowCharacter.Character)){
+                            $Character.Character = $CharacterSets["MiddleTop"][$BorderPos]
+                        }
+                        if($CharacterSets["Vertical"] -contains $BelowCharacter.Character -and -not ($CharacterSets["Vertical"] -contains $AboveCharacter.Character)){
+                            $Character.Character = $CharacterSets["MiddleBottom"][$BorderPos]
+                        }
+                    }
+                }
+            }
+             # Parse Manual Formatting
+            if($ManualFormatting -ne '' -and $Null -ne $ManualFormatting){
+                $ManualFormattingArr = $ManualFormatting -Split ' '
+                $ManualParams = ConvertTo-Params $ManualFormattingArr -schema @{
+                    Index = [int[]],@()
+                    IndexRange = [String[]],@()
+                    Line = [int[]],@()
+                    LineRange = [String[]],@()
+                    ForegroundColor = [String[]],@()
+                    BackgroundColor = [String[]],@()
+                    Replace = [String[]],@()
+                }
+                $ManualParamsHash = @{}
+                $ManualParamKeys = $ManualParams.Keys
+                Foreach($Key in $ManualParamKeys){
+                    $ManualParamsHash["$Key"] = $ManualParams[$Key].Value
+                }
+                if(($Null -eq $ManualParamsHash["LineRange"] -and ($Null -ne $ManualParamsHash["IndexRange"] -or $Null -ne $ManualParamsHash["Index"])) -or ($Null -eq $ManualParamsHash["IndexRange"] -and ($Null -ne $ManualParamsHash["LineRange"] -or $Null -ne $ManualParamsHash["Line"]))){Throw "Both a Line Range and an Index Range are required"}
+                if($ManualParamsHash["LineRange"].Count -ne $ManualParamsHash["IndexRange"].Count){Throw "The Line Range must be the same length as the Index Range"}
+                $SpecifiedTerms = if($Null -ne $ManualParamsHash["LineRange"]){$ManualParamsHash["LineRange"].Count}elseif($Null -ne $ManualParamsHash["Line"]){$ManualParamsHash["Line"].Count}
+                $LineArr = if($Null -ne $ManualParamsHash["LineRange"]){$ManualParamsHash["LineRange"]}elseif($Null -ne $ManualParamsHash["Line"]){$ManualParamsHash["Line"]}
+                $IndexArr = if($Null -ne $ManualParamsHash["IndexRange"]){$ManualParamsHash["IndexRange"]}elseif($Null -ne $ManualParamsHash["Index"]){$ManualParamsHash["Index"]}
+                if($Null -ne $ManualParamsHash["ForegroundColor"]){$ForegroundColorArr = $ManualParamsHash["ForegroundColor"]}
+                if($Null -ne $ManualParamsHash["BackgroundColor"]){$BackgroundColorArr = $ManualParamsHash["BackgroundColor"]}
+                if($Null -ne $ManualParamsHash["Replace"]){$ReplaceArr = $ManualParamsHash["Replace"]}
+                $TermHash = @{}
+                for($n = 1; $n -le $SpecifiedTerms; $n++){
+                    $TermHash["$($n)"] = [PSCustomObject]@{
+                        LineRange = ($LineArr[$n-1] -Split ',')[0]..($LineArr[$n-1] -Split ',')[1]
+                        IndexRange = ($IndexArr[$n-1] -Split ',')[0]..($IndexArr[$n-1] -Split ',')[1]
+                        ForegroundColor = if($Null -ne $ForegroundColorArr){$ForegroundColorArr[$n-1]}
+                        BackgroundColor = if($Null -ne $BackgroundColorArr){$BackgroundColorArr[$n-1]}
+                        Replace = if($Null -ne $ReplaceArr){($LineArr[$n-1] -Split ',')[0]}
+                        ReplaceWith = if($Null -ne $ReplaceArr){($LineArr[$n-1] -Split ',')[1]}
+                    }
+                }
+                # Modify the Character Grid with the Parameters
+                for($n = 1; $n -le $SpecifiedTerms; $n++){
+                    foreach($LineNum in $TermHash["$($n)"].LineRange){
+                        foreach($Index in $TermHash["$($n)"].IndexRange){
+                            if($TermHash["$($n)"].ForegroundColor -ne '' -and $Null -ne $TermHash["$($n)"].ForegroundColor){
+                                ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $TermHash["$($n)"].ForegroundColor
+                            }
+                            if($TermHash["$($n)"].BackgroundColor -ne '' -and $Null -ne $TermHash["$($n)"].BackgroundColor){
+                                Read-Host $TermHash["$($n)"].BackgroundColor
+                                ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $TermHash["$($n)"].BackgroundColor
+                            }
+                            if($TermHash["$($n)"].Replace -ne '' -and $Null -ne $TermHash["$($n)"].Replace){
+                                ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character = ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).Character -replace $Replace,$ReplaceWith
+                            }
+                        }
+                    }
+                }
+            } # End Manual Formatting
+        }
+    } # end Process
+    end{
+        # Return the Output
         if($ObjectType -eq "Boxed"){
             $Lines.GetEnumerator() | Sort-Object -Property Name | Select-Object -ExpandProperty Value | ForEach-Object {
                 $_
             }
         }
         elseif($ObjectType -eq "Grid"){
-            $BuiltObjects
+            $CharacterGrid
         }
     }
 } # End Function
