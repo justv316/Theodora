@@ -20,29 +20,34 @@ function fnAssembleObject{
             fnXML "Boxes"
         }
     #Parse Build Formatting
-        $BuildParamArr = $BuildFormatting -Split ' '
-        $BuildParam = ConvertTo-Params $BuildParamArr -schema @{
-            ObjectType = [String],''
-            Justification = [String], 'None'
-            IgnoreTop = [String], 'false'
-            MiddleBorder = [String], 'false'
-            Padding = [String],''
-            EnforcedMaxLength = [Int],160
-            MinimumPaddingLength = [Int],4
+        if($BuildFormatting -ne '' -and $Null -ne $BuildFormatting){
+            $BuildParamArr = $BuildFormatting -Split ' '
+            $BuildParam = ConvertTo-Params $BuildParamArr -schema @{
+                ObjectType = [String],''
+                Justification = [String], 'None'
+                IgnoreTop = [String], 'false'
+                MiddleBorder = [String], 'false'
+                Padding = [String],''
+                EnforcedMaxLength = [Int],160
+                MinimumPaddingLength = [Int],4
+            }
+            $BuildParamHash = @{}
+            $BuildParamKeys = $BuildParam.Keys
+            Foreach($Key in $BuildParamKeys){
+                $BuildParamHash["$Key"] = $BuildParam[$Key].Value
+            }
+            #$ObjectType = If($Null -ne $BuildParamHash["ObjectType"]){$BuildParamHash["ObjectType"]}elseif($Null -eq $BuildParamHash["ObjectType"]){throw "ObjectType is Required."}
+            $Justification = if($Null -ne $BuildParamHash["Justification"]){$BuildParamHash["Justification"]}else{"None"}
+            $IgnoreTop = If($BuildParamHash["IgnoreTop"] -eq "True"){$True}else{$False}
+            $MiddleBorder = If($BuildParamHash["MiddleBorder"] -eq "True"){$True}else{$False}
+            $Padding = if($BuildParamHash["Padding"]){$BuildParamHash["Padding"]}else{" "}
+            $Script:EnforcedMaxLength = if($Null -ne $BuildParamHash["EnforcedMaxLength"]){$BuildParamHash["EnforcedMaxLength"]}else{160}
+            $Script:MinimumPaddingLength = if($Null -ne $BuildParamHash["MinimumPaddingLength"]){$BuildParamHash["MinimumPaddingLength"]}else{4}
+            $BuiltObjects = @()
         }
-        $BuildParamHash = @{}
-        $BuildParamKeys = $BuildParam.Keys
-        Foreach($Key in $BuildParamKeys){
-            $BuildParamHash["$Key"] = $BuildParam[$Key].Value
-        }
-        $ObjectType = If($Null -ne $BuildParamHash["ObjectType"]){$BuildParamHash["ObjectType"]}elseif($Null -eq $BuildParamHash["ObjectType"]){throw "ObjectType is Required."}
-        $Justification = if($Null -ne $BuildParamHash["Justification"]){$BuildParamHash["Justification"]}else{"None"}
-        $IgnoreTop = If($BuildParamHash["IgnoreTop"] -eq "True"){$True}else{$False}
-        $MiddleBorder = If($BuildParamHash["MiddleBorder"] -eq "True"){$True}else{$False}
-        $Padding = if($BuildParamHash["Padding"]){$BuildParamHash["Padding"]}else{" "}
-        $Script:EnforcedMaxLength = if($Null -ne $BuildParamHash["EnforcedMaxLength"]){$BuildParamHash["EnforcedMaxLength"]}else{160}
-        $Script:MinimumPaddingLength = if($Null -ne $BuildParamHash["MinimumPaddingLength"]){$BuildParamHash["MinimumPaddingLength"]}else{4}
-    #End Build Formatting
+        else{
+            $BuiltObjects = $InputObject
+        }#End Build Formatting
     # Parse Color Formatting
         $Colors = @('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan', 'DarkRed', 'DarkMagenta', 'DarkYellow',
             'Gray', 'DarkGray', 'Blue', 'Green', 'Cyan', 'Red', 'Magenta', 'Yellow', 'White')
@@ -155,7 +160,6 @@ function fnAssembleObject{
             if($Null -ne $ManualParamsHash["BackgroundColor"]){$BackgroundColorArr = $ManualParamsHash["BackgroundColor"]}
             if($Null -ne $ManualParamsHash["Replace"]){$ReplaceArr = $ManualParamsHash["Replace"]}
         } #End Manual Formatting
-        $BuiltObjects = @()
     } #End Begin
     Process{
     #Build Objects
@@ -442,7 +446,6 @@ function fnAssembleObject{
                             ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).ForegroundColor = $TermHash["$($n)"].ForegroundColor
                         }
                         if($TermHash["$($n)"].BackgroundColor -ne '' -and $Null -ne $TermHash["$($n)"].BackgroundColor){
-                            Read-Host $TermHash["$($n)"].BackgroundColor
                             ($CharacterGrid[$LineNum] | Where-Object {$_.Index -eq $Index}).BackgroundColor = $TermHash["$($n)"].BackgroundColor
                         }
                         if($TermHash["$($n)"].Replace -ne '' -and $Null -ne $TermHash["$($n)"].Replace){

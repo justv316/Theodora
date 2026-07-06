@@ -6,6 +6,27 @@
         <GridFormatting value="--GridColumns=1 --GridBorder=Double --GridJustification=Center --Headers=Main_Menu --HeadersFont=Large --HeadersBorder=DoubleSingle --HeadersObjectBorder=DoubleSingle --HeadersJustification=Center --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=1.New_Game_2.Load_Game_3.Options_4.Credits --ButtonsFont=Graceful --ButtonsBorder=None --ButtonsObjectBorder=Single --ButtonsJustification=Center"/>
         <ColorFormatting value="--BorderForegroundColor Magenta"/>
         <ManualFormatting value="--IndexRange=32,88 29,93 --LineRange=3,8 13,28 --ForegroundColor=blue green"/>
+        <SubState value="-1">
+            <SimpleName value="PreGame"/>
+            <ObjectFormatting value="--InputType=Menu --EnforcedMaxLength=80 --MinimumPaddingLength=0"/>
+            <BuildFormatting value="--ObjectType=Grid --Justification=Left"/>
+            <GridFormatting value="--GridColumns=2 --GridBorder=Double --GridJustification=Left --Headers=PlaceHolder! --HeadersFont=Graceful --HeadersBorder=Double --HeadersObjectBorder=Single --HeadersJustification=Left --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=PlaceHolder! PlaceHolder! --ButtonsFont=None None --ButtonsBorder=Single Single --ButtonsObjectBorder=None None --ButtonsJustification=None Right" />
+            <ColorFormatting value="--BorderForegroundColor Magenta"/>
+        </SubState>
+        <SubState value="1">
+            <SimpleName value="NewGame"/>
+            <ObjectFormatting value="--InputType=Menu --EnforcedMaxLength=80 --MinimumPaddingLength=0"/>
+            <BuildFormatting value="--ObjectType=Grid --Justification=Left"/>
+            <GridFormatting value="--GridColumns=2 --GridBorder=Double --GridJustification=Left --Headers=PlaceHolder! --HeadersFont=Graceful --HeadersBorder=Double --HeadersObjectBorder=Single --HeadersJustification=Left --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=PlaceHolder! PlaceHolder! --ButtonsFont=None None --ButtonsBorder=Single Single --ButtonsObjectBorder=None None --ButtonsJustification=None Right" />
+            <ColorFormatting value="--BorderForegroundColor Magenta"/>
+        </SubState>
+        <SubState value="2">
+            <SimpleName value="LoadGame"/>
+            <ObjectFormatting value="--InputType=Menu --EnforcedMaxLength=80 --MinimumPaddingLength=0"/>
+            <BuildFormatting value="--ObjectType=Grid --Justification=Left"/>
+            <GridFormatting value="--GridColumns=2 --GridBorder=Double --GridJustification=Left --Headers=PlaceHolder! --HeadersFont=Graceful --HeadersBorder=Double --HeadersObjectBorder=Single --HeadersJustification=Left --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=PlaceHolder! PlaceHolder! --ButtonsFont=None None --ButtonsBorder=Single Single --ButtonsObjectBorder=None None --ButtonsJustification=None Right" />
+            <ColorFormatting value="--BorderForegroundColor Magenta"/>
+        </SubState>
         <SubState value="3">
             <SimpleName value="Options"/>
             <ObjectFormatting value="--InputType=Menu --EnforcedMaxLength=80 --MinimumPaddingLength=0"/>

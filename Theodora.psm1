@@ -21,3 +21,4 @@ if($Null -eq $States){
 }
 
 Clear-Host
+fnwriteObject -inputobject "Setup Complete! Run 'Start-Theodora' to begin." -ObjectFormatting "--InputType=String --BorderType=Single --Justification=Center --EnforcedMaxLength=120 --MinimumPaddingLength=4" -ColorFormatting "--TextForegroundColor=White --TextBackgroundColor=Black --BorderForegroundColor=Blue --BorderBackgroundColor=White --IgnoreTextPadding"
