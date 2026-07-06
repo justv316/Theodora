@@ -1,34 +1,17 @@
 <States>
     <StateGroup name="0">
         <SimpleName value="MainMenu"/>
-        <ObjectFormatting value="--InputType=Menu --EnforcedMaxLength=120 --MinimumPaddingLength=4"/>
-        <BuildFormatting value="--ObjectType=Grid --Justification=Center"/>
+        <ObjectFormatting value="--InputType=Menu"/>
+        <BuildFormatting value="--ObjectType=Grid --Justification=Center --EnforcedMaxLength=120 --MinimumPaddingLength=4"/>
         <GridFormatting value="--GridColumns=1 --GridBorder=Double --GridJustification=Center --Headers=Main_Menu --HeadersFont=Large --HeadersBorder=DoubleSingle --HeadersObjectBorder=DoubleSingle --HeadersJustification=Center --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=1.New_Game_2.Load_Game_3.Options_4.Credits --ButtonsFont=Graceful --ButtonsBorder=None --ButtonsObjectBorder=Single --ButtonsJustification=Center"/>
         <ColorFormatting value="--BorderForegroundColor Magenta"/>
         <ManualFormatting value="--IndexRange=32,88 29,93 --LineRange=3,8 13,28 --ForegroundColor=blue green"/>
-        <SubState value="1">
-            <SimpleName value="NewGame"/>
-            <ObjectFormatting value=""/>
-            <BuildFormatting value=""/>
-            <GridFormatting value=""/>
-            <ColorFormatting value=""/>
-            <ManualFormatting value=""/>
-        </SubState>
-        <SubState value="2">
-            <SimpleName value="LoadGame"/>
-            <ObjectFormatting value=""/>
-            <BuildFormatting value=""/>
-            <GridFormatting value=""/>
-            <ColorFormatting value=""/>
-            <ManualFormatting value=""/>
-        </SubState>
         <SubState value="3">
             <SimpleName value="Options"/>
             <ObjectFormatting value="--InputType=Menu --EnforcedMaxLength=80 --MinimumPaddingLength=0"/>
             <BuildFormatting value="--ObjectType=Grid --Justification=Left"/>
             <GridFormatting value="--GridColumns=2 --GridBorder=Double --GridJustification=Left --Headers=Options --HeadersFont=Graceful --HeadersBorder=Double --HeadersObjectBorder=Single --HeadersJustification=Left --HeadersMiddleBorder=True --HeadersIgnoreTop=False --Buttons=Option_1 Detail_1 --ButtonsFont=None None --ButtonsBorder=Single Single --ButtonsObjectBorder=None None --ButtonsJustification=None Right" />
             <ColorFormatting value="--BorderForegroundColor Magenta"/>
-            <ManualFormatting value=""/>
         </SubState>
         <SubState value="4">
             <SimpleName value="Credits"/>
@@ -36,7 +19,6 @@
             <BuildFormatting value="--ObjectType=Grid --Justification=Center"/>
             <GridFormatting value="--GridColumns=1 --GridBorder=Double --GridJustification=Left --Buttons=Scipting,_ASCII,_etc. Fox --ButtonsFont=None Graceful --ButtonsBorder=Single Single --ButtonsObjectBorder=None None --ButtonsJustification=Center Center"/>
             <ColorFormatting value="--BorderForegroundColor Red --TextForegroundColor White"/>
-            <ManualFormatting value=""/>
         </SubState>
         <SubState value="Help">
             <SimpleName value="MainMenu_Help"/>
@@ -44,7 +26,6 @@
             <BuildFormatting value="--ObjectType=Grid --Justification=Left"/>
             <GridFormatting value="--GridColumns=2 --GridBorder=Double --GridJustification=Left --Buttons=Valid_Inputs --ButtonsFont=None --ButtonsBorder=Single --ButtonsObjectBorder=None --ButtonsJustification=Left"/>
             <ColorFormatting value="--BorderForegroundColor Green"/>
-            <ManualFormatting value=""/>
         </SubState>
         <SubState value="Exit">
             <SimpleName value="MainMenu_Exit"/>
@@ -52,7 +33,6 @@
             <BuildFormatting value="--ObjectType=Grid --Justification=Center"/>
             <GridFormatting value="--GridColumns=1 --GridBorder=Double --GridJustification=Center --Buttons=Thank_You_for_Playing_my_Game --ButtonsFont=Graceful --ButtonsBorder=Single --ButtonsObjectBorder=None --ButtonsJustification=Center"/>
             <ColorFormatting value="--BorderForegroundColor Red --TextForegroundColor Magenta"/>
-            <ManualFormatting value=""/>
         </SubState>
     </StateGroup>
 </States>

@@ -75,7 +75,6 @@ function fnXML{
             }
         }
         elseif($XML -eq "States"){
-            $Script:States = @{}
             $FileXML.States.StateGroup | Foreach-Object {
                 [String]$GroupName = $_.Name
                 $States[$GroupName] = [PSCustomObject]@{}
@@ -106,9 +105,9 @@ function fnXML{
                     if($SubStates[$Num].Value.BuildFormatting -ne ""){
                     $BuildFormatting = $SubStates[$Num].Value.BuildFormatting
                     $GridFormatting = $SubStates[$Num].Value.GridFormatting
-                    $ColorFormatting = $SubStates[$Num].ColorFormatting
-                    $ManualFormatting = $SubStates[$Num].ManualFormatting
-                    $ConstructedSubState = fnBuildObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
+                    $ColorFormatting = $SubStates[$Num].Value.ColorFormatting
+                    $ManualFormatting = $SubStates[$Num].Value.ManualFormatting
+                    $ConstructedSubState = fnAssembleObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
                     $SubStates[$Num].Value | Add-Member NoteProperty -Name "SubstateGrid" -Value $ConstructedSubState -Force
                     }
                 }
@@ -116,7 +115,7 @@ function fnXML{
                 $GridFormatting = $States[$State].GridFormatting
                 $ColorFormatting = $States[$State].ColorFormatting
                 $ManualFormatting = $States[$State].ManualFormatting
-                $StateGrid = fnBuildObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
+                $StateGrid = fnAssembleObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
                 $States[$GroupName] | Add-Member NoteProperty -Name "StateGrid" -Value $StateGrid -Force
             }
         }

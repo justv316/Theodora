@@ -52,7 +52,7 @@ function fnWriteObject{
         }
     } # End Begin
     process{
-        # fnSetConsoleWinSize -Height ($CharacterGrid.Count+1) -Width $CharacterGrid[1].Length
+        fnSetConsoleWinSize -Height ($CharacterGrid.Count+1) -Width $CharacterGrid[1].Length
         Foreach($GridLine in 1..($CharacterGrid.Count)){
             $CharacterGrid[$GridLine] | Foreach-Object {
                 if($_.Index -lt $CharacterGrid[$GridLine].Count){
