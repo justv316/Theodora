@@ -79,44 +79,18 @@ function fnXML{
                 [String]$GroupName = $_.Name
                 $States[$GroupName] = [PSCustomObject]@{}
                 $_.ChildNodes | Foreach-Object{
-                    if($_.Name -ne "SubState"){
-                        [String]$Name = $_.Name
-                        [String]$Value = $_.Value
-                        $States[$GroupName] | Add-Member NoteProperty -Name $Name -Value $Value -Force
-                    }
-                    else{
-                        [String]$SubState = $_.Name
-                        [String]$Index = $_.Value
-                        $SubStateName = ("$($SubState)" + "-" + "$($Index)")
-                        $States[$GroupName] | Add-Member NoteProperty -Name $SubStateName -Value 0 -Force
-                        $States[$GroupName].$SubStateName = [PSCustomObject]@{}
-                        $_.ChildNodes | Foreach-Object{
-                            [String]$Name = $_.Name
-                            [String]$Value = $_.Value
-                            $States[$GroupName].$SubStateName | Add-Member NoteProperty -Name $Name -Value $Value -Force
-                        }
-                    }
+                    [String]$Name = $_.Name
+                    [String]$Value = $_.Value
+                    $States[$GroupName] | Add-Member NoteProperty -Name $Name -Value $Value -Force
                 }
             }
-            foreach($State in 0..($States.Count - 1)){
-                $State = $State -as [String]
-                $SubStates = $States[$State].PSObject.Properties | Where-Object {$_.Name -like "SubState*"}
-                Foreach($Num in 0..($SubStates.Count - 1)){
-                    if($SubStates[$Num].Value.BuildFormatting -ne ""){
-                    $BuildFormatting = $SubStates[$Num].Value.BuildFormatting
-                    $GridFormatting = $SubStates[$Num].Value.GridFormatting
-                    $ColorFormatting = $SubStates[$Num].Value.ColorFormatting
-                    $ManualFormatting = $SubStates[$Num].Value.ManualFormatting
-                    $ConstructedSubState = fnAssembleObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
-                    $SubStates[$Num].Value | Add-Member NoteProperty -Name "SubstateGrid" -Value $ConstructedSubState -Force
-                    }
-                }
+            foreach($State in $States.Keys){
                 $BuildFormatting = $States[$State].BuildFormatting
                 $GridFormatting = $States[$State].GridFormatting
                 $ColorFormatting = $States[$State].ColorFormatting
                 $ManualFormatting = $States[$State].ManualFormatting
                 $StateGrid = fnAssembleObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
-                $States[$GroupName] | Add-Member NoteProperty -Name "StateGrid" -Value $StateGrid -Force
+                $States["$State"] | Add-Member NoteProperty -Name "StateGrid" -Value $StateGrid -Force
             }
         }
     }
