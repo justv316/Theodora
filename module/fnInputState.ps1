@@ -12,6 +12,7 @@ function fnInputState{
             fnWriteObject -InputObject $States["$State"].StateGrid -ObjectFormatting $States["$State"].ObjectFormatting
             $Script:Active = $True
             $Script:ActiveState = $States["$State"]
+            $Script:ActiveStateString = $State
             fnReadInput
         }
         else{

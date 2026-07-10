@@ -3,7 +3,8 @@ function fnWriteObject{
     param(
         $InputObject,
         [String] $ObjectFormatting = '',
-        [String] $ColorFormatting = ''
+        [String] $ColorFormatting = '',
+        [Switch] $IgnoreConsole
     )
     <#
     ObjectFormatting (Used Here)  = "
@@ -67,7 +68,9 @@ function fnWriteObject{
         }
     } # End Begin
     process{
-        fnSetConsoleWinSize -Height ($CharacterGrid.Count+1) -Width $CharacterGrid[1].length
+        if($IgnoreConsole -eq $False){
+            fnSetConsoleWinSize -Height ($CharacterGrid.Count+1) -Width $CharacterGrid[1].length
+        }
         Foreach($GridLine in 1..($CharacterGrid.Count)){
             $CharacterGrid[$GridLine] | Foreach-Object {
                 if($_.Index -lt $CharacterGrid[$GridLine].Count){

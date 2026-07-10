@@ -15,7 +15,7 @@ function fnReadInput{
             fnInputState $ActiveState.Parent
         }
         else{
-            Throw "Invalid Command!"
+            fnwriteObject -inputobject "Invalid Command!" -ObjectFormatting "--InputType=String --BorderType=Single --Justification=Center --EnforcedMaxLength=80 --MinimumPaddingLength=4" -ColorFormatting "--TextForegroundColor=Red --TextBackgroundColor=Black --BorderForegroundColor=Blue --BorderBackgroundColor=White --IgnoreTextPadding" -IgnoreConsole
             fnReadInput
         }
     }
