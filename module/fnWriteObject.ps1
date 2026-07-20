@@ -74,18 +74,26 @@ function fnWriteObject{
         Foreach($GridLine in 1..($CharacterGrid.Count)){
             $CharacterGrid[$GridLine] | Foreach-Object {
                 if($_.Index -lt $CharacterGrid[$GridLine].Count){
-                    if($_.Type -ne "Padding"){
+                    if($_.Type -ne "Padding" -and $_.Type -ne "Pixel"){
                         Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline
+                    }
+                    elseif($_.Type -eq "Pixel"){
+                        Write-Host $_.UnrevealedChar -ForegroundColor $_.UnrevealedForegroundColor -BackgroundColor $_.UnrevealedBackgroundColor -NoNewline
                     }
                     else{
                         Write-Host "&#xa0;" -NoNewline -ForegroundColor White
                     }
                 }
                 elseif($_.Index -eq $CharacterGrid[$GridLine].Count){
-                    Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline
+                    if($_.Type -eq "Pixel"){
+                        Write-Host $_.UnrevealedChar -ForegroundColor $_.UnrevealedForegroundColor -BackgroundColor $_.UnrevealedBackgroundColor -NoNewline
+                    }
+                    else{
+                        Write-Host $_.Character -ForegroundColor $_.ForegroundColor -BackgroundColor $_.BackgroundColor -NoNewline
+                    }
                     Write-Host ''
                 }
-            }
+            } 
         }
     } #end Process
 } # end function

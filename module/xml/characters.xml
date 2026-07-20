@@ -153,4 +153,13 @@
         <MiddleBottom value=" "/>
         <CenterJunction value=" "/>
     </type>
+    <type name ="Map">
+        <Unrevealed value="░"/>
+        <Middle value="▒"/>
+        <Illuminated value = "▓"/>
+        <Block value ="█"/>
+        <TopBlock value ="▀"/>
+        <BottomBlock value="▄"/>
+        <Void value=" "/>
+    </type>
 </types>
