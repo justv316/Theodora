@@ -1,0 +1,9 @@
+<sprites>
+    <sprite name="Template">
+        <size value ="SubGrid"/>
+        <lines value='3'/>
+        <width value='3'/>
+        <Locationality value='0'/>
+        <data value="░░░░░░░░░"/>
+    </sprite>
+</sprites>

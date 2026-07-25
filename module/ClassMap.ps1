@@ -67,11 +67,11 @@ class Map{
                         $This.Ninths[$Ninth].SubGrids[$Y].Pixels += $ThisPixel
                     }
                 }
-                if($Ninth -ne 3 -or $Ninth -ne 6){
+                if($Y -ne 3 -or $Y -ne 6){
                     $PixelS = $PixelS + 3
                     $PixelE = $PixelE + 3
                 }
-                if($Ninth -eq 3 -or $Ninth -eq 6){
+                if($Y -eq 3 -or $Y -eq 6){
                     $PixelS = 1
                     $PixelE = 3
                     $LineS = $LineS + 3
@@ -81,6 +81,11 @@ class Map{
         }
     } # End Constructors
     # Methods
+    [void] FillFromTemplate([String]$Template){
+        foreach($Ninth in 1..$This.Ninths.Count){
+            $This.Subgrids[$Ninth].FillFromTemplate($Script:MapTemplates.$Template[$Ninth])
+        }
+    }
 }
 
 class Character{
@@ -118,12 +123,14 @@ class Character{
         $this.Revealed = $True
         $this.Char = $Char
     }
+    [void] Set([String]$Char){
+        $this.Char = $Char
+    }
 }
 
 
 class Ninths{
     [Int]$Index
-    [String]$CardinalLocation
     $SubGrids
     $Pixels
     Ninths([Int]$Index){
@@ -131,13 +138,31 @@ class Ninths{
         $This.SubGrids = [System.Collections.SortedList]::new()
         $This.Pixels = @()
     }
+    [void] FillFromTemplate([String]$Template){
+        foreach($SubGrid in 1..$This.SubGrids.Count){
+            $This.Subgrids[$SubGrid].FillFromTemplate($Script:NinthTemplates.$Template[$SubGrid])
+        }
+    }
 }
 class SubGrids{
     [Int]$Index
-    [Array]$AbsPos
     $Pixels
     SubGrids([Int]$Index){
         $This.Index = $Index
         $This.Pixels = @()
     }
-}
+    [void] FillFromTemplate([String]$Template){
+        $ThisSprite = $Script:Sprites.$Template | Select-Object
+        $SpriteArr = $ThisSprite.Data -Split ''
+        $SpriteArr = $SpriteArr[1..9]
+        $ReplaceHash = @{}
+        $N = 1
+        $SpriteArr | Foreach-Object{
+            $ReplaceHash[$N] = $_
+            $N = $N + 1
+        }
+        Foreach($Pixel in 1..9){
+            $This.Pixels[$Pixel-1].Set($ReplaceHash[$Pixel])
+        }
+    }
+} 

@@ -30,8 +30,17 @@ function fnXML{
         if($XML -eq 'Boxes' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Boxes))){
             $Script:Boxes = @{}
         }
+        if($XML -eq 'Sprites' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name Sprites))){
+            $Script:Sprites = @{}
+        }
         if($XML -eq 'States' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name States))){
             $Script:States = @{}
+        }
+        if($XML -eq 'MapTemplates' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name MapTemplates))){
+            $Script:MapTemplates = @{}
+        }
+        if($XML -eq 'NinthTemplates' -and (-not (Get-Variable -ErrorAction SilentlyContinue -Scope Script -Name NinthTemplates))){
+            $Script:NinthTemplates = @{}
         }
         $File = "E:\Documents\GitHub\PSGame\Theodora\module\xml\$($XML).xml"
         $FileXML = [XML] (Get-Content $File -ErrorAction SilentlyContinue)
@@ -46,6 +55,23 @@ function fnXML{
                         'Lines' = $_.lines
                         'Font' = $_.Font
                     }
+                }
+            }
+        }
+        elseif($XML -Contains "Sprites"){
+            $FileXML.Sprites.Sprite | Foreach-Object {
+                [String]$TypeName = $_.Name
+                $Sprites[$TypeName] = @{}
+                $_.ChildNodes | Foreach-Object{
+                    [String]$Name = $_.Name
+                    if(0..9 -contains $_.Value){
+                        [Int]$Value = $_.Value
+                    }
+                    else{
+                        [String]$Value = $_.Value
+                    }
+                    $Sprites[$TypeName][$Name] = $Value
+                    $Sprites[$TypeName]["Data"] = $Sprites[$TypeName]["Data"] -split " "
                 }
             }
         }
@@ -91,6 +117,28 @@ function fnXML{
                 $ManualFormatting = $States[$State].ManualFormatting
                 $StateGrid = fnAssembleObject -BuildFormatting $BuildFormatting -GridFormatting $GridFormatting -ColorFormatting $ColorFormatting -ManualFormatting $ManualFormatting
                 $States["$State"] | Add-Member NoteProperty -Name "StateGrid" -Value $StateGrid -Force
+            }
+        }
+        elseif($XML -eq "NinthTemplates"){
+            $FileXML.Ninths.Ninth | ForEach-Object {
+                [String]$TypeName = $_.Name
+                $NinthTemplates[$TypeName] = @{}
+                $_.ChildNodes | Foreach-Object{
+                    [Int]$Name = $_.Name -replace 'n',''
+                    [String]$Value = $_.Value
+                    $NinthTemplates[$TypeName][$Name] = $Value
+                }
+            }
+        }
+        elseif($XML -eq "MapTemplates"){
+            $FileXML.Maps.Map | ForEach-Object {
+                [String]$TypeName = $_.Name
+                $MapTemplates[$TypeName] = @{}
+                $_.ChildNodes | Foreach-Object{
+                    [Int]$Name = $_.Name -replace 'n',''
+                    [String]$Value = $_.Value
+                    $MapTemplates[$TypeName][$Name] = $Value
+                }
             }
         }
     }
