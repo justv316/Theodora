@@ -60,18 +60,11 @@ function fnXML{
         }
         elseif($XML -Contains "Sprites"){
             $FileXML.Sprites.Sprite | Foreach-Object {
-                [String]$TypeName = $_.Name
-                $Sprites[$TypeName] = @{}
-                $_.ChildNodes | Foreach-Object{
-                    [String]$Name = $_.Name
-                    if(0..9 -contains $_.Value){
-                        [Int]$Value = $_.Value
-                    }
-                    else{
-                        [String]$Value = $_.Value
-                    }
-                    $Sprites[$TypeName][$Name] = $Value
-                    $Sprites[$TypeName]["Data"] = $Sprites[$TypeName]["Data"] -split " "
+                $Sprites["$($_.Name)"] = [PSCustomObject]@{
+                    'Name' = $_.Name
+                    'Data' = $_.Data
+                    'Width' = $_.Width
+                    'Lines' = $_.lines
                 }
             }
         }

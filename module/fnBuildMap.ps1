@@ -1,4 +1,4 @@
-using module E:\Documents\Github\PSGame\Theodora\Theodora.psm1
+#using module E:\Documents\Github\PSGame\Theodora\Theodora.psm1
 
 function fnBuildMap{
     [CmdletBinding()]
@@ -8,14 +8,15 @@ function fnBuildMap{
     )
     begin{
         if($Null -eq $MapGrids){
-            $Global:MapGrids = @()
+            $Script:MapGrids = @()
         }
     }
     process{
-        $Global:MapGrid = [Map]::New($Mapname)
+        $MapGrid = [Map]::New($Mapname)
+        $MapGrid.FillFromTemplate($MapName)
+        $MapGrid.UpdatePixels()
     }
     end{
-        $Global:MapGrids += $MapGrid
-        $Global:MapGrids
+        $Script:MapGrids += $MapGrid
     }
 }

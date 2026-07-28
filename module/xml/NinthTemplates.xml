@@ -10,4 +10,15 @@
         <n8 value="Template"/>
         <n9 value="Template"/>
     </Ninth>
+    <Ninth name="BasicRoom">
+        <n1 value="ULC_1_Single"/>
+        <n2 value="THor_1_Single"/>
+        <n3 value="URC_1_Single"/>
+        <n4 value="LVer_1_Single"/>
+        <n5 value="Empty_Middle"/>
+        <n6 value="RVer_1_Single"/>
+        <n7 value="LLC_1_Single"/>
+        <n8 value="UHor_1_Single"/>
+        <n9 value="LRC_1_Single"/>
+    </Ninth>
 </Ninths>

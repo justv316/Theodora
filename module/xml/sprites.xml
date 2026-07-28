@@ -1,9 +1,62 @@
 <sprites>
-    <sprite name="Template">
-        <size value ="SubGrid"/>
-        <lines value='3'/>
-        <width value='3'/>
-        <Locationality value='0'/>
-        <data value="░░░░░░░░░"/>
+    <sprite>
+        <name>Template</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>░░░░░░░░░</data>
+    </sprite>
+    <sprite>
+        <name>ULC_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>░┏━░┃&#xa0;░┃&#xa0;</data>
+    </sprite>
+    <sprite>
+        <name>LLC_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>░┃&#xa0;░┃&#xa0;░┗━</data>
+    </sprite>
+    <sprite>
+        <name>URC_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>━┓░&#xa0;┃░&#xa0;┃░</data>
+    </sprite>
+    <sprite>
+        <name>LRC_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>&#xa0;┃░&#xa0;┃░━┛░</data>
+    </sprite>
+    <sprite>
+        <name>THor_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>━━━&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;</data>
+    </sprite>
+    <sprite>
+        <name>LVer_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>&#xa0;┃░&#xa0;┃░&#xa0;┃░</data>
+    </sprite>
+    <sprite>
+        <name>BHor_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;━━━</data>
+    </sprite>
+    <sprite>
+        <name>LVer_1_Single</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>░┃&#xa0;░┃&#xa0;░┃&#xa0;</data>
+    </sprite>
+    <sprite>
+        <name>Empty_Middle</name>
+        <lines>3</lines>
+        <width>3</width>
+<data>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;</data>
     </sprite>
 </sprites>

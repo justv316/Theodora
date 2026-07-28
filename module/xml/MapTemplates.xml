@@ -10,4 +10,15 @@
         <n8 value="Template"/>
         <n9 value="Template"/>
     </Map>
+    <Map name="EmptyRooms">
+        <n1 value="BasicRoom"/>
+        <n2 value="BasicRoom"/>
+        <n3 value="BasicRoom"/>
+        <n4 value="BasicRoom"/>
+        <n5 value="BasicRoom"/>
+        <n6 value="BasicRoom"/>
+        <n7 value="BasicRoom"/>
+        <n8 value="BasicRoom"/>
+        <n9 value="BasicRoom"/>
+    </Map>
 </Maps>
